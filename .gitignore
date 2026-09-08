@@ -1,0 +1,23 @@
+# Environment and Secrets (Never commit API keys)
+.env
+*.env
+.env.local
+
+# Local Research & Feasibility Outputs (Local only, validated manually)
+research-outcome/
+note-taker-log/
+summarize-outcome/
+feasibility-goals/
+teammate-persona/
+
+# Python and Environment artifacts
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+env/
+
+# OS files
+.DS_Store
+Thumbs.db
