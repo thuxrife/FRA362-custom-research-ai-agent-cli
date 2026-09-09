@@ -1,11 +1,8 @@
-# FRA362 Custom Research & Feasibility AI Agent CLI
+# FRA362 Custom Research & Feasibility AI Multi-Agent System
 
-A dual multi-agent system designed for **Dialectical Literature Research** and **TELOS-SDG Feasibility Consulting**.
+A dual multi-agent system designed for **Dialectical Literature Research** and **TELOS-SDG Feasibility Consulting**, operating directly within the AI chat interface.
 
-All agent SOPs, personas, and behavioral directives are defined cleanly in **Markdown** (`agents/*.md`). Output dossiers, debate transcripts, Excel matrices, and executive summaries are organized into **USA-formatted date/time subfolders** (`M-D-YYYY_HHMM-{Topic}`).
-
-> [!NOTE]
-> **Local-Only & Privacy Design**: All generated outcomes (`research-outcome/`, `note-taker-log/`, `summarize-outcome/`, `feasibility-goals/`, `teammate-persona/`) are strictly kept on your local machine and ignored by Git. This ensures that every team member runs their own AI search tools locally to manually validate findings before sharing, with zero risk of leaking private research data or API keys.
+All agent SOPs, personas, and behavioral directives are defined cleanly in **Markdown** (`agents/*.md`), while the SDG indicator diagnostic questions are modularized in `sdg-rulebook/goals/`.
 
 ---
 
@@ -79,50 +76,25 @@ The system natively understands and generates natural, professional Thai (ภา
 
 ---
 
-## Quick Start & Setup (.venv & requirements.txt)
+## 🚀 In-Chat Workflow & Usage
 
-### 1. Create & Activate Virtual Environment (`.venv`)
+No local terminal installation or Python scripts required. The agents operate directly within this chat interface:
 
-**On Windows (PowerShell):**
-```powershell
-# Create virtual environment
-python -m venv .venv
+### 1. Literature Research & Dialectical Debate
+Simply ask any technical research topic in Thai or English:
+- *Example*: `ระบบ IoT ตรวจวัดระดับน้ำและเปิดปิดประตูระบายน้ำอัตโนมัติ กรุงเทพ`
+- *Process*:
+  1. `(1-1-manager)` validates and clarifies scope if ambiguous.
+  2. `(1-2-researcher)` performs live web searches, pulls engineering specs, formulas ($Q = C_d \cdot b \cdot h_g \sqrt{2g \Delta h}$), and empirical performance matrices.
+  3. `(1-3-objectionist)` quotes highlighted claims from sources, identifies physical failure modes (rain fade, H₂S degradation, mechanical jams), and generates an **FMEA Matrix**.
+  4. `(1-5-summarizer)` synthesizes the findings into a **Quantitative Engineering Comparative Data Table** and a 3-phase Go/No-Go roadmap.
 
-# Activate virtual environment
-.venv\Scripts\Activate.ps1
-```
-*(If script execution is disabled on Windows, run: `Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass`)*
-
-**On macOS / Linux (Bash / Zsh):**
-```bash
-python3 -m venv .venv
-source .venv/bin/activate
-```
-
----
-
-### 2. Install Dependencies (`requirements.txt`)
-```bash
-pip install -r requirements.txt
-```
-
----
-
-### 3. Run the CLI
-```bash
-python main.py
-```
-*(Or directly via virtual environment without activating: `.venv\Scripts\python main.py`)*
-
----
-
-### 4. Key CLI Commands
-* **Run Research Mode**: Simply type your topic in English or Thai (e.g. `Solid-State Batteries` หรือ `ระบบบำบัดน้ำเสียชุมชน`).
-* **Run Feasibility Mode**: Type `/feasibility <your_project_idea>` (e.g. `/feasibility ประตูกั้นน้ำอัตโนมัติพลังงานแสงอาทิตย์ลุ่มน้ำเจ้าพระยา`).
-* **Switch Default Mode**: Type `/mode` to toggle between `RESEARCH` and `FEASIBILITY`.
-* **Reference Past Sessions**: Add `--ref <session_name>` or type `/ref`.
-* **List Past Sessions**: Type `/list`.
-* **Zero Cost / 100% Free**: The system uses DuckDuckGo live web scraping and ArXiv open academic papers out of the box with zero API keys required.
-* **Optional Paid Keys**: Type `/key` if you ever wish to connect Perplexity, Gemini, or OpenAI.
+### 2. TELOS-SDG Feasibility Consulting
+Ask to assess any project idea using TELOS and SDG indicators:
+- *Example*: `ประเมินความเป็นไปได้: โครงการประตูกั้นน้ำอัตโนมัติพลังงานแสงอาทิตย์ลุ่มน้ำเจ้าพระยา`
+- *Process*:
+  1. `(2-1-jury)` enforces Anti-Backpropagation rules, freezing requirements before scoring.
+  2. The 6 Feasibility Specialists (`Tech`, `Economic`, `Legal`, `Operational`, `Schedule`, and `SDGs Expert`) examine constraints across all dimensions.
+  3. `(2-7-sdgs-expert)` queries modular targets and indicators from [`sdg-rulebook/goals/`](sdg-rulebook/goals/README.md) mapped to the Stockholm Wedding Cake model.
 
 
