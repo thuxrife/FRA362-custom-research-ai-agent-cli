@@ -1,6 +1,6 @@
 # FRA362 Custom Research & Feasibility AI Multi-Agent System
 
-A dual multi-agent system designed for **Dialectical Literature Research** and **TELOS-SDG Feasibility Consulting**, operating directly within the AI chat interface.
+A dual multi-agent system designed for **Dialectical Literature Research** and **Systems-Thinking Robotics Feasibility Consulting (TELOS+S)**, operating directly within the AI chat interface.
 
 All agent SOPs, personas, and behavioral directives are defined cleanly in **Markdown** (`agents/*.md`), while the SDG indicator diagnostic questions are modularized in `sdg-rulebook/goals/`.
 
@@ -20,8 +20,11 @@ flowchart TD
         M --> S["(1-5-summarizer)"]
     end
     
-    subgraph Group 2: TELOS-SDG Feasibility
-        Lead -->|Feasibility Mode| J["(2-1-jury)"]
+    subgraph Group 2: TELOS+S Feasibility Consulting
+        In1["📁 solution-details/<br>*.md"] -.-> J["(2-1-jury)"]
+        In2["📁 team-skills/<br>{name}.md"] -.-> J
+        In3["📁 schedule-details/<br>schedule.md"] -.-> J
+        Lead -->|Feasibility Mode| J
         J --> T["(2-2-tech-feasibility)"]
         J --> E["(2-3-economic-feasibility)"]
         J --> L["(2-4-legal-feasibility)"]
@@ -33,7 +36,7 @@ flowchart TD
     NT --> D1[("📁 note-taker-log/")]
     R --> D2[("📁 research-outcome/")]
     S & J --> D3[("📁 summarize-outcome/")]
-    J --> D4[("📁 feasibility-goals/<br>TELOS_SDG_Matrix.xlsx")]
+    J --> D4[("📁 feasibility-outcome/<br>{month}-{date}-{year}-{time}.xlsx")]
     T --> D5[("📁 teammate-persona/<br>team_skills.md")]
 ```
 
@@ -48,14 +51,36 @@ flowchart TD
 - `(1-4-note-taker)`: Continuous verbatim debate recorder in `note-taker-log/`.
 - `(1-5-summarizer)`: Final engineering synthesis into HTML & Markdown in `summarize-outcome/` featuring a mandatory Quantitative Engineering Comparative Data Table.
 
-### Group 2: TELOS-SDG Feasibility Team ("Consultors Setup Questions, Jury Takes Them All")
-- `(2-1-jury)`: **Master Arbitrator & Collector**: Takes all questions proposed by the consultors, cuts off nonsense, interviews the user directly on unverified assumptions, freezes goals before scoring (anti-backpropagation rule), and compiles `TELOS_SDG_Matrix.xlsx` in `feasibility-goals/`.
-- `(2-2-tech-feasibility)`: Sets up technical questions: audits actual human team capability (logged in `teammate-persona/`) and Pioneer Red Flag novelty risk.
-- `(2-3-economic-feasibility)`: Sets up economic questions: evaluates whether it is worth it (constraints vs. attractiveness) with concrete benchmark examples.
-- `(2-4-legal-feasibility)`: Sets up regulatory questions: statutory law, social norms, public ethics, and pending legislation.
-- `(2-5-operational-feasibility)`: **Human & Team Centric**: Questions user the most regarding pre-launch workflow friction and post-launch ripple effects / 2 AM burnout.
-- `(2-6-schedule-feasibility)`: Sets up timeline questions: critical-path realism, delivery guarantee conditions, and de-scoping contingency.
-- `(2-7-sdgs-expert)`: **Indicator-Driven Feasibility**: Converts official **UN SDG Indicators** into exact diagnostic questions based on the [17 Modular SDG Files](sdg-rulebook/goals/README.md) across the 3 layers of the **SDG Wedding Cake** (Biosphere, Society, Economy).
+### Group 2: TELOS+S Feasibility Consulting Team (Systems-Thinking Robotics Audit)
+- `(2-1-jury)`: **Chief Judge & Anti-Tech-Trap Gatekeeper**: Enforces the core curriculum concept from LN5 (beware focusing only on technology; all aspects interconnect). Eliminates solution-biased and overly generic questions, enforces strict discrete integer scoring `{1, 2, 3, 4, 5}`, and orchestrates `feasibility-analysis.py` to compile `{month}-{date}-{year}-{time}.xlsx`.
+- `(2-2-tech-feasibility)`: **Man & Machine Auditor**: Audits real tool access, fabrication skills (Mech/Elec/Prog), and the time/cost overhead that technology choices extract from the project. Flags Pioneer Novelty Risks.
+- `(2-3-economic-feasibility)`: **Cost-Benefit & Financial Reality Analyst**: Evaluates funding reality, budget ceilings, scrap/iteration allowances, and true worth compared to the Zero-Action baseline (doing nothing / manual labor).
+- `(2-4-legal-feasibility)`: **Institutional & Policy Gatekeeper**: Audits statutory law (PDPA, NBTC), municipal liabilities, IP infringements, and the team's verified capability to conduct in-person government agency liaisons.
+- `(2-5-operational-feasibility)`: **The "Will It Actually Be Used?" Stress-Tester**: Audits dispatcher adoption, procedural resistance (e.g. Traffy Fondue photo evidence rules), workflow disruption, training burdens, and developer burnout.
+- `(2-6-schedule-feasibility)`: **Conflict & Deadline Realist**: Audits milestone delivery realism against formal TRL levels (TRL2, TRL3, TRL4), stress-testing against university exam blackouts and procurement lead times.
+- `(2-7-sdgs-expert)`: **Systemic Sustainability Consultant**: Evaluates multi-layer Stockholm Wedding Cake impact (Biosphere, Society, Economy), UN SDG indicators, and Do-No-Harm safeguards (preventing e-waste and vulnerability shifts).
+
+---
+
+## 📁 The 3 Structured Intake Folders
+
+Feasibility analysis is executed against three evidence-backed intake folders:
+
+1. **`solution-details/` (`solution-1.md`, `solution-2.md`, etc.)**: Ingests one or more solution proposals, architecture drafts, or teammate submissions. The Jury normalizes differing author writing styles and synthesizes requirements, constraints, and subsystem mechanics/electronics/programming.
+2. **`team-skills/` (`{name}.md`)**: Ingests individual member profile files (e.g. `somchai.md`, `jk.md`) detailing hard skills (Mech/Elec/Prog), outreach willingness/capability, and verified past project evidence.
+3. **`schedule-details/schedule.md`**: Standalone single file detailing target deadline, milestone checkpoints, component procurement windows, and manufacturing lead times.
+
+---
+
+## 📊 Transposed Horizontal Excel Matrix (`{month}-{date}-{year}-{time}.xlsx`)
+
+Compiled automatically via `feasibility-analysis.py` directly into `feasibility-outcome/{month}-{date}-{year}-{time}.xlsx` (e.g. `9-22-2026-2349.xlsx`):
+- **Transposed Horizontal Inspection**: Attributes are arranged in rows (ID, Pillar, Question, Rationale, Rubric, Score, Weight, Evidence, De-scoping Action) while diagnostic questions are aligned across columns.
+- **Dedicated Score Inspection Row**: Row 9 displays all scores parallel horizontally across the sheet.
+- **Strict Discrete Integer Scoring**: All scores are whole integers chosen strictly from **`{1, 2, 3, 4, 5}`** (zero decimals, no 0.5).
+- **Critical Context-Specific Questions**: Eliminates solution bias and generic textbook questions. Every question probes a real constraint and failure mode.
+- **Evidence-Based Citations**: Explicitly references specific sections of intake files.
+- **Actionable De-scoping Advisories**: Proposes concrete engineering remedies whenever a score $< 4$.
 
 ---
 
@@ -89,12 +114,10 @@ Simply ask any technical research topic in Thai or English:
   3. `(1-3-objectionist)` quotes highlighted claims from sources, identifies physical failure modes (rain fade, H₂S degradation, mechanical jams), and generates an **FMEA Matrix**.
   4. `(1-5-summarizer)` synthesizes the findings into a **Quantitative Engineering Comparative Data Table** and a 3-phase Go/No-Go roadmap.
 
-### 2. TELOS-SDG Feasibility Consulting
-Ask to assess any project idea using TELOS and SDG indicators:
-- *Example*: `ประเมินความเป็นไปได้: โครงการประตูกั้นน้ำอัตโนมัติพลังงานแสงอาทิตย์ลุ่มน้ำเจ้าพระยา`
+### 2. Systems-Thinking TELOS+S Feasibility Consulting
+Provide project files in the 3 intake folders (`solution-details/`, `team-skills/`, `schedule-details/`), then trigger the feasibility evaluation:
+- *Trigger*: `/feasibility` or `ประเมินความเป็นไปได้จากโฟลเดอร์ intake`
 - *Process*:
-  1. `(2-1-jury)` enforces Anti-Backpropagation rules, freezing requirements before scoring.
-  2. The 6 Feasibility Specialists (`Tech`, `Economic`, `Legal`, `Operational`, `Schedule`, and `SDGs Expert`) examine constraints across all dimensions.
-  3. `(2-7-sdgs-expert)` queries modular targets and indicators from [`sdg-rulebook/goals/`](sdg-rulebook/goals/README.md) mapped to the Stockholm Wedding Cake model.
-
-
+  1. `(2-1-jury)` reads the 3 intake files, eliminates solution-biased and generic questions, and broadcasts facts.
+  2. The 6 Feasibility Specialists audit Man & Machine capabilities, funding reality vs. zero-action, statutory policy, operational dispatcher adoption, exam conflicts, and systemic SDGs.
+  3. `(2-1-jury)` compiles `{month}-{date}-{year}-{time}.xlsx` in `feasibility-outcome/` with strict integer scores `{1, 2, 3, 4, 5}` aligned horizontally, complete with rationales, evidence citations, and a De-scoping Advisory.
