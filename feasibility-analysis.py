@@ -23,7 +23,7 @@ import argparse
 from datetime import datetime
 import openpyxl
 from openpyxl.styles import Font, Alignment, PatternFill, Border, Side
-from openpyxl.utils import get_column_letter
+from openpyxl.utils import get_column_letter, column_index_from_string
 
 # Ensure UTF-8 printing in Windows terminals
 if sys.stdout and hasattr(sys.stdout, 'reconfigure'):
@@ -36,7 +36,7 @@ if sys.stderr and hasattr(sys.stderr, 'reconfigure'):
 # Helper: Canonical Pillar Normalization & Weighting
 # ==============================================================================
 
-def get_canonical_pillar(pillar_str):
+def get_canonical_pillar(pillar_str, has_sdg=False):
     """
     จัดกลุ่มข้อความมิติการประเมินให้เป็น Canonical Key และค่าน้ำหนักมาตรฐาน (Two-Tier Model)
     รองรับทั้งภาษาไทย ภาษาอังกฤษ และรูปแบบข้อความที่ไม่สม่ำเสมอ
@@ -46,22 +46,40 @@ def get_canonical_pillar(pillar_str):
         return ("T", 0.20)
     elif any(k in p for k in ["econ", "เศรษฐ", "การเงิน", "ต้นทุน"]):
         return ("E", 0.20)
-    elif any(k in p for k in ["legal", "กฎหมาย", "ระเบียบ", "outreach"]):
-        return ("L", 0.15)
-    elif any(k in p for k in ["operat", "ปฏิบัติการ", "หน้างาน", "ผู้ใช้"]):
+    elif any(k in p for k in ["legal", "กฎหมาย", "ระเบียบ", "สถาบัน", "outreach"]):
+        return ("L", 0.15 if has_sdg else 0.20)
+    elif any(k in p for k in ["operat", "ปฏิบัติการ", "หน้างาน", "ผู้ใช้", "developer", "user"]):
         return ("O", 0.20)
     elif any(k in p for k in ["sched", "เวลา", "กำหนด", "แผนงาน"]):
-        return ("S", 0.15)
+        return ("S", 0.15 if has_sdg else 0.20)
     elif any(k in p for k in ["sdg", "ยั่งยืน", "สิ่งแวดล้อม"]):
         return ("SDG", 0.10)
-    return ("OTHER", 1.0 / 6.0)
+    return ("OTHER", 0.20)
+
+
+def make_pillar_sum_formula(col_letters, row_idx=11):
+    """
+    สร้างสูตร Excel สำหรับรวมคะแนนถ่วงน้ำหนักของคำถามในมิตินั้นๆ แล้วคูณด้วย 20
+    เพื่อแปลงคะแนนสเกลถ่วงน้ำหนัก (เต็มตามค่าน้ำหนักมิติ เช่น 0.20) ให้เป็นคะแนนเต็มมิติ (เช่น 20.0)
+    """
+    if not col_letters:
+        return "=0.0"
+    col_indices = [column_index_from_string(c) for c in col_letters]
+    # ตรวจสอบว่าเป็นคอลัมน์เรียงติดกันหรือไม่
+    if len(col_indices) > 1 and col_indices == list(range(col_indices[0], col_indices[0] + len(col_indices))):
+        return f"=SUM({col_letters[0]}{row_idx}:{col_letters[-1]}{row_idx})*20"
+    elif len(col_indices) == 1:
+        return f"={col_letters[0]}{row_idx}*20"
+    else:
+        cells = ",".join(f"{c}{row_idx}" for c in col_letters)
+        return f"=SUM({cells})*20"
 
 
 # ==============================================================================
 # 1. ฟังก์ชันจัดรูปแบบและเขียนแผ่นงานสำหรับแต่ละ Solution (Transposed Horizontal Matrix)
 # ==============================================================================
 
-def write_solution_sheet(wb, sheet_title, assessment_data, solution_name="Solution"):
+def write_solution_sheet(wb, sheet_title, assessment_data, solution_name="Solution", robotic_data=None):
     if not assessment_data:
         print(f"[แจ้งเตือน] {sheet_title} ไม่มีข้อมูล assessment_data ข้ามการสร้าง Sheet")
         return None
@@ -119,10 +137,17 @@ def write_solution_sheet(wb, sheet_title, assessment_data, solution_name="Soluti
 
     ws.column_dimensions['A'].width = 38
 
+    # ตรวจสอบว่าชุดประเมินมีมิติ SDG (+S) หรือไม่ เพื่อสลับระหว่างโมเดล TELOS (5 เสา) และ TELOS+S (6 เสา)
+    has_sdg = any(
+        any(k in str(it.get("pillar", "")).lower() for k in ["sdg", "ยั่งยืน", "สิ่งแวดล้อม"])
+        for it in assessment_data
+    )
+
     # นับจำนวนคำถามต่อมิติแบบ Canonical เพื่อใช้ใน Two-Tier Normalized Weighting Fallback
     pillar_counts = {}
+    pillar_cols = {"T": [], "E": [], "L": [], "O": [], "S": [], "SDG": []}
     for it in assessment_data:
-        c_key, _ = get_canonical_pillar(it.get("pillar", ""))
+        c_key, _ = get_canonical_pillar(it.get("pillar", ""), has_sdg=has_sdg)
         pillar_counts[c_key] = pillar_counts.get(c_key, 0) + 1
 
     # เติมข้อมูลคำถามจาก AI Agents ลงในแนวคอลัมน์ (Columns B, C, D, ...)
@@ -131,6 +156,10 @@ def write_solution_sheet(wb, sheet_title, assessment_data, solution_name="Soluti
         col = start_col + idx
         col_letter = get_column_letter(col)
         ws.column_dimensions[col_letter].width = 36
+
+        c_key, _ = get_canonical_pillar(item.get("pillar", ""), has_sdg=has_sdg)
+        if c_key in pillar_cols:
+            pillar_cols[c_key].append(col_letter)
 
         # Row 4: รหัส
         c4 = ws.cell(row=4, column=col, value=item.get("id", f"Q-{idx+1:02d}"))
@@ -191,7 +220,7 @@ def write_solution_sheet(wb, sheet_title, assessment_data, solution_name="Soluti
                 weight_val = None
 
         if weight_val is None:
-            c_key, p_wt = get_canonical_pillar(item.get("pillar", ""))
+            c_key, p_wt = get_canonical_pillar(item.get("pillar", ""), has_sdg=has_sdg)
             p_count = max(1, pillar_counts.get(c_key, 1))
             weight_val = p_wt / p_count
 
@@ -300,6 +329,128 @@ def write_solution_sheet(wb, sheet_title, assessment_data, solution_name="Soluti
     ws.cell(row=13, column=summary_col_idx).alignment = Alignment(horizontal="center", vertical="center")
     ws.cell(row=13, column=summary_col_idx).border = thin_border
 
+    # =========================================================================
+    # ตารางสรุปคะแนนแยกตามมิติ TELOS+S (Pillar Score Breakdown: Rows 15-23)
+    # =========================================================================
+    ws.cell(row=15, column=1, value="ตารางสรุปคะแนนแยกตามมิติ TELOS+S (Pillar Score Breakdown)").font = title_font
+
+    breakdown_headers = [
+        (1, "มิติการประเมิน (TELOS+S Pillar)"),
+        (2, "สัดส่วนน้ำหนัก (Weight %)"),
+        (3, "คะแนนเต็มมิติ (Max Points)"),
+        (4, "คะแนนที่ได้รับจริง (Earned Points)"),
+        (5, "คะแนนเฉลี่ย (Score 1-5)"),
+        (6, "ระดับความพร้อม (Readiness Level)")
+    ]
+    for b_col, b_title in breakdown_headers:
+        b_cell = ws.cell(row=16, column=b_col, value=b_title)
+        b_cell.font = attr_header_font
+        b_cell.fill = attr_fill
+        b_cell.alignment = Alignment(horizontal="center", vertical="center", wrap_text=True)
+        b_cell.border = thin_border
+
+    if not has_sdg:
+        pillar_configs = [
+            (17, "T", "T : ด้านเทคโนโลยีและวิศวกรรม (Technical)", 0.20, 20.0, 16.0, 12.0),
+            (18, "E", "E : ด้านเศรษฐศาสตร์และความคุ้มค่า (Economic)", 0.20, 20.0, 16.0, 12.0),
+            (19, "L", "L : ด้านกฎหมายและสถาบัน (Legal & Institutional)", 0.20, 20.0, 16.0, 12.0),
+            (20, "O", "O : ด้านการปฏิบัติการและหน้างาน (Operational)", 0.20, 20.0, 16.0, 12.0),
+            (21, "S", "S : ด้านแผนงานและเวลาส่งมอบ (Schedule)", 0.20, 20.0, 16.0, 12.0),
+        ]
+        tot_r = 22
+        end_pillar_r = 21
+    else:
+        pillar_configs = [
+            (17, "T", "T : ด้านเทคโนโลยีและวิศวกรรม (Technical)", 0.20, 20.0, 16.0, 12.0),
+            (18, "E", "E : ด้านเศรษฐศาสตร์และความคุ้มค่า (Economic)", 0.20, 20.0, 16.0, 12.0),
+            (19, "L", "L : ด้านกฎหมาย ระเบียบ และภาคประชาชน (Legal & Outreach)", 0.15, 15.0, 12.0, 9.0),
+            (20, "O", "O : ด้านการปฏิบัติการและหน้างาน (Operational)", 0.20, 20.0, 16.0, 12.0),
+            (21, "S", "S : ด้านแผนงานและเวลาส่งมอบ (Schedule)", 0.15, 15.0, 12.0, 9.0),
+            (22, "SDG", "+S : ด้านความยั่งยืนและสิ่งแวดล้อม (Sustainability / SDG)", 0.10, 10.0, 8.0, 6.0),
+        ]
+        tot_r = 23
+        end_pillar_r = 22
+
+    for r_num, p_key, p_name, p_weight, p_max, th_high, th_med in pillar_configs:
+        # Col A: ชื่อมิติ
+        cA = ws.cell(row=r_num, column=1, value=p_name)
+        cA.font = bold_font
+        cA.border = thin_border
+
+        # Col B: สัดส่วนน้ำหนัก
+        cB = ws.cell(row=r_num, column=2, value=p_weight)
+        cB.font = regular_font
+        cB.number_format = '0.0%'
+        cB.alignment = Alignment(horizontal="center", vertical="center")
+        cB.border = thin_border
+
+        # Col C: คะแนนเต็ม
+        cC = ws.cell(row=r_num, column=3, value=p_max)
+        cC.font = regular_font
+        cC.number_format = '0.0'
+        cC.alignment = Alignment(horizontal="center", vertical="center")
+        cC.border = thin_border
+
+        # Col D: คะแนนที่ได้รับจริง (สูตร Excel)
+        p_formula = make_pillar_sum_formula(pillar_cols.get(p_key, []), 11)
+        cD = ws.cell(row=r_num, column=4, value=p_formula)
+        cD.font = Font(name="Segoe UI", size=10, bold=True, color="002060")
+        cD.fill = score_cell_fill
+        cD.number_format = '0.00'
+        cD.alignment = Alignment(horizontal="center", vertical="center")
+        cD.border = thin_border
+
+        # Col E: คะแนนเฉลี่ย 1-5
+        cE = ws.cell(row=r_num, column=5, value=f"=IF(C{r_num}>0, (D{r_num}/C{r_num})*5, 0)")
+        cE.font = regular_font
+        cE.number_format = '0.00'
+        cE.alignment = Alignment(horizontal="center", vertical="center")
+        cE.border = thin_border
+
+        # Col F: สถานะความพร้อม
+        cF = ws.cell(row=r_num, column=6, value=f'=IF(D{r_num}>={th_high}, "พร้อมระดับสูง (High)", IF(D{r_num}>={th_med}, "ปานกลาง (Medium)", "เสี่ยงวิกฤต (Critical)"))')
+        cF.font = bold_font
+        cF.alignment = Alignment(horizontal="center", vertical="center")
+        cF.border = thin_border
+
+    # แถวสรุปคะแนนรวมทั้งหมด
+    cTotA = ws.cell(row=tot_r, column=1, value="คะแนนรวมทุกมิติ (Total Feasibility Score)")
+    cTotA.font = bold_font
+    cTotA.alignment = Alignment(horizontal="left", vertical="center")
+    cTotA.fill = PatternFill(start_color="F2F4F7", end_color="F2F4F7", fill_type="solid")
+    cTotA.border = thin_border
+
+    cB_tot = ws.cell(row=tot_r, column=2, value=f"=SUM(B17:B{end_pillar_r})")
+    cB_tot.font = bold_font
+    cB_tot.number_format = '0.0%'
+    cB_tot.alignment = Alignment(horizontal="center", vertical="center")
+    cB_tot.border = thin_border
+
+    cC_tot = ws.cell(row=tot_r, column=3, value=f"=SUM(C17:C{end_pillar_r})")
+    cC_tot.font = bold_font
+    cC_tot.number_format = '0.0'
+    cC_tot.alignment = Alignment(horizontal="center", vertical="center")
+    cC_tot.border = thin_border
+
+    cD_tot = ws.cell(row=tot_r, column=4, value=f"=SUM(D17:D{end_pillar_r})")
+    cD_tot.font = Font(name="Segoe UI", size=11, bold=True, color="002060")
+    cD_tot.fill = highlight_fill
+    cD_tot.number_format = '0.00'
+    cD_tot.alignment = Alignment(horizontal="center", vertical="center")
+    cD_tot.border = thin_border
+
+    cE_tot = ws.cell(row=tot_r, column=5, value=f"=IF(C{tot_r}>0, (D{tot_r}/C{tot_r})*5, 0)")
+    cE_tot.font = bold_font
+    cE_tot.number_format = '0.00'
+    cE_tot.alignment = Alignment(horizontal="center", vertical="center")
+    cE_tot.border = thin_border
+
+    cF_tot = ws.cell(row=tot_r, column=6, value=f'=IF(D{tot_r}>=80, "ผ่านเกณฑ์ระดับสูง (HIGHLY VIABLE)", IF(D{tot_r}>=60, "ผ่านแบบมีเงื่อนไข (CONDITIONALLY VIABLE)", "ความเสี่ยงสูง (HIGH RISK)"))')
+    cF_tot.font = verdict_font
+    cF_tot.fill = highlight_fill
+    cF_tot.alignment = Alignment(horizontal="center", vertical="center")
+    cF_tot.border = thin_border
+
     ws.row_dimensions[4].height = 24
     ws.row_dimensions[5].height = 24
     ws.row_dimensions[6].height = 80
@@ -310,15 +461,91 @@ def write_solution_sheet(wb, sheet_title, assessment_data, solution_name="Soluti
     ws.row_dimensions[11].height = 24
     ws.row_dimensions[12].height = 115
     ws.row_dimensions[13].height = 70
+    ws.row_dimensions[14].height = 15
+    ws.row_dimensions[15].height = 26
+    ws.row_dimensions[16].height = 24
+    for r in range(17, end_pillar_r + 1):
+        ws.row_dimensions[r].height = 22
+    ws.row_dimensions[tot_r].height = 26
+
+    # =========================================================================
+    # เมทริกซ์ประเมินความเข้ากันได้กับองค์ความรู้ด้านวิศวกรรมหุ่นยนต์ (Robotics Knowledge Compatibility)
+    # เกณฑ์เฉพาะทาง FIBO (เต็ม 10 คะแนน) - เป็นเอกเทศ ไม่นับรวมในคะแนน TELOS 100 คะแนน
+    # =========================================================================
+    if robotic_data:
+        r_spacer = tot_r + 1
+        r_title = tot_r + 2
+        r_note = tot_r + 3
+        r_hdr = tot_r + 4
+        r_data = tot_r + 5
+
+        ws.row_dimensions[r_spacer].height = 12  # spacer
+        ws.row_dimensions[r_title].height = 26
+        ws.row_dimensions[r_note].height = 22
+        ws.row_dimensions[r_hdr].height = 24
+        ws.row_dimensions[r_data].height = 95
+
+        ws.cell(row=r_title, column=1, value="เมทริกซ์ประเมินความเข้ากันได้กับองค์ความรู้ด้านวิศวกรรมหุ่นยนต์ (Robotics Knowledge Compatibility)").font = title_font
+        ws.cell(row=r_note, column=1, value="* หมายเหตุ: การประเมินส่วนนี้วัดศักยภาพในการประยุกต์ใช้องค์ความรู้ด้านวิศวกรรมหุ่นยนต์ (Perception, Control, Actuation, Mechatronics) เต็ม 10 คะแนน | เป็นเอกเทศ ไม่นับรวมในคะแนน TELOS 100 คะแนน").font = sub_font
+
+        robotic_headers = [
+            (1, "มิติการประเมิน (Robotics Dimension)"),
+            (2, "คะแนนศักยภาพ (/10)"),
+            (3, "แกน Perception & Sensing (การรับรู้)"),
+            (4, "แกน Control & Algorithms (การควบคุม)"),
+            (5, "แกน Actuation & Mechanisms (กลไก)"),
+            (6, "บทวิเคราะห์เชิงวิศวกรรมหุ่นยนต์ (FIBO Alignment Rationale)")
+        ]
+        r_hdr_fill = PatternFill(start_color="366092", end_color="366092", fill_type="solid")
+        for r_col, r_title_txt in robotic_headers:
+            r_c = ws.cell(row=r_hdr, column=r_col, value=r_title_txt)
+            r_c.font = attr_header_font
+            r_c.fill = r_hdr_fill
+            r_c.alignment = Alignment(horizontal="center", vertical="center", wrap_text=True)
+            r_c.border = thin_border
+
+        r_data_A = ws.cell(row=r_data, column=1, value="ศักยภาพการประยุกต์ใช้องค์ความรู้หุ่นยนต์และระบบอัตโนมัติ")
+        r_data_A.font = bold_font
+        r_data_A.alignment = Alignment(horizontal="left", vertical="center")
+        r_data_A.border = thin_border
+
+        r_data_B = ws.cell(row=r_data, column=2, value=float(robotic_data.get("score", 0.0)))
+        r_data_B.font = Font(name="Segoe UI", size=14, bold=True, color="002060")
+        r_data_B.fill = score_cell_fill
+        r_data_B.alignment = Alignment(horizontal="center", vertical="center")
+        r_data_B.number_format = '0.0'
+        r_data_B.border = thin_border
+
+        domains = robotic_data.get("domains", {})
+        r_data_C = ws.cell(row=r_data, column=3, value=domains.get("perception", "-"))
+        r_data_C.font = regular_font
+        r_data_C.alignment = Alignment(horizontal="left", vertical="top", wrap_text=True)
+        r_data_C.border = thin_border
+
+        r_data_D = ws.cell(row=r_data, column=4, value=domains.get("control_algorithms", "-"))
+        r_data_D.font = regular_font
+        r_data_D.alignment = Alignment(horizontal="left", vertical="top", wrap_text=True)
+        r_data_D.border = thin_border
+
+        r_data_E = ws.cell(row=r_data, column=5, value=domains.get("actuation_mechanics", "-"))
+        r_data_E.font = regular_font
+        r_data_E.alignment = Alignment(horizontal="left", vertical="top", wrap_text=True)
+        r_data_E.border = thin_border
+
+        r_data_F = ws.cell(row=r_data, column=6, value=robotic_data.get("fibo_alignment_rationale", "-"))
+        r_data_F.font = regular_font
+        r_data_F.alignment = Alignment(horizontal="left", vertical="top", wrap_text=True)
+        r_data_F.border = thin_border
 
     return sum_letter
+
 
 
 # ==============================================================================
 # 2. ฟังก์ชันสร้างหน้าสรุปเปรียบเทียบทุก Solution (Executive Comparison Tab)
 # ==============================================================================
 
-def write_comparison_sheet(wb, solutions_info):
+def write_comparison_sheet(wb, solutions_info, has_sdg=False):
     ws = wb.create_sheet(title="เปรียบเทียบทุก Solution", index=0)
     ws.views.sheetView[0].showGridLines = True
 
@@ -341,24 +568,62 @@ def write_comparison_sheet(wb, solutions_info):
     )
 
     ws.cell(row=1, column=1, value="ตารางเปรียบเทียบความเป็นไปได้ของทุกข้อเสนอ (Multi-Solution Feasibility Summary)").font = title_font
-    ws.cell(row=2, column=1, value="วิเคราะห์เปรียบเทียบเชิงระบบ (Systems-Thinking) ตามเกณฑ์ TELOS+S จาก AI Agents | รวมทุก Solution ในไฟล์เดียว").font = sub_font
+    sub_title = ("วิเคราะห์เปรียบเทียบเชิงระบบตามเกณฑ์ TELOS+S (เต็ม 100) และเมทริกซ์ศักยภาพด้านวิศวกรรมหุ่นยนต์ (เต็ม 10 แยกอิสระ)" 
+                 if has_sdg else 
+                 "วิเคราะห์เปรียบเทียบเชิงระบบตามเกณฑ์ TELOS 5 เสาหลัก (เต็ม 100) และเมทริกซ์ศักยภาพด้านวิศวกรรมหุ่นยนต์ (เต็ม 10 แยกอิสระ)")
+    ws.cell(row=2, column=1, value=sub_title).font = sub_font
 
-    headers = [
-        ("ลำดับ", 8),
-        ("รหัสข้อเสนอ (Solution ID)", 22),
-        ("ชื่อแนวทางแก้ปัญหา (Title / Concept)", 34),
-        ("คะแนนรวม (เต็ม 100)", 18),
-        ("ผลการประเมิน (Verdict)", 28),
-        ("จุดแข็งสำคัญ (Key Strengths)", 35),
-        ("จุดติดขัดวิกฤต (Critical Bottlenecks)", 35),
-        ("คำแนะนำเชิงระบบ (Strategic Advice)", 35)
-    ]
+    if not has_sdg:
+        headers = [
+            ("ลำดับ", 8),
+            ("รหัสข้อเสนอ (Solution ID)", 22),
+            ("ชื่อแนวทางแก้ปัญหา (Title / Concept)", 34),
+            ("คะแนนรวม (เต็ม 100)", 18),
+            ("T: เทคนิค (/20)", 14),
+            ("E: เศรษฐศาสตร์ (/20)", 17),
+            ("L: กฎหมายและสถาบัน (/20)", 18),
+            ("O: ปฏิบัติการ (/20)", 16),
+            ("S: แผนงาน (/20)", 14),
+            ("ผลการประเมิน (Verdict)", 28),
+            ("จุดแข็งสำคัญ (Key Strengths)", 35),
+            ("จุดติดขัดวิกฤต (Critical Bottlenecks)", 35),
+            ("คำแนะนำเชิงระบบ (Strategic Advice)", 35),
+            ("Robotics Potential (/10)", 22),
+            ("เหตุผลความเข้ากันได้ด้านหุ่นยนต์ (Robotics Engineering Rationale)", 45)
+        ]
+        robotic_cols = (14, 15)
+        total_cols = 15
+        verdict_col = 10
+    else:
+        headers = [
+            ("ลำดับ", 8),
+            ("รหัสข้อเสนอ (Solution ID)", 22),
+            ("ชื่อแนวทางแก้ปัญหา (Title / Concept)", 34),
+            ("คะแนนรวม (เต็ม 100)", 18),
+            ("T: เทคนิค (/20)", 14),
+            ("E: เศรษฐศาสตร์ (/20)", 17),
+            ("L: กฎหมาย (/15)", 14),
+            ("O: ปฏิบัติการ (/20)", 16),
+            ("S: แผนงาน (/15)", 14),
+            ("+S: ยั่งยืน (/10)", 14),
+            ("ผลการประเมิน (Verdict)", 28),
+            ("จุดแข็งสำคัญ (Key Strengths)", 35),
+            ("จุดติดขัดวิกฤต (Critical Bottlenecks)", 35),
+            ("คำแนะนำเชิงระบบ (Strategic Advice)", 35),
+            ("Robotics Potential (/10)", 22),
+            ("เหตุผลความเข้ากันได้ด้านหุ่นยนต์ (Robotics Engineering Rationale)", 45)
+        ]
+        robotic_cols = (15, 16)
+        total_cols = 16
+        verdict_col = 11
+
+    robotic_hdr_fill = PatternFill(start_color="366092", end_color="366092", fill_type="solid")
 
     ws.row_dimensions[4].height = 28
     for col_idx, (hdr_text, col_width) in enumerate(headers, start=1):
         cell = ws.cell(row=4, column=col_idx, value=hdr_text)
         cell.font = hdr_font
-        cell.fill = hdr_fill
+        cell.fill = robotic_hdr_fill if col_idx in robotic_cols else hdr_fill
         cell.alignment = Alignment(horizontal="center", vertical="center", wrap_text=True)
         cell.border = thin_border
         col_letter = get_column_letter(col_idx)
@@ -385,38 +650,78 @@ def write_comparison_sheet(wb, solutions_info):
         c4.alignment = Alignment(horizontal="center", vertical="center")
         c4.number_format = '0.0'
 
-        c5 = ws.cell(row=r_idx, column=5, value=f"={sheet_ref}!{sol['sum_col']}12")
-        c5.alignment = Alignment(horizontal="center", vertical="center", wrap_text=True)
+        # Pillar Breakdown (T, E, L, O, S)
+        c5 = ws.cell(row=r_idx, column=5, value=f"={sheet_ref}!D17")
+        c5.alignment = Alignment(horizontal="center", vertical="center")
+        c5.number_format = '0.00'
+        c5.font = bold_data_font
+
+        c6 = ws.cell(row=r_idx, column=6, value=f"={sheet_ref}!D18")
+        c6.alignment = Alignment(horizontal="center", vertical="center")
+        c6.number_format = '0.00'
+        c6.font = bold_data_font
+
+        c7 = ws.cell(row=r_idx, column=7, value=f"={sheet_ref}!D19")
+        c7.alignment = Alignment(horizontal="center", vertical="center")
+        c7.number_format = '0.00'
+        c7.font = bold_data_font
+
+        c8 = ws.cell(row=r_idx, column=8, value=f"={sheet_ref}!D20")
+        c8.alignment = Alignment(horizontal="center", vertical="center")
+        c8.number_format = '0.00'
+        c8.font = bold_data_font
+
+        c9 = ws.cell(row=r_idx, column=9, value=f"={sheet_ref}!D21")
+        c9.alignment = Alignment(horizontal="center", vertical="center")
+        c9.number_format = '0.00'
+        c9.font = bold_data_font
+
+        if has_sdg:
+            c10 = ws.cell(row=r_idx, column=10, value=f"={sheet_ref}!D22")
+            c10.alignment = Alignment(horizontal="center", vertical="center")
+            c10.number_format = '0.00'
+            c10.font = bold_data_font
+
+        c_v = ws.cell(row=r_idx, column=verdict_col, value=f"={sheet_ref}!{sol['sum_col']}12")
+        c_v.alignment = Alignment(horizontal="center", vertical="center", wrap_text=True)
 
         if sol.get("has_fatal_flaw", False):
             c4.font = Font(name="Segoe UI", size=13, bold=True, color="9C0006")
             c4.fill = PatternFill(start_color="FFC7CE", end_color="FFC7CE", fill_type="solid")
-            c5.font = Font(name="Segoe UI", size=10, bold=True, color="9C0006")
-            c5.fill = PatternFill(start_color="FFC7CE", end_color="FFC7CE", fill_type="solid")
+            c_v.font = Font(name="Segoe UI", size=10, bold=True, color="9C0006")
+            c_v.fill = PatternFill(start_color="FFC7CE", end_color="FFC7CE", fill_type="solid")
         else:
             c4.font = score_sum_font
             c4.fill = highlight_fill
-            c5.font = bold_data_font
+            c_v.font = bold_data_font
 
-        c6 = ws.cell(row=r_idx, column=6, value=sol.get("strength", "จุดแข็งด้านซอฟต์แวร์และการใช้ฮาร์ดแวร์ COTS"))
-        c6.font = data_font
-        c6.alignment = Alignment(horizontal="left", vertical="center", wrap_text=True)
+        next_c = verdict_col + 1
+        ws.cell(row=r_idx, column=next_c, value=sol.get("strength", "-")).alignment = Alignment(horizontal="left", vertical="center", wrap_text=True)
+        ws.cell(row=r_idx, column=next_c + 1, value=sol.get("bottleneck", "-")).alignment = Alignment(horizontal="left", vertical="center", wrap_text=True)
+        ws.cell(row=r_idx, column=next_c + 2, value=sol.get("advice", "-")).alignment = Alignment(horizontal="left", vertical="center", wrap_text=True)
 
-        c7 = ws.cell(row=r_idx, column=7, value=sol.get("bottleneck", "ระเบียบปฏิบัติหน้างานและสัปดาห์สอบของมหาวิทยาลัย"))
-        c7.font = data_font
-        c7.alignment = Alignment(horizontal="left", vertical="center", wrap_text=True)
+        # เมทริกซ์ความเข้ากันได้ด้านหุ่นยนต์ (Robotics Knowledge Compatibility: แยกอิสระ เต็ม 10 คะแนน)
+        rob_score_col = next_c + 3
+        rob_rat_col = next_c + 4
 
-        c8 = ws.cell(row=r_idx, column=8, value=sol.get("advice", "ล็อกสเปกฮาร์ดแวร์ก่อนสัปดาห์ที่ 9 และทำระบบสร้างใบปิดงานดิจิทัล"))
-        c8.font = data_font
-        c8.alignment = Alignment(horizontal="left", vertical="center", wrap_text=True)
+        c_rob = ws.cell(row=r_idx, column=rob_score_col, value=float(sol.get("robotic_score", 0.0)))
+        c_rob.font = Font(name="Segoe UI", size=11, bold=True, color="002060")
+        c_rob.fill = PatternFill(start_color="DCE6F1", end_color="DCE6F1", fill_type="solid")
+        c_rob.alignment = Alignment(horizontal="center", vertical="center")
+        c_rob.number_format = '0.0'
 
-        for col_idx in range(1, 9):
+        c_rob_rat = ws.cell(row=r_idx, column=rob_rat_col, value=sol.get("robotic_rationale", "-"))
+        c_rob_rat.font = data_font
+        c_rob_rat.alignment = Alignment(horizontal="left", vertical="center", wrap_text=True)
+
+        for col_idx in range(1, total_cols + 1):
             cell = ws.cell(row=r_idx, column=col_idx)
             cell.border = thin_border
-            if col_idx not in (4, 5) and fill_to_use.fill_type:
+            if col_idx not in (4, verdict_col, rob_score_col) and fill_to_use.fill_type:
                 cell.fill = fill_to_use
-            elif col_idx == 5 and not sol.get("has_fatal_flaw", False) and fill_to_use.fill_type:
+            elif col_idx == verdict_col and not sol.get("has_fatal_flaw", False) and fill_to_use.fill_type:
                 cell.fill = fill_to_use
+
 
 
 # ==============================================================================
@@ -480,7 +785,11 @@ def compile_excel_from_eval_data(solutions_eval_data, output_dir="feasibility-ou
 
         assessment_data = sol.get("assessment_data", [])
         concept = sol.get("concept", sheet_title)
-        sum_col = write_solution_sheet(wb, sheet_title, assessment_data, solution_name=concept)
+        robotic_info = sol.get("robotic_compatibility", {})
+        robotic_score = robotic_info.get("score", 0.0)
+        robotic_rationale = robotic_info.get("fibo_alignment_rationale", "-")
+
+        sum_col = write_solution_sheet(wb, sheet_title, assessment_data, solution_name=concept, robotic_data=robotic_info)
         if not sum_col:
             continue
 
@@ -497,10 +806,18 @@ def compile_excel_from_eval_data(solutions_eval_data, output_dir="feasibility-ou
             "has_fatal_flaw": has_fatal,
             "strength": sol.get("strength", "-"),
             "bottleneck": sol.get("bottleneck", "-"),
-            "advice": sol.get("advice", "-")
+            "advice": sol.get("advice", "-"),
+            "robotic_score": robotic_score,
+            "robotic_rationale": robotic_rationale
         })
 
-    write_comparison_sheet(wb, solutions_summary_info)
+    has_sdg_any = any(
+        any(any(k in str(it.get("pillar", "")).lower() for k in ["sdg", "ยั่งยืน", "สิ่งแวดล้อม"])
+            for it in sol.get("assessment_data", []))
+        for sol in solutions_eval_data
+    )
+
+    write_comparison_sheet(wb, solutions_summary_info, has_sdg=has_sdg_any)
 
     if default_sheet in wb.worksheets and len(wb.worksheets) > 1:
         wb.remove(default_sheet)

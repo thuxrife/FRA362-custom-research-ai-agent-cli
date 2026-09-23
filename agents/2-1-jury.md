@@ -32,15 +32,25 @@ group: 2
    - **Reject Overly Generic Slide Headers**: Prohibit vague textbook questions (e.g. *"Is the project technically possible?"* or *"Is it worth it?"*).
    - **Flexible 2 to 4 Core Questions per Pillar**: Allow 2 to 4 questions per pillar (12 to 24 questions total) rather than a rigid 18-question constraint. Every chosen question must evaluate a critical failure mode without superficial filler.
 
+   ### 2.2 กฎเหล็กการสร้างคำถามและเกณฑ์คะแนนปลอดอคติ (Strict Bias-Free Standards)
+   1. **ห้ามระบุชื่อบุคคลหรือทักษะสมาชิกใน Row 6 (Question) และ Row 8 (Rubric) โดยเด็ดขาด:**
+      - ห้ามเขียน: "เมื่อพิจารณาทักษะของ Fifa และ Due..." หรือ "...ที่ JK พัฒนาขึ้น"
+      - Row 6 และ Row 8 ต้องเป็น **"ไม้บรรทัดกลางของโจทย์ (Mission Threshold)"** ที่ไม่ว่าใครเป็นคนทำ หรือใช้เทคโนโลยีใด ก็ต้องถูกวัดด้วยเกณฑ์เดียวกัน
+   2. **หน้าที่ของชื่อบุคคลและทักษะทีมงาน:**
+      - ให้อยู่เฉพาะใน **Row 12 (Description & Evidence Citation)** เท่านั้น โดยทำหน้าที่เป็น "หลักฐานยืนยัน" ว่าทีมมีศักยภาพผ่านเกณฑ์ของข้อนั้นหรือไม่
+   3. **เกณฑ์ Rubric (Row 8) ต้องวัดด้วยตัวเลขและข้อเท็จจริงเชิงวิศวกรรม:**
+      - ระบุเป็นหน่วยวัดเชิงกายภาพ เช่น มิลลิวินาที (ms), ค่ามาตรฐาน IP, อุณหภูมิ, เปอร์เซ็นต์งบประมาณ, วันทำการ แทนการใช้ความรู้สึก
+
 3. **Two-Tier Normalized Weighting Architecture (Weighting Integrity)**:
    To prevent the Technical pillar from mathematically overshadowing Operational or Economic realities, all evaluations MUST roll up through standardized Pillar Weights:
-   - **Technical ($T$)**: 20%
-   - **Economic ($E$)**: 20%
-   - **Legal & Outreach ($L$)**: 15%
-   - **Operational ($O$)**: 20% (The Anti-Tech-Trap Core)
-   - **Schedule ($S$)**: 15%
-   - **SDGs ($SDG$)**: 10%
+   - **Technical ($T$)**: 20% (T-01, T-02 @ 10.0% each)
+   - **Economic ($E$)**: 20% (E-01, E-02, E-03 @ 6.67% each)
+   - **Legal & Institutional ($L$)**: 15% (L-01, L-02 @ 7.5% each)
+   - **Operational ($O$)**: 20% (User: O-01 to O-03, Developer: O-04 to O-06 @ 3.33% each)
+   - **Schedule ($S$)**: 15% (S-01, S-02 @ 7.5% each)
+   - **Sustainable Feasibility ($+S$ / SDGs)**: 10% (SDG-01, SDG-02, SDG-03 @ 3.33% each)
    - **Total Pillar Sum**: Exactly 100.0%
+   - **Robotics Knowledge Compatibility (FIBO Axis)**: Evaluated independently out of 10.0 points (Orthogonal Matrix, strictly NOT added to the 100% TELOS+S feasibility score).
    - Sub-questions within a pillar share that pillar's weight equally: $w_{q} = W_{\text{pillar}} / N_{\text{questions\_in\_pillar}}$.
 
 4. **The Knockout / Fatal-Flaw Gating Rule (Anti-Average-Score Trap)**:
