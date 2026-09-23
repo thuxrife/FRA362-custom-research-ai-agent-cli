@@ -42,17 +42,17 @@ def get_canonical_pillar(pillar_str):
     รองรับทั้งภาษาไทย ภาษาอังกฤษ และรูปแบบข้อความที่ไม่สม่ำเสมอ
     """
     p = str(pillar_str).lower()
-    if any(k in p for k in ["tech", "เทคนิค"]):
+    if any(k in p for k in ["tech", "เทคนิค", "เทคโน"]):
         return ("T", 0.20)
-    elif any(k in p for k in ["econ", "เศรษฐ"]):
+    elif any(k in p for k in ["econ", "เศรษฐ", "การเงิน", "ต้นทุน"]):
         return ("E", 0.20)
-    elif any(k in p for k in ["legal", "กฎหมาย"]):
+    elif any(k in p for k in ["legal", "กฎหมาย", "ระเบียบ", "outreach"]):
         return ("L", 0.15)
-    elif any(k in p for k in ["operat", "ปฏิบัติการ"]):
+    elif any(k in p for k in ["operat", "ปฏิบัติการ", "หน้างาน", "ผู้ใช้"]):
         return ("O", 0.20)
-    elif any(k in p for k in ["sched", "เวลา", "กำหนด"]):
+    elif any(k in p for k in ["sched", "เวลา", "กำหนด", "แผนงาน"]):
         return ("S", 0.15)
-    elif any(k in p for k in ["sdg", "ยั่งยืน"]):
+    elif any(k in p for k in ["sdg", "ยั่งยืน", "สิ่งแวดล้อม"]):
         return ("SDG", 0.10)
     return ("OTHER", 1.0 / 6.0)
 
@@ -62,6 +62,10 @@ def get_canonical_pillar(pillar_str):
 # ==============================================================================
 
 def write_solution_sheet(wb, sheet_title, assessment_data, solution_name="Solution"):
+    if not assessment_data:
+        print(f"[แจ้งเตือน] {sheet_title} ไม่มีข้อมูล assessment_data ข้ามการสร้าง Sheet")
+        return None
+
     ws = wb.create_sheet(title=sheet_title)
     ws.views.sheetView[0].showGridLines = True
 
@@ -126,7 +130,7 @@ def write_solution_sheet(wb, sheet_title, assessment_data, solution_name="Soluti
     for idx, item in enumerate(assessment_data):
         col = start_col + idx
         col_letter = get_column_letter(col)
-        ws.column_dimensions[col_letter].width = 30
+        ws.column_dimensions[col_letter].width = 36
 
         # Row 4: รหัส
         c4 = ws.cell(row=4, column=col, value=item.get("id", f"Q-{idx+1:02d}"))
@@ -219,7 +223,7 @@ def write_solution_sheet(wb, sheet_title, assessment_data, solution_name="Soluti
     # คอลัมน์สรุปภาพรวม (Summary Column)
     summary_col_idx = start_col + len(assessment_data)
     sum_letter = get_column_letter(summary_col_idx)
-    ws.column_dimensions[sum_letter].width = 30
+    ws.column_dimensions[sum_letter].width = 36
 
     first_col = get_column_letter(start_col)
     last_col = get_column_letter(summary_col_idx - 1)
@@ -298,13 +302,13 @@ def write_solution_sheet(wb, sheet_title, assessment_data, solution_name="Soluti
 
     ws.row_dimensions[4].height = 24
     ws.row_dimensions[5].height = 24
-    ws.row_dimensions[6].height = 75
+    ws.row_dimensions[6].height = 80
     ws.row_dimensions[7].height = 95
-    ws.row_dimensions[8].height = 110
+    ws.row_dimensions[8].height = 150
     ws.row_dimensions[9].height = 36
     ws.row_dimensions[10].height = 22
     ws.row_dimensions[11].height = 24
-    ws.row_dimensions[12].height = 95
+    ws.row_dimensions[12].height = 115
     ws.row_dimensions[13].height = 70
 
     return sum_letter
@@ -477,6 +481,8 @@ def compile_excel_from_eval_data(solutions_eval_data, output_dir="feasibility-ou
         assessment_data = sol.get("assessment_data", [])
         concept = sol.get("concept", sheet_title)
         sum_col = write_solution_sheet(wb, sheet_title, assessment_data, solution_name=concept)
+        if not sum_col:
+            continue
 
         has_fatal = any(
             (isinstance(it.get("score"), (int, float)) and int(round(it["score"])) == 1)

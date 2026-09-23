@@ -60,7 +60,7 @@ summarize-outcome/
 ```
 
 ### C. Root Execution Tool
-- **`feasibility-analysis.py`**: Automated Python script at the root directory that ingests the 3 intake folders, executes the TELOS+S stress-test, and compiles the transposed horizontal Excel matrix directly into `feasibility-outcome/{month}-{date}-{year}-{time}.xlsx`.
+- **`feasibility-analysis.py`**: Automated Python script at the root directory that ingests the 3 intake folders, executes the TELOS+S stress-test, and compiles the transposed horizontal Excel matrix directly into `feasibility-outcome/{month}-{date}-{year}-{time}_{seq}.xlsx`.
 
 ---
 
@@ -152,7 +152,7 @@ The matrix is transposed horizontally so that **headers and scores align paralle
   - **Row 13**: `De-scoping & Risk Mitigation Action`
 - **Columns B, C, D, ...**: Diagnostic questions arranged sequentially (2 to 4 questions per pillar).
 - **Summary Column (Far Right Column)**:
-  - **Row 9**: Total Aggregated Score (`=SUM(B11:...11)*20`)
+  - **Row 9**: Total Aggregated Score (`=IF(Col10>0, (Col11/Col10)*20, 0)`)
   - **Row 10**: Total Weight Sum (`=SUM(B10:...10) = 100.0%`)
   - **Row 12**: Automated Verdict with **Knockout Gating Logic**:
     `=IF(MIN(B9:...9)=1, "VETOED / ตกเกณฑ์ข้อบังคับวิกฤต (คะแนนระดับ 1)", IF(Col9>=80, "ผ่านเกณฑ์ระดับสูง (HIGHLY VIABLE)", IF(Col9>=60, "ผ่านแบบมีเงื่อนไข (CONDITIONALLY VIABLE)", "ความเสี่ยงสูง (HIGH RISK)"))`
@@ -169,3 +169,69 @@ The matrix is transposed horizontally so that **headers and scores align paralle
 2. **Token Optimization via 17 Modular Files (`sdg-rulebook/goals/`)**:
    - `sdg-rulebook/goals/` contains 17 separate files (`goal-01.md` to `goal-17.md`).
    - Consultor `(2-7-sdgs-expert)` references `sdg-rulebook/goals/README.md` and loads only the 1–3 relevant Goals for the topic, keeping token usage efficient (~1,500–2,500 tokens).
+
+---
+
+## 7. The Intake Standardization Templates (Garbage-In, Garbage-Out Guard)
+
+To enforce the **Zero "Common Sense" / Strict Evidence Rule**, users and teammates must structure their intake files using these standardized Markdown templates:
+
+### A. Template for `solution-details/solution-{n}.md`
+```markdown
+# Solution Proposal: [Solution Name]
+
+## 1. Subsystem Architecture
+- **Mechanics / Fabrication**: [e.g. 3D printed PETG enclosure, CNC aluminum bracket, off-the-shelf IP68 box]
+- **Electronics & Sensors**: [e.g. Ultrasonic sensor, STM32G474RE, 12V-to-5V buck converter, SIM7600 4G module]
+- **Software & Protocol**: [e.g. FreeRTOS, MQTT over TLS, REST API endpoint, 10 Hz sampling rate]
+
+## 2. Operating Environment & Physical Constraints
+- **Target Deployment Site**: [e.g. Roadside drainage manhole, open canal embankment]
+- **Power Source & Autonomy**: [e.g. 18650 Li-ion pack, solar trickle charge, grid tie]
+- **Maintenance Model**: [e.g. Routine monthly cleaning, swap-and-replace modular packs]
+```
+
+### B. Template for `team-skills/{name}.md`
+```markdown
+# Teammate Profile: [Name]
+
+## 1. Verified Technical Competence (Past Evidence)
+- **Mechanical**: [e.g. Level 3: Proficient in SolidWorks, operated Bambu Lab A1; no CNC lathe experience]
+- **Electronics**: [e.g. Level 2: Breadboard wiring, basic soldering; zero custom PCB routing experience]
+- **Programming**: [e.g. Level 4: Built multi-threaded C++ ROS 2 nodes, FreeRTOS task queues]
+
+## 2. External Outreach & Institutional Willingness
+- **Government / Agency Outreach**: [e.g. Level 1: Unwilling/uncomfortable contacting municipal officers; or Level 3: Active connection with BMA drainage division through faculty advisor]
+```
+
+### C. Template for `schedule-details/schedule.md`
+```markdown
+# Project Schedule & Milestone Deadlines
+
+## 1. Hard Target Deadlines
+- **TRL 2 (Model / Analytical)**: Week 9 (Date: [YYYY-MM-DD])
+- **TRL 3 (Bench PoC)**: Week 13 (Date: [YYYY-MM-DD])
+- **TRL 4 (Lab Breadboard Demonstration)**: Week 16 (Date: [YYYY-MM-DD])
+
+## 2. External Schedule Collisions & Blackouts
+- **University Midterm Exams**: Weeks 10+1 and 10+2 (Zero development hours)
+- **University Final Exams**: Weeks 15+1 and 15+2 (Zero development hours)
+- **Component Procurement Lead Time**: 15–25 business days for international shipping
+```
+
+---
+
+## 8. Architectural Protocols to Formalize
+
+### A. The "Closed-Loop Re-Audit" Protocol (Handling VETOED Solutions)
+When a candidate solution receives a score of `1` (Fatal Flaw) on any diagnostic question:
+1. It is automatically flagged as **`VETOED / NON-VIABLE PENDING DE-SCOPING`** by the dynamic Excel formula.
+2. Row 13 of that question formulates an actionable **De-scoping & Risk Mitigation Plan** (e.g. replacing a custom PCB with a COTS controller shield, or adding an edge-anonymization node for PDPA).
+3. The engineering team revises the architecture according to Row 13 and saves it as `solution-details/solution-1_v2.md`.
+4. The Jury re-evaluates via `/feasibility`.
+5. `feasibility-analysis.py` compiles a new workbook containing both the original baseline (`Solution-1`, displaying the initial VETO) and the revised iteration (`Solution-1_v2`, displaying the unblocked viable score $\ge 3$), providing a transparent audit trail of risk reduction.
+
+### B. The Group 1 to Group 2 Bridge
+Group 1 (Dialectical Research Team) and Group 2 (TELOS+S Consulting Team) connect seamlessly:
+* When a project tackles an ambiguous, high-uncertainty engineering problem (e.g. urban flood hydraulics, sensor fouling, or wireless attenuation), **Group 1 executes first**.
+* The resulting research synthesis ([`summarize-outcome/<session>/summary.md`](summarize-outcome/)) feeds directly into `solution-details/` as peer-reviewed, evidence-backed technical foundation for Group 2 feasibility stress-testing.

@@ -36,7 +36,7 @@ flowchart TD
     NT --> D1[("📁 note-taker-log/")]
     R --> D2[("📁 research-outcome/")]
     S & J --> D3[("📁 summarize-outcome/")]
-    J --> D4[("📁 feasibility-outcome/<br>{month}-{date}-{year}-{time}.xlsx")]
+    J --> D4[("📁 feasibility-outcome/<br>{month}-{date}-{year}-{time}_{seq}.xlsx")]
     T --> D5[("📁 teammate-persona/<br>team_skills.md")]
 ```
 
@@ -83,6 +83,7 @@ Compiled automatically via `feasibility-analysis.py` (Zero hardcoded questions i
 - **Transposed Horizontal Inspection**: Attributes are arranged in rows (ID, Pillar, Question, Rationale, Rubric, Score, Weight, Weighted Score, Evidence, De-scoping Action) while questions are aligned horizontally across columns.
 - **Dedicated Score Inspection Row**: Row 9 displays all scores parallel horizontally across the sheet.
 - **Strict Discrete Integer Scoring**: All scores are whole integers chosen strictly from **`{1, 2, 3, 4, 5}`** (zero decimals, no 0.5).
+- **Dynamic Normalized Total Score**: Row 9 computes `=IF(Col10>0, (Col11/Col10)*20, 0)` to dynamically normalize against the actual sum of weights, preventing score depression if total weights sum to $< 1.0$.
 - **Evidence-Based Citations**: Explicitly references specific sections of intake files.
 - **Deduplication Sequence Numbering**: Automatically appends `_0`, `_1`, `_2` if generated multiple times within the same minute without overwriting.
 
