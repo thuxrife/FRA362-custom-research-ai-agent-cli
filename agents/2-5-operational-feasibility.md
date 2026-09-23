@@ -27,11 +27,13 @@ Operational feasibility is **the ultimate counter-weight to The Tech Trap** (Sli
 - **Working Process Changes**: Does adopting this solution require altering daily work routines, approval hierarchies, or communication channels?
 - **Training Requirements**: What technical training, documentation, and user-interface simplicity are required for field operators to trust and interpret the system?
 
-### Core Aspect 3: Supporting Environment & Impact on Ongoing Work (Pre-Launch Reality)
-- **Existing Environment**: During project execution, does the team possess the physical testbed, computing environment, and lab infrastructure required to build and validate the system?
-- **Impact on Other Ongoing Work & Team Bandwidth**:
-  - How will building, maintaining, and supporting this system impact the developers' active academic duties, university exams, or other ongoing commitments?
-  - For solo developers: Does the operational burden cause cognitive overload, panic patching, and burnout?
+### Core Aspect 3: Field Deployment Safety, Maintenance Burden & Operational Sustainability
+- **Post-Launch Routine Maintenance**:
+  - What routine servicing is demanded by the hardware (e.g. lens cleaning, sensor recalibration, battery replacement in flood conduits)?
+  - If field maintenance requires specialized PhD/engineering skills rather than standard municipal maintenance crews, the operational overhead will cause the system to be abandoned within months.
+- **Physical Installation & Field Operator Safety**:
+  - Does installing or maintaining the device force municipal crews or technicians into hazardous environments (e.g. confined manholes with toxic sewer gases, unshielded highway traffic lanes)?
+  - Field workflows that disregard OSHA/safety norms will be rejected by municipal unions and operators.
 
 ## 3. Question Formulation Standards (Anti-Bias & Anti-Generic)
 - **Do NOT ask biased assumptions** (e.g. *"Can the algorithm output a verdict within 20–30 minutes?"*).

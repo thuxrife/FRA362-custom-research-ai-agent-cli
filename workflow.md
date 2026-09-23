@@ -81,19 +81,36 @@ No feasibility aspect exists in a silo. **All aspects affect the others**:
 - **Schedule** collisions with university exams constrain available engineering time, demanding radical hardware de-scoping.
 
 ### 4. Critical Context-Specific Stress-Test Questions (Anti-Bias & Anti-Generic)
-- **Zero Solution Bias**: The Jury strictly rejects leading questions tailored to flatter the proposed technology (e.g., asking *"Can Python calculate in 500ms?"* is forbidden).
+- **Standardized Problem-Space Question Anchoring (Fair Multi-Solution Baseline)**:
+  - When comparing alternative solutions (`solution-1.md` vs. `solution-2.md`), the **Diagnostic Question Codes and Core Prompts (Row 6) MUST remain standardized across all solutions** (anchored to the common problem space, operating environment, and system requirements).
+  - Only the **Evidence Citations (Row 12)**, **Rubric Benchmarks (Row 8)**, and **Assigned Scores (Row 9)** adapt to each specific solution architecture. This eliminates question asymmetry and guarantees true Apple-to-Apple comparability.
+- **Zero Solution Bias**: The Jury strictly rejects leading questions tailored to flatter the proposed technology.
 - **Zero Generic Textbook Headers**: Questions must not be vague slide headers (e.g., *"Is the project technically possible?"* is forbidden).
-- **The True Sweet Spot**: Questions must be **sharp, context-specific engineering stress-tests** that probe:
-  1. *Real Constraints*: Citing specific conditions from the intake files (e.g. municipal photo evidence mandates, solo developer, 4 exam weeks).
-  2. *Failure Modes*: Testing whether the project survives real-world human, mechanical, or regulatory bottlenecks.
-  3. *Cross-Aspect Consequences*: Explicitly auditing how decisions in one pillar constrain the others.
+- **Flexible 2 to 4 Core Questions per Pillar**: Each pillar contains 2 to 4 questions (12 to 24 questions total) rather than an arbitrary rigid 18-question template, ensuring every question probes a real failure mode without filler.
 
-### 5. Strict Discrete Integer Scoring ({1, 2, 3, 4, 5} ONLY — Zero Decimals / No 0.5)
+### 5. Two-Tier Normalized Weighting Architecture (Weighting Integrity)
+To prevent the Technical aspect from mathematically overshadowing Operational or Economic realities (preventing "The Tech Trap" under the hood), all evaluations roll up through fixed Pillar Weights:
+$$\text{Total Score} = \sum (\text{Pillar Weight} \times \text{Pillar Average Score}) \times 20$$
+- **Technical ($T$)**: 20%
+- **Economic ($E$)**: 20%
+- **Legal & Outreach ($L$)**: 15%
+- **Operational ($O$)**: 20% (The Anti-Tech-Trap Core)
+- **Schedule ($S$)**: 15%
+- **SDGs ($SDG$)**: 10%
+- **Total Pillar Sum**: Exactly 100.0%
+- Sub-questions within a pillar share that pillar's weight equally: $w_{q} = W_{\text{pillar}} / N_{\text{questions\_in\_pillar}}$.
+
+### 6. The Knockout / Fatal-Flaw Gating Rule (Anti-Average-Score Trap)
+Feasibility is fundamentally a series of **non-negotiable gates**, not merely an arithmetic average:
+- If **ANY question** in ANY pillar receives an evidence-backed score of **`1`** (Fatal Failure / Non-Viable / Direct Law Violation / Hazard to Life), the solution is immediately flagged as:
+  **`VETOED / NON-VIABLE PENDING DE-SCOPING (ตกเกณฑ์ข้อบังคับวิกฤต / ยุติโครงการชั่วคราว)`**
+- High scores in other pillars CANNOT mathematically mask a fatal flaw. The solution remains Dead on Arrival (DOA) until the flaw is mitigated via formal de-scoping.
+
+### 7. Strict Discrete Integer Scoring ({1, 2, 3, 4, 5} ONLY — Zero Decimals / No 0.5)
 - All assigned diagnostic scores MUST be discrete whole integers strictly chosen from **`{1, 2, 3, 4, 5}`**.
 - **No 0.5 or fractional decimals under any circumstances**: An aspect either satisfies the rubric criteria for an integer level or it does not. Evaluators must make decisive judgments based on evidence.
-- The only numbers containing decimals in the entire system are calculated weighted products (`Score * Weight`) and the final total aggregated score.
 
-### 6. The 4-Level Contextual Learning & Outreach Scale
+### 8. The 4-Level Contextual Learning & Outreach Scale
 Evaluates human capability based on the **Contextual Gap** between past project evidence and required complexity:
 * **Level 1 (Critical Deficit / High Barrier)**: Zero foundation; insurmountable learning curve; or team is unwilling/blocked from government or external facility outreach.
 * **Level 2 (Foundational / Steep Learning Curve)**: Basic theoretical knowledge; no production hardware experience; willingness exists but lacks warm institutional contacts.
@@ -106,7 +123,7 @@ Evaluates human capability based on the **Contextual Gap** between past project 
 
 | ID | Agent Name | Strict Tag Prefix | Destination Folder | Core Consulting Mission & Focus |
 | :--- | :--- | :--- | :--- | :--- |
-| **2.1** | **The Jury** | `(2-1-jury)` | `feasibility-outcome/` | **Chief Judge, Solo Architect & Anti-Tech-Trap Gatekeeper**: Operates in dual modes: can audit all 6 TELOS+S pillars alone in 1 single step, or orchestrate specialists 2.2–2.7. Ingests the 3 intake folders, eliminates biased questions, enforces integer scoring `{1-5}`, and compiles `{month}-{date}-{year}-{time}_{seq}.xlsx`. |
+| **2.1** | **The Jury** | `(2-1-jury)` | `feasibility-outcome/` | **Chief Judge, Solo Architect & Anti-Tech-Trap Gatekeeper**: Operates in dual modes: can audit all 6 TELOS+S pillars alone in 1 single step, or orchestrate specialists 2.2–2.7. Ingests the 3 intake folders, eliminates biased questions, enforces integer scoring `{1-5}`, two-tier weighting, knockout gating, and compiles `{month}-{date}-{year}-{time}_{seq}.xlsx`. |
 | **2.2** | **Tech Feasibility** | `(2-2-tech-feasibility)` | `teammate-persona/` | **Man & Machine Auditor**: Audits real tool access, fabrication skills (Mech/Elec/Prog), and the time/cost overhead that technology choices extract from the project. Flags Pioneer Novelty Risks. |
 | **2.3** | **Economic Feasibility** | `(2-3-economic-feasibility)` | N/A | **Cost-Benefit & Financial Reality Analyst**: Evaluates funding reality, budget ceilings, scrap/iteration allowances, and true worth compared to the Zero-Action baseline (doing nothing / manual labor). |
 | **2.4** | **Legal & Outreach Feasibility** | `(2-4-legal-feasibility)` | N/A | **Institutional & Policy Gatekeeper**: Audits statutory law (PDPA, NBTC), municipal liabilities, IP infringements, and the team's verified capability to conduct in-person government agency liaisons. |
@@ -116,25 +133,29 @@ Evaluates human capability based on the **Contextual Gap** between past project 
 
 ---
 
-## 5. Transposed Horizontal Excel Matrix Specification (`{month}-{date}-{year}-{time}.xlsx`)
+## 5. Transposed Horizontal Excel Matrix Specification (`{month}-{date}-{year}-{time}_{seq}.xlsx`)
 
-Generated automatically via `openpyxl` directly inside `feasibility-outcome/{month}-{date}-{year}-{time}.xlsx`.
+Generated automatically via `openpyxl` directly inside `feasibility-outcome/{month}-{date}-{year}-{time}_{seq}.xlsx`.
 
 ### Layout Structure:
 The matrix is transposed horizontally so that **headers and scores align parallel across columns**, allowing immediate horizontal comparison:
 - **Column A**: Attribute Row Headers
   - **Row 4**: `Question Code` (e.g. T-01, E-01, O-01)
   - **Row 5**: `Pillar / Dimension` (Technical, Economic, Legal/Outreach, Operational, Schedule, SDGs)
-  - **Row 6**: `Diagnostic Question` (Critical, Context-Specific Stress-Test Question)
+  - **Row 6**: `Diagnostic Question (Standardized Problem-Space Prompt)`
   - **Row 7**: `Question Rationale (Why Asked & Failure Mode Guarded Against)`
-  - **Row 8**: `Scoring Rubric Definition (Objective 1 vs. 5 Standards)`
+  - **Row 8**: `Scoring Rubric Definition (Explicitly defines all 5 levels: 1, 2, 3, 4, 5 — ระบุเงื่อนไขครบทุกระดับ)`
   - **Row 9**: `ASSIGNED SCORE (1, 2, 3, 4, 5 STRICT INTEGER)` <--- Prominent horizontal inspection row
-  - **Row 10**: `Weight (%)`
+  - **Row 10**: `Normalized Weight (% derived from Two-Tier Pillar Allocation)`
   - **Row 11**: `Weighted Score (=Score * Weight)`
   - **Row 12**: `Description & Evidence Citation (The 'Why' / Exact citations from intake files)`
   - **Row 13**: `De-scoping & Risk Mitigation Action`
-- **Columns B through S**: Individual diagnostic questions arranged sequentially.
-- **Far Right Column**: Total Summary Column computing total weighted score, weight sum, and automated viability verdict (>=80 Highly Viable, >=60 Conditionally Viable, <60 High Risk).
+- **Columns B, C, D, ...**: Diagnostic questions arranged sequentially (2 to 4 questions per pillar).
+- **Summary Column (Far Right Column)**:
+  - **Row 9**: Total Aggregated Score (`=SUM(B11:...11)*20`)
+  - **Row 10**: Total Weight Sum (`=SUM(B10:...10) = 100.0%`)
+  - **Row 12**: Automated Verdict with **Knockout Gating Logic**:
+    `=IF(MIN(B9:...9)=1, "VETOED / ตกเกณฑ์ข้อบังคับวิกฤต (คะแนนระดับ 1)", IF(Col9>=80, "ผ่านเกณฑ์ระดับสูง (HIGHLY VIABLE)", IF(Col9>=60, "ผ่านแบบมีเงื่อนไข (CONDITIONALLY VIABLE)", "ความเสี่ยงสูง (HIGH RISK)"))`
 
 ---
 

@@ -23,11 +23,11 @@ Schedule feasibility is not simply drawing a Gantt chart. It is an honest, skept
   - Week 16: **TRL 4** (Controlled laboratory environment component/breadboard verification).
 - Probe whether the current development velocity realistically allows achieving these formal standards, or if progress is an illusion of incomplete sketches.
 
-### Core Aspect 2: Potential Scheduling Conflicts & Blackouts
-- Identify non-negotiable **external schedule collisions**:
-  - *Academic Exam Fortnights*: University exams (Weeks 10+1, 10+2, 15+1, 15+2) wipe out 4 entire weeks where zero engineering progress can occur.
-  - *Procurement Lead Times*: International component shipments (AliExpress, JLCPCB, customs clearance) take 10–25 days. If a critical component arrives late or defective, how does it impact the critical path?
-  - *Single Point of Failure (SPOF)*: For solo developers, illness or academic crunch completely halts project velocity.
+### Core Aspect 2: Potential Scheduling Conflicts, Blackouts & Developer Bandwidth
+- Consolidate all non-negotiable **developer bandwidth bottlenecks, external collisions, and lead times**:
+  - *Academic Exam Fortnights & Bandwidth Squeeze*: University exams (Weeks 10+1, 10+2, 15+1, 15+2) wipe out 4 entire weeks where zero engineering progress can occur. Ongoing coursework competing for developer hours must be audited strictly here.
+  - *Single Point of Failure (SPOF) & Solo Burnout*: For solo developers, illness, exam crunch, or panic patching completely halts project velocity and threatens delivery.
+  - *Procurement Lead Times & Fabrication Queues*: International component shipments (AliExpress, JLCPCB, customs clearance) take 10–25 days. University Machine Shop access queues and tool booking deficits directly consume the schedule.
 
 ### Core Aspect 3: Deadline Guarantee Conditions & Buffers
 - What explicit guarantee conditions ensure the deadline is met?

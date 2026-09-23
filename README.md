@@ -52,13 +52,13 @@ flowchart TD
 - `(1-5-summarizer)`: Final engineering synthesis into HTML & Markdown in `summarize-outcome/` featuring a mandatory Quantitative Engineering Comparative Data Table.
 
 ### Group 2: TELOS+S Feasibility Consulting Team (Systems-Thinking Robotics Audit)
-- `(2-1-jury)`: **Chief Judge & Anti-Tech-Trap Gatekeeper**: Enforces the core curriculum concept from LN5 (beware focusing only on technology; all aspects interconnect). Eliminates solution-biased and overly generic questions, enforces strict discrete integer scoring `{1, 2, 3, 4, 5}`, and orchestrates `feasibility-analysis.py` to compile `{month}-{date}-{year}-{time}.xlsx`.
-- `(2-2-tech-feasibility)`: **Man & Machine Auditor**: Audits real tool access, fabrication skills (Mech/Elec/Prog), and the time/cost overhead that technology choices extract from the project. Flags Pioneer Novelty Risks.
-- `(2-3-economic-feasibility)`: **Cost-Benefit & Financial Reality Analyst**: Evaluates funding reality, budget ceilings, scrap/iteration allowances, and true worth compared to the Zero-Action baseline (doing nothing / manual labor).
-- `(2-4-legal-feasibility)`: **Institutional & Policy Gatekeeper**: Audits statutory law (PDPA, NBTC), municipal liabilities, IP infringements, and the team's verified capability to conduct in-person government agency liaisons.
-- `(2-5-operational-feasibility)`: **The "Will It Actually Be Used?" Stress-Tester**: Audits dispatcher adoption, procedural resistance (e.g. Traffy Fondue photo evidence rules), workflow disruption, training burdens, and developer burnout.
-- `(2-6-schedule-feasibility)`: **Conflict & Deadline Realist**: Audits milestone delivery realism against formal TRL levels (TRL2, TRL3, TRL4), stress-testing against university exam blackouts and procurement lead times.
-- `(2-7-sdgs-expert)`: **Systemic Sustainability Consultant**: Evaluates multi-layer Stockholm Wedding Cake impact (Biosphere, Society, Economy), UN SDG indicators, and Do-No-Harm safeguards (preventing e-waste and vulnerability shifts).
+- `(2-1-jury)`: **Chief Judge & Anti-Tech-Trap Gatekeeper**: Enforces the core curriculum concept from LN5 (beware focusing only on technology; all aspects interconnect). Eliminates solution-biased and overly generic questions, enforces **Standardized Problem-Space Question Anchoring** across solutions, enforces **Two-Tier Normalized Weighting** ($T=20\%, E=20\%, L=15\%, O=20\%, S=15\%, SDG=10\%$), enforces **The Knockout / Fatal-Flaw Gating Rule** (`MIN=1 -> VETOED`), and outputs `feasibility-outcome/jury_eval_data.json` or orchestrates `feasibility-analysis.py` to compile `{month}-{date}-{year}-{time}_{seq}.xlsx`.
+- `(2-2-tech-feasibility)`: **Man & Machine Auditor (Weight 20%)**: Audits real tool access, fabrication skills (Mech/Elec/Prog), and the time/cost overhead that technology choices extract from the project. Flags Pioneer Novelty Risks.
+- `(2-3-economic-feasibility)`: **Cost-Benefit & Financial Reality Analyst (Weight 20%)**: Evaluates funding reality, budget ceilings, scrap/iteration allowances, and true worth compared to the Zero-Action baseline (doing nothing / manual labor).
+- `(2-4-legal-feasibility)`: **Institutional & Policy Gatekeeper (Weight 15%)**: Audits statutory law (PDPA, NBTC), municipal liabilities, IP infringements, and the team's verified capability to conduct in-person government agency liaisons.
+- `(2-5-operational-feasibility)`: **The "Will It Actually Be Used?" Stress-Tester (Weight 20%)**: Audits dispatcher adoption, procedural resistance (e.g. Traffy Fondue photo evidence rules), workflow disruption, training burdens, and developer burnout.
+- `(2-6-schedule-feasibility)`: **Conflict & Deadline Realist (Weight 15%)**: Audits milestone delivery realism against formal TRL levels (TRL2, TRL3, TRL4), stress-testing against university exam blackouts and procurement lead times.
+- `(2-7-sdgs-expert)`: **Systemic Sustainability Consultant (Weight 10%)**: Evaluates multi-layer Stockholm Wedding Cake impact (Biosphere, Society, Economy), UN SDG indicators, and Do-No-Harm safeguards (preventing e-waste and vulnerability shifts).
 
 ---
 
@@ -72,15 +72,19 @@ Feasibility analysis is executed against three evidence-backed intake folders:
 
 ---
 
-## 📊 Transposed Horizontal Excel Matrix (`{month}-{date}-{year}-{time}.xlsx`)
+## 📊 Transposed Horizontal Excel Matrix (`{month}-{date}-{year}-{time}_{seq}.xlsx`)
 
-Compiled automatically via `feasibility-analysis.py` directly into `feasibility-outcome/{month}-{date}-{year}-{time}.xlsx` (e.g. `9-22-2026-2349.xlsx`):
-- **Transposed Horizontal Inspection**: Attributes are arranged in rows (ID, Pillar, Question, Rationale, Rubric, Score, Weight, Evidence, De-scoping Action) while diagnostic questions are aligned across columns.
+Compiled automatically via `feasibility-analysis.py` (Zero hardcoded questions in Python) directly into `feasibility-outcome/{month}-{date}-{year}-{time}_{seq}.xlsx` (e.g. `9-23-2026-1229_0.xlsx`):
+- **Executive Comparison Tab (Sheet 1)**: Compares all evaluated solutions side-by-side with overall scores, verdicts, key strengths, critical bottlenecks, and strategic advisories.
+- **Dedicated Solution Tabs (Sheets 2+)**: 1 sheet per solution formatted as a Transposed Horizontal Matrix.
+- **Standardized Problem-Space Question Anchoring**: All alternative solutions are tested against the exact same diagnostic question codes and core prompts (Row 6), ensuring true apple-to-apple comparison.
+- **Two-Tier Normalized Weighting**: Pillar weights are fixed ($T=20\%, E=20\%, L=15\%, O=20\%, S=15\%, SDG=10\%$), and questions within a pillar divide its weight equally so Technical cannot mathematically overshadow Operational realities.
+- **The Knockout / Fatal-Flaw Gating Rule**: If any question receives a score of `1`, the entire solution is flagged as `VETOED / NON-VIABLE PENDING DE-SCOPING (ตกเกณฑ์ข้อบังคับวิกฤต / ยุติโครงการชั่วคราว)`—high scores in other pillars cannot mask fatal flaws.
+- **Transposed Horizontal Inspection**: Attributes are arranged in rows (ID, Pillar, Question, Rationale, Rubric, Score, Weight, Weighted Score, Evidence, De-scoping Action) while questions are aligned horizontally across columns.
 - **Dedicated Score Inspection Row**: Row 9 displays all scores parallel horizontally across the sheet.
 - **Strict Discrete Integer Scoring**: All scores are whole integers chosen strictly from **`{1, 2, 3, 4, 5}`** (zero decimals, no 0.5).
-- **Critical Context-Specific Questions**: Eliminates solution bias and generic textbook questions. Every question probes a real constraint and failure mode.
 - **Evidence-Based Citations**: Explicitly references specific sections of intake files.
-- **Actionable De-scoping Advisories**: Proposes concrete engineering remedies whenever a score $< 4$.
+- **Deduplication Sequence Numbering**: Automatically appends `_0`, `_1`, `_2` if generated multiple times within the same minute without overwriting.
 
 ---
 

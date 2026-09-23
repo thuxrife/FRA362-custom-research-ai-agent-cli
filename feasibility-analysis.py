@@ -33,6 +33,31 @@ if sys.stderr and hasattr(sys.stderr, 'reconfigure'):
 
 
 # ==============================================================================
+# Helper: Canonical Pillar Normalization & Weighting
+# ==============================================================================
+
+def get_canonical_pillar(pillar_str):
+    """
+    จัดกลุ่มข้อความมิติการประเมินให้เป็น Canonical Key และค่าน้ำหนักมาตรฐาน (Two-Tier Model)
+    รองรับทั้งภาษาไทย ภาษาอังกฤษ และรูปแบบข้อความที่ไม่สม่ำเสมอ
+    """
+    p = str(pillar_str).lower()
+    if any(k in p for k in ["tech", "เทคนิค"]):
+        return ("T", 0.20)
+    elif any(k in p for k in ["econ", "เศรษฐ"]):
+        return ("E", 0.20)
+    elif any(k in p for k in ["legal", "กฎหมาย"]):
+        return ("L", 0.15)
+    elif any(k in p for k in ["operat", "ปฏิบัติการ"]):
+        return ("O", 0.20)
+    elif any(k in p for k in ["sched", "เวลา", "กำหนด"]):
+        return ("S", 0.15)
+    elif any(k in p for k in ["sdg", "ยั่งยืน"]):
+        return ("SDG", 0.10)
+    return ("OTHER", 1.0 / 6.0)
+
+
+# ==============================================================================
 # 1. ฟังก์ชันจัดรูปแบบและเขียนแผ่นงานสำหรับแต่ละ Solution (Transposed Horizontal Matrix)
 # ==============================================================================
 
@@ -73,7 +98,7 @@ def write_solution_sheet(wb, sheet_title, assessment_data, solution_name="Soluti
         (5, "มิติการประเมิน (TELOS+S Pillar)", attr_header_font, attr_fill),
         (6, "คำถามทดสอบความเสี่ยงจริง (Stress-Test Question)", attr_header_font, attr_fill),
         (7, "เหตุผลในการถาม & โหมดความล้มเหลวที่เฝ้าระวัง (Rationale)", attr_header_font, attr_fill),
-        (8, "เกณฑ์การให้คะแนน (Scoring Rubric Definition: 1 vs. 5)", attr_header_font, attr_fill),
+        (8, "เกณฑ์การให้คะแนน (Scoring Rubric Definition: ระดับ 1, 2, 3, 4, 5 ครบทุกระดับ)", attr_header_font, attr_fill),
         (9, "คะแนนที่ได้รับ (ASSIGNED SCORE: 1, 2, 3, 4, 5 STRICT INTEGER)", Font(name="Segoe UI", size=10, bold=True, color="FFFFFF"), score_hdr_fill),
         (10, "ค่าน้ำหนัก (Weight %)", attr_header_font, attr_fill),
         (11, "คะแนนถ่วงน้ำหนัก (=Score * Weight)", attr_header_font, attr_fill),
@@ -89,6 +114,12 @@ def write_solution_sheet(wb, sheet_title, assessment_data, solution_name="Soluti
         cell.border = thin_border
 
     ws.column_dimensions['A'].width = 38
+
+    # นับจำนวนคำถามต่อมิติแบบ Canonical เพื่อใช้ใน Two-Tier Normalized Weighting Fallback
+    pillar_counts = {}
+    for it in assessment_data:
+        c_key, _ = get_canonical_pillar(it.get("pillar", ""))
+        pillar_counts[c_key] = pillar_counts.get(c_key, 0) + 1
 
     # เติมข้อมูลคำถามจาก AI Agents ลงในแนวคอลัมน์ (Columns B, C, D, ...)
     start_col = 2
@@ -143,8 +174,23 @@ def write_solution_sheet(wb, sheet_title, assessment_data, solution_name="Soluti
         c9.number_format = '0'
         c9.border = thin_border
 
-        # Row 10: น้ำหนัก
-        weight_val = float(item.get("weight", 1.0 / len(assessment_data)))
+        # Row 10: น้ำหนัก (Two-Tier Normalized Weighting Architecture)
+        weight_val = None
+        if "weight" in item and item["weight"] is not None:
+            try:
+                raw_w = str(item["weight"]).replace('%', '').strip()
+                parsed_w = float(raw_w)
+                if parsed_w > 1.0:
+                    parsed_w = parsed_w / 100.0  # แปลง 20 หรือ 6.67 ให้เป็น 0.20 หรือ 0.0667
+                weight_val = parsed_w
+            except (ValueError, TypeError):
+                weight_val = None
+
+        if weight_val is None:
+            c_key, p_wt = get_canonical_pillar(item.get("pillar", ""))
+            p_count = max(1, pillar_counts.get(c_key, 1))
+            weight_val = p_wt / p_count
+
         c10 = ws.cell(row=10, column=col, value=weight_val)
         c10.font = bold_font
         c10.alignment = Alignment(horizontal="center", vertical="center")
@@ -197,14 +243,25 @@ def write_solution_sheet(wb, sheet_title, assessment_data, solution_name="Soluti
     ws.cell(row=7, column=summary_col_idx).alignment = Alignment(wrap_text=True)
     ws.cell(row=7, column=summary_col_idx).border = thin_border
 
-    ws.cell(row=8, column=summary_col_idx, value="เกณฑ์รวม: >=80 ผ่านสูง, >=60 มีเงื่อนไข, <60 เสี่ยงสูง").font = regular_font
+    ws.cell(row=8, column=summary_col_idx, value="เกณฑ์รวม: >=80 ผ่านสูง, >=60 มีเงื่อนไข, <60 เสี่ยงสูง | หากมีข้อใดได้ 1 = VETOED ตกเกณฑ์ทันที").font = regular_font
     ws.cell(row=8, column=summary_col_idx).alignment = Alignment(wrap_text=True)
     ws.cell(row=8, column=summary_col_idx).border = thin_border
 
-    # คะแนนรวมเต็ม 100
-    c_tot_score = ws.cell(row=9, column=summary_col_idx, value=f"=SUM({first_col}11:{last_col}11)*20")
-    c_tot_score.font = Font(name="Segoe UI", size=16, bold=True, color="006100")
-    c_tot_score.fill = highlight_fill
+    # ตรวจสอบว่ามีคำถามใดได้คะแนน 1 หรือไม่ (Knockout / Fatal-Flaw Detection)
+    has_fatal_flaw = any(
+        (isinstance(it.get("score"), (int, float)) and int(round(it["score"])) == 1)
+        or str(it.get("score", "")).strip() == "1"
+        for it in assessment_data
+    )
+
+    # คะแนนรวมเต็ม 100 คำนวณแบบ Normalized กับผลรวมค่าน้ำหนักจริง (Dynamic Normalization)
+    c_tot_score = ws.cell(row=9, column=summary_col_idx, value=f'=IF({sum_letter}10>0, ({sum_letter}11/{sum_letter}10)*20, 0)')
+    if has_fatal_flaw:
+        c_tot_score.font = Font(name="Segoe UI", size=16, bold=True, color="9C0006")
+        c_tot_score.fill = PatternFill(start_color="FFC7CE", end_color="FFC7CE", fill_type="solid")
+    else:
+        c_tot_score.font = Font(name="Segoe UI", size=16, bold=True, color="006100")
+        c_tot_score.fill = highlight_fill
     c_tot_score.number_format = '0.0'
     c_tot_score.alignment = Alignment(horizontal="center", vertical="center")
     c_tot_score.border = thin_border
@@ -223,11 +280,16 @@ def write_solution_sheet(wb, sheet_title, assessment_data, solution_name="Soluti
     c_tot_weighted.alignment = Alignment(horizontal="center", vertical="center")
     c_tot_weighted.border = thin_border
 
-    # คำตัดสิน Verdict
-    verdict_c = ws.cell(row=12, column=summary_col_idx, value=f'=IF({sum_letter}9>=80, "ผ่านเกณฑ์ระดับสูง (HIGHLY VIABLE)", IF({sum_letter}9>=60, "ผ่านแบบมีเงื่อนไข (CONDITIONALLY VIABLE)", "ความเสี่ยงสูง (HIGH RISK)"))')
-    verdict_c.font = verdict_font
-    verdict_c.alignment = Alignment(horizontal="center", vertical="center")
-    verdict_c.fill = highlight_fill
+    # คำตัดสิน Verdict ตามกฎ Knockout / Fatal-Flaw Gating Rule
+    # หาก MIN ของคะแนน = 1 ให้ขึ้น VETOED ตกเกณฑ์ข้อบังคับวิกฤตทันที
+    verdict_c = ws.cell(row=12, column=summary_col_idx, value=f'=IF(MIN({first_col}9:{last_col}9)=1, "VETOED / ตกเกณฑ์ข้อบังคับวิกฤต (คะแนนระดับ 1)", IF({sum_letter}9>=80, "ผ่านเกณฑ์ระดับสูง (HIGHLY VIABLE)", IF({sum_letter}9>=60, "ผ่านแบบมีเงื่อนไข (CONDITIONALLY VIABLE)", "ความเสี่ยงสูง (HIGH RISK)")))')
+    if has_fatal_flaw:
+        verdict_c.font = Font(name="Segoe UI", size=11, bold=True, color="9C0006")
+        verdict_c.fill = PatternFill(start_color="FFC7CE", end_color="FFC7CE", fill_type="solid")
+    else:
+        verdict_c.font = verdict_font
+        verdict_c.fill = highlight_fill
+    verdict_c.alignment = Alignment(horizontal="center", vertical="center", wrap_text=True)
     verdict_c.border = thin_border
 
     ws.cell(row=13, column=summary_col_idx, value="ปฏิบัติตามแผนลดขอบเขตงาน (De-scoping Advisory)").font = bold_font
@@ -237,8 +299,8 @@ def write_solution_sheet(wb, sheet_title, assessment_data, solution_name="Soluti
     ws.row_dimensions[4].height = 24
     ws.row_dimensions[5].height = 24
     ws.row_dimensions[6].height = 75
-    ws.row_dimensions[7].height = 75
-    ws.row_dimensions[8].height = 75
+    ws.row_dimensions[7].height = 95
+    ws.row_dimensions[8].height = 110
     ws.row_dimensions[9].height = 36
     ws.row_dimensions[10].height = 22
     ws.row_dimensions[11].height = 24
@@ -313,16 +375,24 @@ def write_comparison_sheet(wb, solutions_info):
         c3.font = data_font
         c3.alignment = Alignment(horizontal="left", vertical="center", wrap_text=True)
 
-        sheet_ref = f"'{sol['sheet_title']}'"
+        safe_sheet_name = sol['sheet_title'].replace("'", "''")
+        sheet_ref = f"'{safe_sheet_name}'"
         c4 = ws.cell(row=r_idx, column=4, value=f"={sheet_ref}!{sol['sum_col']}9")
-        c4.font = score_sum_font
-        c4.fill = highlight_fill
         c4.alignment = Alignment(horizontal="center", vertical="center")
         c4.number_format = '0.0'
 
         c5 = ws.cell(row=r_idx, column=5, value=f"={sheet_ref}!{sol['sum_col']}12")
-        c5.font = bold_data_font
         c5.alignment = Alignment(horizontal="center", vertical="center", wrap_text=True)
+
+        if sol.get("has_fatal_flaw", False):
+            c4.font = Font(name="Segoe UI", size=13, bold=True, color="9C0006")
+            c4.fill = PatternFill(start_color="FFC7CE", end_color="FFC7CE", fill_type="solid")
+            c5.font = Font(name="Segoe UI", size=10, bold=True, color="9C0006")
+            c5.fill = PatternFill(start_color="FFC7CE", end_color="FFC7CE", fill_type="solid")
+        else:
+            c4.font = score_sum_font
+            c4.fill = highlight_fill
+            c5.font = bold_data_font
 
         c6 = ws.cell(row=r_idx, column=6, value=sol.get("strength", "จุดแข็งด้านซอฟต์แวร์และการใช้ฮาร์ดแวร์ COTS"))
         c6.font = data_font
@@ -339,7 +409,9 @@ def write_comparison_sheet(wb, solutions_info):
         for col_idx in range(1, 9):
             cell = ws.cell(row=r_idx, column=col_idx)
             cell.border = thin_border
-            if col_idx != 4 and fill_to_use.fill_type:
+            if col_idx not in (4, 5) and fill_to_use.fill_type:
+                cell.fill = fill_to_use
+            elif col_idx == 5 and not sol.get("has_fatal_flaw", False) and fill_to_use.fill_type:
                 cell.fill = fill_to_use
 
 
@@ -348,7 +420,24 @@ def write_comparison_sheet(wb, solutions_info):
 # ==============================================================================
 
 def compile_excel_from_eval_data(solutions_eval_data, output_dir="feasibility-outcome", custom_filename=None):
+    import re
     os.makedirs(output_dir, exist_ok=True)
+
+    # ป้องกันข้อผิดพลาด Gap 1: กรณี LLM ห่อ List ด้วย Dictionary เช่น {"solutions": [...]}
+    if isinstance(solutions_eval_data, dict):
+        for candidate_key in ["solutions", "data", "evaluations", "results", "proposals"]:
+            if candidate_key in solutions_eval_data and isinstance(solutions_eval_data[candidate_key], list):
+                solutions_eval_data = solutions_eval_data[candidate_key]
+                break
+        else:
+            for val in solutions_eval_data.values():
+                if isinstance(val, list):
+                    solutions_eval_data = val
+                    break
+
+    if not isinstance(solutions_eval_data, list):
+        print("[ข้อผิดพลาด] รูปแบบข้อมูลการประเมินต้องเป็น List ของ Solutions!")
+        return
 
     if not custom_filename:
         now = datetime.now()
@@ -369,17 +458,37 @@ def compile_excel_from_eval_data(solutions_eval_data, output_dir="feasibility-ou
     default_sheet = wb.active
 
     solutions_summary_info = []
+    used_titles = set()
 
-    for sol in solutions_eval_data:
-        sheet_title = sol["sheet_title"][:28]
+    for idx, sol in enumerate(solutions_eval_data, start=1):
+        # ป้องกันข้อผิดพลาด Gap 3: ตัดอักขระต้องห้ามของ Excel \ / ? * : [ ] และป้องกันชื่อซ้ำ
+        raw_title = str(sol.get("sheet_title", f"Solution-{idx}"))
+        safe_title = re.sub(r'[\\/*?:\[\]]', '_', raw_title).strip()
+        safe_title = safe_title[:28] if safe_title else f"Solution-{idx}"
+
+        unique_title = safe_title
+        dup_counter = 1
+        while unique_title in used_titles or unique_title in wb.sheetnames:
+            unique_title = f"{safe_title[:25]}_{dup_counter}"
+            dup_counter += 1
+        used_titles.add(unique_title)
+        sheet_title = unique_title
+
         assessment_data = sol.get("assessment_data", [])
         concept = sol.get("concept", sheet_title)
         sum_col = write_solution_sheet(wb, sheet_title, assessment_data, solution_name=concept)
+
+        has_fatal = any(
+            (isinstance(it.get("score"), (int, float)) and int(round(it["score"])) == 1)
+            or str(it.get("score", "")).strip() == "1"
+            for it in assessment_data
+        )
 
         solutions_summary_info.append({
             "sheet_title": sheet_title,
             "concept": concept,
             "sum_col": sum_col,
+            "has_fatal_flaw": has_fatal,
             "strength": sol.get("strength", "-"),
             "bottleneck": sol.get("bottleneck", "-"),
             "advice": sol.get("advice", "-")
