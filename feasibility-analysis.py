@@ -785,7 +785,7 @@ def compile_excel_from_eval_data(solutions_eval_data, output_dir="feasibility-ou
 
         assessment_data = sol.get("assessment_data", [])
         concept = sol.get("concept", sheet_title)
-        robotic_info = sol.get("robotic_compatibility", {})
+        robotic_info = sol.get("robotic_compatibility") or sol.get("robotic_data") or {}
         robotic_score = robotic_info.get("score", 0.0)
         robotic_rationale = robotic_info.get("fibo_alignment_rationale", "-")
 

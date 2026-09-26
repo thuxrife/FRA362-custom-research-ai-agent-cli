@@ -1,47 +1,49 @@
-# Solution 1: Real-Time Recession Rate (dh/dt) Predictive Filtering for QRT Dispatch (Ann Arbor Case Adaptation)
-> **อ้างอิงกรณีศึกษา**: เคส 2 Ann Arbor, Michigan - Open-source Dynamic Water Network Control
+# **Solution 1:** 
 
----
+# CCTV on the road (Visual water flow) \+ ultrasonic to measure the flow rate of the canal \+ alarm
 
-## 1. Context ปัญหา
-เมื่อเกิดน้ำท่วมขัง ประชาชนจะส่งปัญหาไปยังระบบแนว ๆ Traffy Fondue ซึ่ง ในหลาย ๆ เคสเกิดจาก **ปัญหาที่หายเองได้** (เช่น น้ำท่วมขังรอระบาย แล้วเจ้าหน้าที่ไปลงหน้างานแล้วน้ำไม่ท่วมขังแล้ว ก็กลายเป็นเสียเวลาและทรัพยากร) ซึ่งปัญหานี้จะเกิดภายใน Situations ของ Quick Response Unit (QRT) ไม่เกี่ยวข้องกับประเด็นอื่น ๆ
+พยายามใช้ local sensor ที่มีก่อน
 
----
+**Leverage point fit**
 
-## 2. Leverage Point ที่ต้องการจะปรับ (Anticipated ผลกระทบอะไรที่จะเกิดขึ้น)
-**Filter ปัญหาที่หายเองได้ ออกจากปัญหาที่หายเองไม่ได้** ด้วยการทำให้ การสะสมของ False Flags หรือ False Alarm หายไป ด้วยการ Delayed การสะสมของ Empty Case
+- QRT  
+- Maintenance Queue
 
----
+# **Function**
 
-## 3. Requirements
+- ดู flow น้ำบนถนนด้วย CCTV ภายในช่วงที่มีแสง  
+- ดู ระดับความสูงน้ำบนคลอง ( มีอยู๋แล้วแต่ต้องดึงข้อมูลมา )  
+- สามารถวิเคราะห์ได้ว่าตรงไหนท่วม เพราะฝนตกหนัก หรือ เพราะท่อตัน  
+- เก็บ data เพื่อนำมาวิเคราะห์จัดคิวลอกท่อ  
+- เก็บ sample น้ำท่วม  5 นาที และดูว่าน้ำท่วมหรือไม่ เพื่อ ให้เจ้าหน้าที่สwามารถ response ได้ และสามารถเก็บ
 
-### a. การทำนายการลดลงของระดับน้ำ (Recession Rate Indicator)
-- ระบบต้องสามารถคำนวณอัตราการลดลงของระดับน้ำผิวดิน ($dh/dt$) ได้แบบเรียลไทม์ โดยเทียบระหว่าง ปริมาณน้ำฝนที่เหลืออยู่ กับ อัตราการระบายจริงของท่อ
-- หากคำนวณแล้วพบว่า เวลาที่น้ำจะลดจนแห้ง $< \text{เวลาเดินทางเฉลี่ยของ QRT หน้างาน}$ (เช่น 20–30 นาที) ระบบต้องจัดสถานะเคสนั้นเป็น **"Transient / Self-Clearing"** และสั่งระงับการปล่อยรถทันที หรือ Filter ออกไปเลย
+# **Operation flow**
 
-### b. ข้อมูลเกี่ยวกับระบบระบายน้ำในคลอง
-- ต้องรู้ว่ามีขยะอุดตันที่คลองมั้ย ประกอบการทำงาน
-- ต้องมีเซนเซอร์วัดระดับน้ำและวัดความเร็วการไหล เพื่อยืนยันว่าท่อระบายน้ำยังมีอัตราการไหลอยู่
+- Input :  
+  - flow การไหลของน้ำ ในคลอง (Flow Rate Meter at Canal)  
+  - ภาพวิดีโอจาก CCTV  
+  - ความสูงของน้ำในคลอง (ultrasonic)  
+- Process :   
+  - from CCTV optical Flow   
+  -  วิเคราะห์ flow rate ของน้ำในคลองจาก ultrasonic sensors ที่มีอยู่แล้ว   
+  - เก็บข้อมูล sample นาน  5 นาที  
+  - วิเคราะห์ว่าท่วม เพราะอะไร  
+    -  (1) ฝนตกหนักน้ำระบายไม่ทัน  
+    -  (2) ท่อตันไม่มี flow ที่ท่อน้ำเล็ก น้ำเลยระบายลงคลองไม่ได้  
+- Output : แจ้ง alert เข้าหน่วยงานที่เกี่ยวข้อง
 
-### c. Automated Dispatch Filtering Layer
-- กลไกคัดกรอง Empty Case ออกจากระบบศูนย์สั่งการ
-- ต้องการ Input ข้อมูลจากหลากหลาย sources (เช่น CCTV, Local Water Level Sensors, ฝนเรดาร์)
 
----
+**Tech stack**
 
-## 4. Constraints
+- Particle Tracking Velocimetry ( For CCTV flow rate)  
+- Particle Image Velocimetry (CCTV)  
+- Optical Flow (CCTV)  
+- Data of each canal and every sewer attached with each canal.
 
-### a. ข้อจำกัดทางกายภาพ
-- ฝนตกซ้ำ 2 รอบติดกัน เพราะคาดเดาไม่ได้
-- เซนเซอร์อาจจะประเมินค่าผิดพลาด คลาดเคลื่อนจากความเป็นจริงมาก ๆ จนทำให้คำตัดสิน (Verdict) ผิด
+**Strong point**
 
-### b. ข้อจำกัดเชิงกระบวนการ
-- ทุกขั้นตอนการดำเนินงานต้องมี Evidences ส่งคืนกลับให้ประชาชน กลายเป็นว่าจะเกิดการบังคับให้เจ้าหน้าที่ไปลงหน้างานเพื่อยืนยันสถานการณ์อีกที
-- **Dispatch Lag**: ระบบราชการปัจจุบันมีขั้นตอนที่เยอะและใช้เวลานาน หาก Filter System ทำงานช้า หรือให้ข้อมูลอย่างไม่ถูกต้อง ก็จะทำให้การประเมินการใช้ทรัพยากรผิดพลาดได้
+- ถ้าทำได้จะสามารถรู้ได้ว่าแต่ละท่อท่วมเพราะอะไร ตรงไหนเป็นปัญหา
 
----
+**Weak point**
 
-## 5. Study Case & Innovation Mapping
-- **เคส 1 PUB Singapore (CWOS)**: ทำงานแบบ 2-Factor Authentication (แยกเป็น Solution 2)
-- **เคส 2 Ann Arbor, Michigan**: ใช้ Prediction Model ผ่าน Recession Rate ($dh/dt$) ของท่อระบายน้ำและบ่อพักน้ำ เพื่อแยกว่าน้ำท่วมขังเกิดจากการระบายไม่ทัน หรือเกิดจากการอุดตันถาวร เอาไว้แยก False Alarm ออกจากระบบ (แกนหลักของ Solution 1 นี้)
-- **เคส 3 Acoustic Pre-Screening (UK, USA)**: เก็บข้อมูลผ่าน Acoustic Sensors ทำ Cleanliness Mapping 3 กลุ่ม (0-3 Action, 4-6 Queue, 7-10 Clean) เฉพาะสำหรับงาน Maintenance วางแผนลอกท่อล่วงหน้า (แยกเป็น Solution 3)
+- บางท่ออยู่นอกขอบเขตของ CCTV

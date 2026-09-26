@@ -1,0 +1,165 @@
+### Technology Feasibility
+
+#### Implementation (Build vs. Buy Burden)
+
+* **1 — Build from Scratch:** 100% custom R&D required (custom mechanism, bare-metal schematics, custom algorithm derivation); no reference designs or libraries exist.
+* **2 — Heavy Customization:** Core components exist, but requires extensive custom adaptation, structural machining, and custom wrapper code.
+* **3 — Hybrid / COTS Integration:** Standard off-the-shelf breakout boards and modules assembled with custom brackets, intermediate wiring, and glue code.
+* **4 — Modular COTS Assembly:** Pre-engineered building blocks with standard mounting and standard communication buses (e.g., DIN-rail modules, I2C/CAN shields); minimal custom fabrication.
+* **5 — Buy and Use (COTS):** Buy and deploy directly out of the box (Plug-and-Play); zero mechanical or electrical fabrication required.
+
+#### Access (Tech Stack & Ecosystem Permissions)
+
+* **1 — Strictly Restricted:** Proprietary stack under NDA, locked enterprise firewalls, or unavailable developer licenses.
+* **2 — Limited Access:** Closed binary blobs or third-party proprietary firmware; black-box operation with zero telemetry or source code.
+* **3 — Request-Based Access:** Educational/evaluation tier with strict rate limits or quotas; requires formal request or approval delays.
+* **4 — Open Developer Access:** Free public SDKs, full documentation, and open developer APIs, but core low-level architecture cannot be modified.
+* **5 — Full-Stack Access:** Fully open source (permissive license) and open hardware; team has root/admin rights to inspect, modify, and deploy as both user and developer.
+
+#### Base Performance (Technology Readiness Level - TRL)
+
+* **1 — Proof of Concept (TRL 2–3):** Bench breadboard, simulation, or pure mathematical model; verified only in controlled laboratory conditions.
+* **2 — Functional Breadboard (TRL 4):** Integrated components working together in a lab; fragile wiring, uncalibrated for harsh field environments.
+* **3 — Alpha Prototype (TRL 5–6):** Enclosed prototype tested in a relevant simulated environment; operational, but requires human supervision.
+* **4 — Beta / Field-Proven (TRL 7):** Pre-production hardware operating reliably in the actual operating environment under real-world stress.
+* **5 — Commercial Product (TRL 8–9):** Fully certified, production-grade commercial product with documented MTBF and mass field reliability.
+
+#### Team Compatibility (Manpower & Skill Redundancy)
+
+* **1 — Single Point of Failure (SPOF):** Only 1 person has the required skill; if they are unavailable, subsystem development halts 100%.
+* **2 — Solo Lead with Minimal Backup:** 1 core developer; 1 teammate understands basic concepts but cannot debug code or fix hardware alone.
+* **3 — Primary + Secondary Pair:** 1 primary lead and 1 competent secondary backup who can maintain, troubleshoot, and push updates.
+* **4 — Broad Competence:** 3+ teammates can actively design, assemble, and debug the subsystem with minimal ramp-up time.
+* **5 — Full Team Redundancy:** All team members are fully proficient; tasks can be swapped across anyone with zero friction or velocity loss.
+
+#### Learning Curve ("How much do we have to learn?")
+
+* **1 — Total Reset:** Every step requires learning completely unfamiliar tools, languages, and hardware from scratch with zero prior baseline.
+* **2 — Steep Learning Curve:** High theoretical understanding, but zero hands-on experience; debugging basic syntax or wiring stalls progress.
+* **3 — Moderate Ramp-up:** Proven adjacent mastery (e.g., Arduino/ESP32 moving to STM32, or SolidWorks to Fusion 360); manageable 1-week curve.
+* **4 — Minor Adaptation:** Familiar tech stack; only requires learning a specific minor library, sensor API, or configuration syntax.
+* **5 — Zero Learning Curve:** Team can deploy verified past code, existing toolchains, and established muscle memory directly; no new learning required.
+
+---
+
+### Economic Feasibility
+
+#### ROI (Payback Period / Value Horizon)
+
+* **1 — Long Payback ($\ge 10\text{ Years}$):** High initial CapEx with minimal recurring savings; economically non-viable for rapid deployment.
+* **2 — Slow Return ($6–9\text{ Years}$):** Substantial capital investment with a long break-even horizon; requires long-term subsidization.
+* **3 — Moderate Return ($3–5\text{ Years}$):** Reasonable public infrastructure payback; offsets costs across multi-year operational cycles.
+* **4 — Fast Return ($2–3\text{ Years}$):** Strong operational cost reduction (fuel, labor, scrap); breaks even within normal equipment lifecycle.
+* **5 — Immediate Payback ($\le 1–2\text{ Years}$):** Rapid break-even; eliminates major recurring operational losses within the first operating season.
+
+#### Dependency of Component (Vendor Lock-in & Reliability)
+
+* **1 — Total Vendor Lock-in:** 100% dependent on proprietary cloud backend, encrypted telemetry, and single-source proprietary connectors.
+* **2 — High Dependency:** Hardware requires vendor-licensed diagnostic tools or annual subscription fees to maintain operation.
+* **3 — Semi-Independent:** Core hardware relies on proprietary firmware, but allows open API export and standard electrical interfaces.
+* **4 — High Autonomy:** Uses standard open communication protocols (Modbus, MQTT, CAN); parts can be serviced using generic tools.
+* **5 — Complete Independence:** 100% open architecture; hardware is interchangeable with generic substitutes; self-serviceable by any engineer.
+
+#### Scrap Margin (Safety Allowance for Blown ICs & Iterations)
+
+* **1 — Zero Buffer (0%):** Exactly 1x BOM purchased; any fried chip, cracked bracket, or wiring mistake halts the project.
+* **2 — Fragile Buffer (20–30%):** Spares only for passive components (resistors, connectors); no backup microcontrollers or expensive sensors.
+* **3 — Moderate Buffer (50%):** Spares for all critical passive parts and 1 spare for the primary controller board.
+* **4 — High Buffer (80%):** Spares for nearly every active component and sensor; can sustain multiple prototype burn-ins.
+* **5 — Full Redundancy ($\ge 100\%$):** Complete 2x BOM budget on hand; can build two complete working units simultaneously.
+
+---
+
+### Legal Feasibility
+
+#### Felony and Civil Law (Regulatory, Traffic & Public Safety Compliance)
+
+* **1 — Severe Violation / No Privilege:** Direct breach of statutory law (e.g., unconsented public surveillance/PDPA, hazardous road blockage, illegal RF transmission).
+* **2 — High Legal Exposure:** Ambiguous legal zone; high risk of civic complaints or traffic disruption; requires complex technical waivers.
+* **3 — Conditional / Requires Permit:** Permitted strictly under formal written approval, official agency MoU, or municipal permits.
+* **4 — Low Legal Friction:** Operates within standard public engineering exemptions; simple standard notification/safety compliance needed.
+* **5 — 100% Free Domain:** Fully exempt from statutory licensing; zero public safety risk, zero personal data (Zero PII), fully unrestricted.
+
+#### IP and Licensing
+
+* **1 — Closed Commercial Barrier:** Proprietary commercial license; cannot compile, flash, or operate without paying expensive commercial seat licenses.
+* **2 — Ambiguous / Gray IP:** Unclear licensing terms or unlicensed public repos; risk of copyright strike or IP dispute upon public demonstration.
+* **3 — Restrictive Open Source (Copyleft):** Permitted for educational use, but viral licenses (e.g., GPLv3) force your entire codebase to be made public if distributed.
+* **4 — Permissive Open Source:** Open source with minimal conditions (e.g., LGPL, CC-BY); allows proprietary wrapping with simple attribution.
+* **5 — Completely Permissive / Public Domain:** Permissive open source (MIT, Apache 2.0, BSD) or Public Domain; unrestricted freedom to commercialize, modify, and contribute.
+
+---
+
+### Operational Feasibility
+
+#### User — Failure Impact ("If it fails, how severe is the effect?")
+
+* **1 — Life-Threatening:** Failure causes electrocution, fire, traffic collisions, toxic chemical exposure, or structural collapse.
+* **2 — Severe Physical Hazard:** Equipment destroys itself, causes acute environmental contamination, or halts major emergency infrastructure.
+* **3 — Chaotic Response from User:** Panic, operational deadlock, conflicting manual dispatches, and severe operational confusion.
+* **4 — Minor Operational Delay:** System trips safely; requires a manual reboot or standard fallback procedure; no safety risk or chaos.
+* **5 — Benign Budget Loss Only:** Failure causes zero human or operational harm; results only in minor, easily absorbed component/battery replacement costs.
+
+#### User — Behavior & Problem-Solution Fit
+
+* **1 — Disruptive Overhaul:** Forces operators to abandon existing standard procedures, adds 5+ extra tedious forms, and faces active user rejection.
+* **2 — High Friction:** Adds notable extra documentation or redundant verification steps; operators will actively look for ways to bypass it.
+* **3 — Moderate Adaptation:** Modifies daily routines slightly; requires 1–2 training sessions, but delivers clear operational trade-offs.
+* **4 — Low Friction:** Integrates directly into existing tools (e.g., sends alerts to existing LINE/Telegram or ticketing dashboard); minimal habit changes.
+* **5 — Smooth Transient Operation:** Zero workflow disruption; runs transparently in the background and automates existing manual paperwork seamlessly.
+
+#### Developer — Contribution Dependency (Administrative & Lab Gatekeeping)
+
+* **1 — Heavy Gatekeeping:** Blocked by supervisor approvals, locked lab cabinets, NDA signatures, purchasing bureaucracy, and restricted git branches.
+* **2 — Moderate Bureaucracy:** Requires departmental request forms, tool booking queues, and waiting 3–5 days for administrative sign-offs.
+* **3 — Standard Campus Access:** Workable access during university open hours; minor approval delays for specialized equipment or lab keys.
+* **4 — High Autonomy:** Team has full repository write access, open 24/7 lab entry, and pre-approved discretionary stipends for rapid purchases.
+* **5 — Frictionless Contribution:** Complete autonomy; decentralized cloud CI/CD, local prototyping tools at home/bench, zero administrative blockers.
+
+#### Developer — Complexity (Step Count & Pipeline Friction)
+
+* **1 — Highly Convoluted:** Dozens of fragile build steps, complex toolchain dependencies, and high probability of human error during setup.
+* **2 — High Complexity:** Multi-stage manual toolchains; frequent dependency conflicts and difficult multi-board flashing procedures.
+* **3 — Moderate Complexity:** Standard multi-step build/assembly pipeline; manageable and repeatable when following a documented checklist.
+* **4 — Low Complexity:** Straightforward workflow using automated build scripts, standard IDEs, or single-command flashing.
+* **5 — Simple & Direct:** Plug-and-play, 1-step linear workflow; idiot-proof setup requiring zero multi-stage manual configuration.
+
+---
+
+### Schedule Feasibility
+
+#### Production Time (Engineering Design Maturity by 5 Business Weeks)
+
+* **1 — Concept Only (0% Design):** Napkin sketches and verbal ideas; 0% CAD models, 0% schematics, 0% firmware written.
+* **2 — Rough Drafts (25% Design):** Preliminary block diagrams, hand-drawn schematics, unverified parts list, rough 3D bounding boxes.
+* **3 — Intermediate Maturity (50% Design):** Complete CAD assembly (untested clearances), schematic capture complete, draft firmware architecture mapped.
+* **4 — Pre-Production (75–80% Design):** Detailed 3D CAD ready for 3D print/CNC, routed PCB Gerber files verified with DRC, pinouts locked down.
+* **5 — Fully Engineered Design (100% Production Ready):** Complete manufacturing package: verified Gerbers, mechanical tolerance drawings, locked BOM, and flashing scripts ready.
+
+---
+
+### SDGs Feasibility (TELOS+S Master Criteria)
+
+#### SDG-01: Public Impact vs. Academic Greenwashing (SDG 11.5 / 13.1)
+
+* **1 — Pure Buzzword / Greenwashing:** Claims sustainability benefits with zero data, zero measurable effect, and solves no real municipal problem.
+* **2 — Superficial Correlation:** Indirect impact; functions only as an isolated school demo with no realistic way to measure damage prevention.
+* **3 — Localized Proof:** Delivers a measurable, verified benefit (e.g., cuts response time or drops localized temperature on a single test strip), but lacks a scaling model.
+* **4 — District-Level Viability:** Clear pathway to protect municipal infrastructure or reduce public losses across multiple roads/alleys during extreme weather.
+* **5 — Systemic City Resilience:** Backed by concrete empirical data showing significant reduction in public economic losses, vehicle damage, or human hazard.
+
+#### SDG-02: Environmental Footprint & E-Waste ("Do No Harm" — SDG 6.3 / 12.4)
+
+* **1 — Toxic Field Hazard:** Enclosure degrades under UV, or unsealed batteries leak toxic chemicals and detach into the urban drainage network as marine litter.
+* **2 — Fragile Disposable Tech:** Short operational lifespan; sensors foul or corrode within 2–3 weeks and are abandoned because retrieval is impractical.
+* **3 — Standard Field Footprint:** Requires periodic battery replacement and creates standard electronic scrap, but uses basic tethering to prevent total hardware loss.
+* **4 — Low-Impact Enclosure:** Solar-trickle or long-life low-power architecture; uses recyclable casing and redundant physical tethers (e.g., dual stainless lanyards).
+* **5 — Fully Circular & Zero Footprint:** 100% fail-safe retrieval design; uses non-toxic materials, consumes minimal public resources, and leaves zero field trace.
+
+#### SDG-03: Algorithmic Equity & Decision Transparency (SDG 10.2 / 16.6)
+
+* **1 — Opaque Black Box:** Proprietary or unexplained threshold that cancels dispatches or alters public services with zero explanation, risking neglect of vulnerable areas.
+* **2 — Ambiguous Logic:** Decision rules are buried in messy heuristic code; field operators cannot explain to a citizen why an alert was triggered or suppressed.
+* **3 — Documented Internal Rules:** Logic is documented on paper for engineers, but has no public audit trail or clear appeal mechanism if the sensor misreads.
+* **4 — Open Empirical Standards:** Decisions are driven by transparent physical equations applied equally across all city zones.
+* **5 — 100% Auditable & Equitable:** Full tamper-evident digital audit trail; open logic accessible to officials and citizens, guaranteeing equal public protection regardless of district wealth.

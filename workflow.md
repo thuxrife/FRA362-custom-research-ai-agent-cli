@@ -130,6 +130,7 @@ Evaluates human capability based on the **Contextual Gap** between past project 
 | **2.5** | **Operational Feasibility** | `(2-5-operational-feasibility)` | N/A | **The "Will It Actually Be Used?" Stress-Tester**: Audits dispatcher adoption, procedural resistance (e.g. Traffy Fondue photo evidence rules), workflow disruption, training burdens, and developer burnout. |
 | **2.6** | **Schedule Feasibility** | `(2-6-schedule-feasibility)` | N/A | **Conflict & Deadline Realist**: Audits milestone delivery realism against formal TRL levels (TRL2, TRL3, TRL4), stress-testing against university exam blackouts and procurement lead times. |
 | **2.7** | **SDGs Expert** | `(2-7-sdgs-expert)` | N/A | **Systemic Sustainability Consultant**: Evaluates multi-layer Stockholm Wedding Cake impact (Biosphere, Society, Economy), UN SDG indicators, and Do-No-Harm safeguards (preventing e-waste and vulnerability shifts). |
+| **2.8** | **Robotics Compatibility Auditor** | `(2-8-robotics-auditor)` | `feasibility-outcome/` | **Robotics Engineering & Mechatronics Auditor**: Evaluates candidate solutions on the Orthogonal FIBO Robotics Knowledge Compatibility Axis (0.0 to 10.0 points) across Perception, Processing, and Actuation. |
 
 ---
 
@@ -235,3 +236,90 @@ When a candidate solution receives a score of `1` (Fatal Flaw) on any diagnostic
 Group 1 (Dialectical Research Team) and Group 2 (TELOS+S Consulting Team) connect seamlessly:
 * When a project tackles an ambiguous, high-uncertainty engineering problem (e.g. urban flood hydraulics, sensor fouling, or wireless attenuation), **Group 1 executes first**.
 * The resulting research synthesis ([`summarize-outcome/<session>/summary.md`](summarize-outcome/)) feeds directly into `solution-details/` as peer-reviewed, evidence-backed technical foundation for Group 2 feasibility stress-testing.
+
+---
+
+## 9. Subagent Orchestration Protocol (Subagent-Style Audit)
+
+To guarantee specialized depth and prevent cognitive shortcutting, the TELOS+S and Robotics evaluations are executed via **Discrete Domain Subagents** orchestrated by **The Jury (`2-1-jury`)**:
+
+```
+                       ┌─────────────────────────┐
+                       │       The Jury          │
+                       │       (2-1-jury)        │
+                       └───────────┬─────────────┘
+                                   │
+       ┌──────────────┬────────────┼────────────┬─────────────┬─────────────┐
+       ▼              ▼            ▼            ▼             ▼             ▼
+┌──────────────┐┌───────────┐┌───────────┐┌───────────┐┌─────────────┐┌──────────────┐
+│  Tech Audit  ││Econ/Legal ││Ops/Sched  ││ SDG Audit ││  Robotics   ││ Data Ingest  │
+│    (2-2)     ││ (2-3, 2-4)││ (2-5, 2-6)││   (2-7)   ││Auditor (2-8)││   Intake     │
+└──────┬───────┘└─────┬─────┘└─────┬─────┘└─────┬─────┘└──────┬──────┘└──────────────┘
+       │              │            │            │             │
+       └──────────────┴────────────┼────────────┴─────────────┘
+                                   ▼
+                       ┌─────────────────────────┐
+                       │ Dynamic JSON Assembly   │
+                       │ (jury_eval_data.json)   │
+                       └───────────┬─────────────┘
+                                   ▼
+                       ┌─────────────────────────┐
+                       │  feasibility-analysis   │
+                       │ (.xlsx Matrix Engine)   │
+                       └─────────────────────────┘
+```
+
+### Delegation Lifecycle:
+1. **Intake Ingestion**: The Jury scans `solution-details/`, `team-skills/`, `schedule-details/`, and `question_raw.txt`.
+2. **Subagent Spawning (`invoke_subagent`)**:
+   - Subagents are invoked concurrently with explicit domain boundaries and 5-level integer rubric contracts.
+   - Each subagent reads the common intake files and produces structured JSON blocks containing `question_code`, `assigned_score` (discrete 1-5 integer), `description_evidence`, and `descoping_remedy`.
+   - The Robotics Compatibility Auditor (`2-8-robotics-auditor` / `fibo_robotics_auditor`) audits the Sense-Think-Act triad and returns the 0.0 to 10.0 score with detailed domain breakdowns.
+3. **Synthesis & Gating**: The Jury compiles subagent findings, checks for any score of `1` (triggering VETO), assembles `feasibility-outcome/jury_eval_data.json`, and triggers `python feasibility-analysis.py` to compile the final `.xlsx` workbook.
+
+---
+
+## 10. The FIBO Robotics Potential Matrix (Scale 0.0 to 10.0)
+
+### A. Architectural Purpose
+At FIBO (Institute of Field RoBOtics, KMUTT), an engineering capstone or system design must be evaluated on its **Robotics & Mechatronics Depth**. A solution might have high operational viability (e.g. putting a manual sign on a road) while having 0% robotics content. Conversely, a highly complex robot might fail operational feasibility.
+
+Therefore, the **Robotics Potential Scale is orthogonal**:
+- **TELOS+S Feasibility Score (0 to 100%)**: Measures real-world viability, operational adoption, economics, and legal safety.
+- **Robotics Potential Score (0.0 to 10.0 Points)**: Measures automation depth, mechatronic coupling, and utilization of FIBO robotics knowledge.
+- The two scores are presented side-by-side in executive matrices, never summed together.
+
+### B. The 3-Pillar Scoring Formulation (Sense - Think - Act)
+
+$$\text{Robotic Potential (10.0)} = \text{Perception (3.5)} + \text{Processing \& Algorithms (3.5)} + \text{Actuation \& Mechanics (3.0)}$$
+
+1. **Perception & Sensing (0.0 – 3.5 Pts)**:
+   - Evaluates sensor physics, transduction, signal conditioning, and environmental perception.
+   - *Rubric*:
+     - `0.0 - 1.0`: Manual entry / static switch.
+     - `1.1 - 2.0`: Raw single-point analog/digital sensor without calibration.
+     - `2.1 - 2.8`: Time-series signal acquisition (ultrasonic pulse, optical flow, IR array) with basic filtering.
+     - `2.9 - 3.5`: Advanced sensing modality (Acoustic Reflectometry, PTV/PIV velocimetry, 2D cross-sectional scanning, spectral filtering).
+
+2. **Processing, Algorithms & Automation Depth (0.0 – 3.5 Pts)**:
+   - Evaluates edge computing, DSP, state estimation, closed-loop feedback, and automated decision scoring.
+   - *Rubric*:
+     - `0.0 - 1.0`: Static hardcoded delay / zero algorithmic processing.
+     - `1.1 - 2.0`: Simple single-threshold IF-THEN logic.
+     - `2.1 - 2.8`: Multi-variable data pipeline (radar + telemetry, dynamic queue priority).
+     - `2.9 - 3.5`: Automated closed-loop state estimation, 2D profile reconstruction, acoustic energy decay modeling, or quantitative 0–10 cleanliness grading.
+
+3. **Actuation, Mechanisms & Physical Coupling (0.0 – 3.0 Pts)**:
+   - Evaluates physical interaction with the physical environment, mechanical rigging, acoustic transmitters, or robotic carriages.
+   - *Rubric*:
+     - `0.0 - 0.5`: Pure virtual software / dashboard (zero physical interaction).
+     - `0.6 - 1.2`: Static bracket or simple on/off solenoid relay with zero motion control.
+     - `1.3 - 2.0`: Controlled fluid/pneumatic delivery (modulated misting valves) or calibrated acoustic transmitter/receiver rig.
+     - `2.1 - 3.0`: Active mechatronic payload, robotic crawler carriage, or dynamic positioning mechanism.
+
+### C. Performance Interpretation Tiers
+- **8.5 – 10.0**: Exemplary Robotics / Core FIBO Capstone (full closed-loop Sense-Think-Act).
+- **7.0 – 8.4**: Strong Mechatronic Payload / Active NDT Inspection (advanced DSP + automated scoring + physical rig).
+- **5.0 – 6.9**: Applied Instrumentation & Automated Control (sensing + threshold actuation).
+- **0.0 – 4.9**: Passive Telemetry / Pure Software Service (lacks mechatronic actuation or processing depth).
+

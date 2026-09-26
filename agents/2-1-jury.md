@@ -43,11 +43,11 @@ group: 2
 
 3. **Two-Tier Normalized Weighting Architecture (Weighting Integrity)**:
    To prevent the Technical pillar from mathematically overshadowing Operational or Economic realities, all evaluations MUST roll up through standardized Pillar Weights:
-   - **Technical ($T$)**: 20% (T-01, T-02 @ 10.0% each)
+   - **Technical ($T$)**: 20% (T-01 to T-05 @ 4.0% each)
    - **Economic ($E$)**: 20% (E-01, E-02, E-03 @ 6.67% each)
    - **Legal & Institutional ($L$)**: 15% (L-01, L-02 @ 7.5% each)
-   - **Operational ($O$)**: 20% (User: O-01 to O-03, Developer: O-04 to O-06 @ 3.33% each)
-   - **Schedule ($S$)**: 15% (S-01, S-02 @ 7.5% each)
+   - **Operational ($O$)**: 20% (User: O-01 to O-02 @ 5.0% each, Developer: O-03 to O-04 @ 5.0% each)
+   - **Schedule ($S$)**: 15% (S-01 @ 15.0%)
    - **Sustainable Feasibility ($+S$ / SDGs)**: 10% (SDG-01, SDG-02, SDG-03 @ 3.33% each)
    - **Total Pillar Sum**: Exactly 100.0%
    - **Robotics Knowledge Compatibility (FIBO Axis)**: Evaluated independently out of 10.0 points (Orthogonal Matrix, strictly NOT added to the 100% TELOS+S feasibility score).
@@ -81,13 +81,17 @@ group: 2
        `1: ...\n2: ...\n3: ...\n4: ...\n5: ...`
      - **ห้ามเขียนแค่ 1 vs 5 หรือ 1, 3, 5 โดยเด็ดขาด**: ต้องระบุเงื่อนไขเชิงประจักษ์ที่ชัดเจนสำหรับคะแนนระดับ 2 (มีความเสี่ยงสูง/ต้องปรับปรุง) และระดับ 4 (ผ่านเกณฑ์ดี/มีมาตรการรองรับ) เสมอ เพื่อให้การตัดสินใจให้คะแนนมีความเที่ยงตรงทางวิศวกรรม
 
-8. **Solo Autonomous Feasibility Generation (Default Execution Contract)**:
-   - **Default Trigger**: When triggered with `/feasibility` or when performing feasibility evaluation, **The Jury must execute end-to-end in Solo Mode by default** (synthesizing all 6 TELOS+S pillars directly from the 3 intake folders without freezing or waiting for manual subagent handoffs, unless the user explicitly requests an interactive multi-agent debate session).
-     - Ingests and audits `solution-details/`, `team-skills/`, `schedule-details/`.
-     - Standardizes diagnostic questions across all solutions in the problem space.
-     - Enforces Two-Tier weighting, discrete integer scores `{1-5}`, and the Knockout rule.
-     - **Directly outputs `feasibility-outcome/jury_eval_data.json` alone**: The authoritative structured JSON adhering strictly to the schema below.
-     - Automatically calls `python feasibility-analysis.py` to compile `jury_eval_data.json` into `feasibility-outcome/{month}-{date}-{year}-{time}_{seq}.xlsx`.
+8. **Dual Execution Modes: Subagent-Style & Solo Generation**:
+   - **Subagent Orchestration Mode (Preferred & Modular)**:
+     - When subagent style is requested or during formal multi-agent reviews, The Jury spawns domain subagents (`invoke_subagent`):
+       - `(2-2-tech-feasibility)` for T-01..T-05
+       - `(2-3-economic-feasibility)` & `(2-4-legal-feasibility)` for E-01..E-03 & L-01..L-02
+       - `(2-5-operational-feasibility)` & `(2-6-schedule-feasibility)` for O-01..O-04 & S-01
+       - `(2-7-sdgs-expert)` for SDG-01..SDG-03
+       - `(2-8-robotics-auditor)` for the Orthogonal 0-10 Robotics Potential Scale (Perception, Processing, Actuation)
+     - The Jury collects their evaluations, checks gating rules (score=1 -> VETO), harmonizes rubrics, compiles `feasibility-outcome/jury_eval_data.json`, and triggers `python feasibility-analysis.py`.
+   - **Solo Mode (Fast-Path Fallback)**:
+     - The Jury can execute end-to-end alone synthesizing all pillars directly from intake folders.
 
    ### Mandatory JSON Schema for `feasibility-outcome/jury_eval_data.json`
    The output MUST be a top-level JSON Array (list of solution objects) adhering strictly to this schema:

@@ -1,0 +1,684 @@
+import json
+
+data = [
+    {
+        "sheet_title": "Solution_1_CCTV_Flow",
+        "concept": "CCTV on the road (Visual water flow) + ultrasonic to measure the flow rate of the canal + alarm",
+        "strength": "ใช้โครงสร้างพื้นฐานเดิมของเมือง (กล้อง CCTV กทม. และเซนเซอร์วัดระดับน้ำในคลอง) ทำให้ต้นทุน CapEx เริ่มแรกต่ำมาก",
+        "bottleneck": "ติดกำแพงไฟร์วอลล์และสิทธิ์เข้าถึงสตรีมกล้อง กทม. (T-02=1), อัลกอริทึม PIV/PTV จากกล้องที่ไม่มีการสอบเทียบเป็นเพียง TRL 2-3 (T-03=1), และพึ่งพา JK เพียงคนเดียว (T-04=1)",
+        "advice": "ยกเลิกการพึ่งพากล้องวงจรปิด กทม. แล้วหันมาใช้กล้องหรือเซนเซอร์วัดระดับน้ำ/แรงดันของทีมเองในจุดทดสอบเฉพาะ พร้อมใช้อัลกอริทึมตรวจจับความเคลื่อนไหวพื้นฐานแทน PIV",
+        "robotic_compatibility": {
+            "score": 4.8,
+            "domains": {
+                "perception": "Score 2.5/3.5: Computer vision optical flow, PIV, and PTV via municipal CCTV combined with ultrasonic canal water level sensing.",
+                "control_algorithms": "Score 2.1/3.5: Rule-based diagnostic threshold logic separating rain runoff from clogged sewers; lacks dynamic plant state estimation and closed-loop feedback.",
+                "actuation_mechanics": "Score 0.2/3.0: Static mounting brackets with zero mechanical actuation, moving parts, power transmission, or physical intervention on the environment."
+            },
+            "fibo_alignment_rationale": "Solution 1 operates as a smart city telemetry and video monitoring platform rather than a robotic system. It suffers from a broken Sense-Think-Act triad, as actuation terminates in human alerts. It underutilizes team capabilities in mechanical design, fabrication, custom PCB design, and dynamic feedback control."
+        },
+        "robotic_data": {
+            "score": 4.8,
+            "domains": {
+                "perception": "Score 2.5/3.5: Computer vision optical flow, PIV, and PTV via municipal CCTV combined with ultrasonic canal water level sensing.",
+                "control_algorithms": "Score 2.1/3.5: Rule-based diagnostic threshold logic separating rain runoff from clogged sewers; lacks dynamic plant state estimation and closed-loop feedback.",
+                "actuation_mechanics": "Score 0.2/3.0: Static mounting brackets with zero mechanical actuation, moving parts, power transmission, or physical intervention on the environment."
+            },
+            "fibo_alignment_rationale": "Solution 1 operates as a smart city telemetry and video monitoring platform rather than a robotic system. It suffers from a broken Sense-Think-Act triad, as actuation terminates in human alerts. It underutilizes team capabilities in mechanical design, fabrication, custom PCB design, and dynamic feedback control."
+        },
+        "assessment_data": [
+            {
+                "id": "T-01",
+                "pillar": "ด้านเทคนิค (Technical 2.2)",
+                "question": "ระดับการสร้างเองเทียบกับการซื้อสำเร็จรูป (Build vs. Buy Burden) ของระบบตรวจจับการไหลด้วยกล้องและเซนเซอร์คลอง?",
+                "rationale": "ประเมินภาระการวิจัยและพัฒนาชิ้นส่วนกลไก อิเล็กทรอนิกส์ และอัลกอริทึม ป้องกันการเสียเวลากับงานประดิษฐ์ขึ้นใหม่โดยไม่จำเป็น",
+                "rubric": "1: ต้องวิจัยและสร้างขึ้นเองทั้งหมด 100% (ไม่มีพิมพ์เขียว อัลกอริทึม หรือไลบรารีอ้างอิง)\n2: มีชิ้นส่วนหลักในท้องตลาด แต่ต้องดัดแปลงโครงสร้างอย่างหนักและเขียนโค้ดเชื่อมต่อเองทั้งหมด\n3: บูรณาการชิ้นส่วน COTS เข้ากับแท่นยึดแบบกำหนดเอง และเขียนโค้ดเชื่อมต่อบางส่วน\n4: ประกอบจากโมดูลมาตรฐานสำเร็จรูป (DIN-rail, I2C/CAN shields) มีงานประกอบกลไกเล็กน้อย\n5: ซื้อมาติดตั้งใช้งานได้ทันที (Plug-and-Play) ไม่ต้องตัดกลึงหรือบัดกรีวงจรเพิ่มเติม",
+                "score": 2,
+                "weight": 0.04,
+                "evidence": "solution-details/solution-1.md lines 36-41; OpenCV exists but outdoor PTV/PIV hydrological velocimetry requires extensive custom homography rectification, rain-streak filtering, and wrapper code.",
+                "descope": "Descope from uncalibrated CCTV computer vision to installing standard COTS ultrasonic distance/depth sensors inside drainage catch basins reading water levels directly."
+            },
+            {
+                "id": "T-02",
+                "pillar": "ด้านเทคนิค (Technical 2.2)",
+                "question": "สิทธิ์ในการเข้าถึงสตรีมวิดีโอและระบบนิเวศข้อมูล (Access & Permissions) ของกล้อง CCTV กทม. และเซนเซอร์คลองเดิม?",
+                "rationale": "ตรวจสอบข้อจำกัดด้านกรรมสิทธิ์ การล็อกไฟร์วอลล์ และการอนุญาตเข้าถึง เพื่อป้องกันการพัฒนาระบบบนฐานข้อมูลที่ไม่สามารถเข้าถึงได้จริง",
+                "rubric": "1: ล็อกสิทธิ์ภายใต้สัญญา NDA ระบบปิด ติดไฟร์วอลล์องค์กร หรือไม่มีสิทธิ์เข้าถึงฝั่งนักพัฒนา\n2: ซอฟต์แวร์หรือเฟิร์มแวร์กรรมสิทธิ์ปิด ทำงานแบบ Black-box โดยไม่มี Source Code หรือ Telemetry\n3: บัญชีเพื่อการศึกษา/ทดลองใช้ที่มีโควตาหรือ Rate Limit เข้มงวด ต้องรอการอนุมัติอย่างเป็นทางการ\n4: มี SDK หรือ Open API สาธารณะพร้อมเอกสารครบถ้วน แต่ไม่สามารถแก้ไขสถาปัตยกรรมระดับล่างได้\n5: สถาปัตยกรรมเปิดสมบูรณ์ (Open Source/Open HW) ทีมงานมีสิทธิ์ระดับ Root/Admin เต็มรูปแบบ",
+                "score": 1,
+                "weight": 0.04,
+                "evidence": "solution-details/solution-1.md lines 14-15; BMA Traffic CCTV video feeds and DDS canal ultrasonic telemetry are locked behind municipal government intranets/firewalls with zero public developer API or RTSP access, triggering a fatal flaw VETO.",
+                "descope": "Abandon municipal CCTV infrastructure entirely; deploy team-owned standalone camera modules or IoT microcontrollers on private property with signed landowner consent."
+            },
+            {
+                "id": "T-03",
+                "pillar": "ด้านเทคนิค (Technical 2.2)",
+                "question": "ระดับความพร้อมทางเทคโนโลยี (Base Performance / TRL) ของการคำนวณการไหลของน้ำบนผิวถนนด้วยกล้อง CCTV ในสภาพแสงธรรมชาติ?",
+                "rationale": "วัดวุฒิภาวะของเทคโนโลยีว่าผ่านการพิสูจน์ในสภาพแวดล้อมจริงแล้ว หรือเป็นเพียงแนวคิดเชิงทฤษฎีในห้องปฏิบัติการ",
+                "rubric": "1: ระดับแนวคิด/สมการคณิตศาสตร์ (TRL 2–3) ทดสอบเฉพาะในห้องทดลองที่ควบคุมสภาพแวดล้อมได้\n2: เบรดบอร์ดทำงานได้ในแล็บ (TRL 4) สายไฟเปราะบาง ยังไม่ผ่านการสอบเทียบในสภาพแวดล้อมจริง\n3: ตัวต้นแบบประกอบลงกล่อง (TRL 5–6) ผ่านการทดสอบในสภาพแวดล้อมจำลอง ต้องมีคนคอยดูแล\n4: ต้นแบบระดับพรีโปรดักชัน (TRL 7) ทำงานได้อย่างมีเสถียรภาพในสภาพแวดล้อมปฏิบัติงานจริง\n5: ผลิตภัณฑ์เชิงพาณิชย์สมบูรณ์ (TRL 8–9) ผ่านการรับรองมาตรฐาน มีค่า MTBF ยืนยันความทนทาน",
+                "score": 1,
+                "weight": 0.04,
+                "evidence": "solution-details/solution-1.md lines 18-32; uncalibrated ambient-light street CCTV runoff velocimetry without seeding particles is at TRL 2-3 academic proof-of-concept level, failing field operational stability.",
+                "descope": "Pivot from video velocimetry to a physical pressure transducer or float switch in the catch basin, operating at commercial maturity (TRL 8-9)."
+            },
+            {
+                "id": "T-04",
+                "pillar": "ด้านเทคนิค (Technical 2.2)",
+                "question": "ความพร้อมและความซ้ำซ้อนของทักษะสมาชิกในทีม (Team Compatibility & SPOF Risk) ในด้าน Computer Vision และ Fluid Dynamics?",
+                "rationale": "ป้องกันความเสี่ยง Single Point of Failure (SPOF) ที่การดำเนินงานขึ้นอยู่กับสมาชิกเพียงคนเดียวจนไม่สามารถทดแทนกันได้",
+                "rubric": "1: มีผู้เชี่ยวชาญเพียงคนเดียว (SPOF) หากไม่อยู่ การพัฒนาระบบจะหยุดชะงัก 100%\n2: มีหัวหน้าทีมคนเดียว มีสมาชิกเข้าใจหลักการพื้นฐานแต่ไม่สามารถดีบักโค้ดหรือซ่อมแซมฮาร์ดแวร์ได้\n3: มีผู้รับผิดชอบหลักและผู้ช่วยสำรอง 1 คู่ที่สามารถดูแล แก้ไขปัญหา และปรับปรุงระบบทดแทนกันได้\n4: มีสมาชิกในทีมอย่างน้อย 3 คนที่มีความชำนาญ สามารถออกแบบ ประกอบ และแก้ไขระบบได้ทันที\n5: ทีมงานทุกคนมีความเชี่ยวชาญเต็มเปี่ยม สามารถสลับสับเปลี่ยนหน้าที่กันได้โดยไม่กระทบความเร็วงาน",
+                "score": 1,
+                "weight": 0.04,
+                "evidence": "team-skills/jk.md line 42 vs. due.md, fifa.md, jay.md, kin.md; only JK has basic OpenCV experience, and zero team members have fluid velocimetry expertise, creating a complete Single Point of Failure (SPOF).",
+                "descope": "Replace video flow tracking with standard sensor telemetry (water level/pressure) where Due, Fifa, and JK share broad redundant embedded C/C++ firmware capabilities."
+            },
+            {
+                "id": "T-05",
+                "pillar": "ด้านเทคนิค (Technical 2.2)",
+                "question": "ช่วงการเรียนรู้ทางเทคโนโลยีใหม่ (Learning Curve Burden) สำหรับการประมวลผล Particle Image/Tracking Velocimetry?",
+                "rationale": "ประเมินระยะเวลาและภาระที่ทีมงานต้องใช้ในการฝึกฝนเครื่องมือ ภาษา หรือเทคโนโลยีใหม่ เพื่อไม่ให้กระทบต่อตารางส่งมอบ",
+                "rubric": "1: ต้องเริ่มเรียนรู้ใหม่ทั้งหมดจากศูนย์ ทั้งภาษา เครื่องมือ และฮาร์ดแวร์ที่ไม่เคยใช้งานมาก่อน\n2: มีความเข้าใจเชิงทฤษฎี แต่ขาดประสบการณ์ปฏิบัติจริง การเขียนโค้ดและต่อวงจรติดขัดล่าช้า\n3: มีทักษะในเทคโนโลยีใกล้เคียงที่เทียบเคียงได้ ใช้เวลาปรับตัวและฝึกฝนประมาณ 1 สัปดาห์\n4: คุ้นเคยกับชุดเครื่องมืออยู่แล้ว เพียงเรียนรู้ไลบรารีหรือคำสั่งเฉพาะของเซนเซอร์เพิ่มเติมเล็กน้อย\n5: ไม่ต้องเรียนรู้ใหม่ สามารถนำโค้ด เครื่องมือ และทักษะที่มีอยู่เดิมมาประยุกต์ใช้งานได้ทันที",
+                "score": 2,
+                "weight": 0.04,
+                "evidence": "team-skills/jk.md lines 32-44; team has general math background but zero hands-on experience with fluid PIV/PTV cross-correlation, homography calibration, or outdoor illumination noise filtering.",
+                "descope": "Descope quantitative fluid discharge calculation (m3/s) to basic frame-differencing motion detection (e.g. MOG2 background subtractor) to detect mere presence of standing water."
+            },
+            {
+                "id": "E-01",
+                "pillar": "ด้านเศรษฐศาสตร์ (Economic 2.3)",
+                "question": "ระยะเวลาคืนทุนและความคุ้มค่าทางเศรษฐกิจ (ROI & Payback Horizon) จากการลดความเสียหายน้ำท่วม?",
+                "rationale": "ประเมินผลตอบแทนทางการเงินและการประหยัดงบประมาณภาครัฐเทียบกับเงินลงทุน เพื่อป้องกันโครงการที่ใช้งบประมาณเกินคุ้มค่า",
+                "rubric": "1: ระยะเวลาคืนทุนนานมาก (>= 10 ปี) ต้นทุนเริ่มแรกสูงแต่ประหยัดค่าใช้จ่ายได้น้อยมาก ไม่คุ้มค่าเชิงพาณิชย์\n2: คืนทุนช้า (6–9 ปี) ใช้เงินลงทุนสูงและต้องได้รับการอุดหนุนงบประมาณระยะยาว\n3: คืนทุนปานกลาง (3–5 ปี) เหมาะสมกับโครงสร้างพื้นฐานสาธารณะ ชดเชยต้นทุนได้ตามรอบงบประมาณ\n4: คืนทุนเร็ว (2–3 ปี) ลดค่าใช้จ่ายด้านแรงงาน เชื้อเพลิง หรือการสูญเสียได้อย่างมีนัยสำคัญ\n5: คืนทุนทันที (<= 1–2 ปี) ลดความสูญเสียจากภัยพิบัติหรือความเสียหายซ้ำซากได้ตั้งแต่ฤดูกาลแรก",
+                "score": 5,
+                "weight": 0.0667,
+                "evidence": "Leverages existing municipal CCTV infrastructure and canal ultrasonic level telemetry with near-zero new hardware CapEx, delivering immediate payback within <= 1-2 years by preventing recurring monsoon flash-flood damages and misdirected dredging dispatches in the first operating season.",
+                "descope": "Pilot initial software deployment on 5 critical flood-prone road intersections to validate immediate flood damage reduction within season 1."
+            },
+            {
+                "id": "E-02",
+                "pillar": "ด้านเศรษฐศาสตร์ (Economic 2.3)",
+                "question": "ระดับการพึ่งพาชิ้นส่วนและสถาปัตยกรรมระบบ (Vendor Lock-in & Autonomy) ของการดึงข้อมูลสตรีมและเซนเซอร์?",
+                "rationale": "ประเมินความเสี่ยงจากการผูกขาดเทคโนโลยีและค่าลิขสิทธิ์ต่อเนื่อง เพื่อให้ระบบสามารถบำรุงรักษาได้อย่างเป็นอิสระ",
+                "rubric": "1: ผูกขาดกับผู้ขาย 100% พึ่งพาคลาวด์และตัวเชื่อมต่อเฉพาะทางที่เข้ารหัส ปิดกั้นการซ่อมบำรุง\n2: ต้องใช้เครื่องมือตรวจวิเคราะห์เฉพาะของผู้ผลิต หรือเสียค่าธรรมเนียมรายปีเพื่อเปิดใช้งาน\n3: ฮาร์ดแวร์หลักใช้เฟิร์มแวร์กรรมสิทธิ์ แต่เปิดช่องทาง API และใช้อินเทอร์เฟซไฟฟ้าตามมาตรฐาน\n4: ใช้โพรโทคอลสื่อสารมาตรฐานเปิด (MQTT, Modbus, CAN) ซ่อมบำรุงด้วยเครื่องมือทั่วไปได้\n5: สถาปัตยกรรมเปิดสมบูรณ์ ชิ้นส่วนทุกชิ้นมีอะไหล่ทดแทนในท้องตลาด วิศวกรซ่อมบำรุงได้เอง 100%",
+                "score": 4,
+                "weight": 0.0667,
+                "evidence": "Utilizes standard open streaming (RTSP/ONVIF) and telemetry protocols (MQTT/REST) compatible with generic IP cameras and ultrasonic gauges, though data ingestion depends on BMA centralized network access.",
+                "descope": "Implement a generic camera/sensor ingestion abstraction layer supporting both municipal CCTV streams and standalone COTS bench cameras."
+            },
+            {
+                "id": "E-03",
+                "pillar": "ด้านเศรษฐศาสตร์ (Economic 2.3)",
+                "question": "สัดส่วนงบประมาณสำรองความเสียหายของชิ้นส่วน (Scrap Margin Allowance) สำหรับการทดสอบต้นแบบ?",
+                "rationale": "ประเมินขีดความสามารถทางการเงินในการรองรับความเสียหายของอุปกรณ์จากการทดลอง เพื่อไม่ให้โครงการหยุดชะงักเมื่อเกิดข้อผิดพลาด",
+                "rubric": "1: ไม่มีงบสำรองอะไหล่ (0%) ซื้อฮาร์ดแวร์เพียง 1 ชุด หากชิปไหม้หรือโครงสร้างเสียหาย โครงการจะหยุดชะงัก\n2: งบสำรองเปราะบาง (20–30%) มีอะไหล่เฉพาะชิ้นส่วนพาสซีฟ ไม่มีไมโครคอนโทรลเลอร์หรือเซนเซอร์สำรอง\n3: งบสำรองปานกลาง (50%) มีอะไหล่พาสซีฟครบถ้วน และมีบอร์ดควบคุมหลักสำรอง 1 ชุด\n4: งบสำรองสูง (80%) มีอะไหล่สำรองสำหรับชิ้นส่วนแอคทีฟและเซนเซอร์เกือบทุกตัว รองรับความผิดพลาดได้หลายครั้ง\n5: มีอะไหล่ทดแทนสมบูรณ์ (>= 100%) สามารถประกอบชุดฮาร์ดแวร์ทำงานได้พร้อมกัน 2 ระบบเต็มรูปแบบ",
+                "score": 5,
+                "weight": 0.0666,
+                "evidence": "Minimal physical hardware BOM for bench TRL 2-4 validation (ESP32 and ultrasonic sensor < 1,500 THB total) allows the team to maintain a >= 100% duplicate spare buffer, fully accommodating JK's soldering limitations.",
+                "descope": "Deploy pre-soldered ESP32 boards with screw-terminal breakout shields and maintain duplicate bench rigs."
+            },
+            {
+                "id": "L-01",
+                "pillar": "ด้านกฎหมายและสถาบัน (Legal 2.4)",
+                "question": "การปฏิบัติตามกฎหมายจราจร ความปลอดภัยสาธารณะ และ พ.ร.บ. คุ้มครองข้อมูลส่วนบุคคล (PDPA Compliance)?",
+                "rationale": "ตรวจสอบความสอดคล้องกับข้อกำหนดทางกฎหมายและสิทธิ์ความเป็นส่วนตัว เพื่อป้องกันการถูกระงับโครงการหรือดำเนินคดี",
+                "rubric": "1: ฝ่าฝืนกฎหมายชัดเจน (ละเมิด PDPA จากการสอดส่องที่สาธารณะ, กีดขวางการจราจร, คลื่นวิทยุผิดกฎหมาย)\n2: มีความเสี่ยงทางกฎหมายสูง มีข้อร้องเรียนเรื่องการสัญจรหรือความปลอดภัย ต้องขอข้อยกเว้นทางเทคนิคซับซ้อน\n3: ปฏิบัติการได้ภายใต้เงื่อนไข ต้องมีหนังสืออนุญาต บันทึกข้อตกลง (MoU) หรือใบอนุญาตจากเทศบาล\n4: ความเสี่ยงต่ำ ปฏิบัติการภายใต้ข้อยกเว้นงานวิจัยทางวิศวกรรมสาธารณะ เพียงแจ้งหน่วยงานและปฏิบัติตามมาตรฐาน\n5: ได้รับการยกเว้นตามกฎหมาย 100% ไม่มีความเสี่ยงต่อความปลอดภัยสาธารณะ และไม่มีการเก็บข้อมูลส่วนบุคคล (Zero PII)",
+                "score": 3,
+                "weight": 0.075,
+                "evidence": "Processing public roadway CCTV streams captures personal data (faces, license plates) subject to Thailand's PDPA B.E. 2562, and pulling municipal feeds requires formal written approval/MoU from BMA under the Computer Crime Act.",
+                "descope": "Implement real-time edge blurring/masking of license plates and pedestrians before optical flow processing to guarantee Zero PII retention, backed by a formal KMUTT-BMA educational research MoU."
+            },
+            {
+                "id": "L-02",
+                "pillar": "ด้านกฎหมายและสถาบัน (Legal 2.4)",
+                "question": "เงื่อนไขสัญญาอนุญาตซอฟต์แวร์และทรัพย์สินทางปัญญา (IP & Licensing Framework)?",
+                "rationale": "ป้องกันการละเมิดลิขสิทธิ์ซอฟต์แวร์หรือข้อผูกมัดทางกฎหมายแบบ Copyleft ที่อาจบังคับเปิดเผยทรัพย์สินทางปัญญาของระบบ",
+                "rubric": "1: สัญญาอนุญาตเชิงพาณิชย์แบบปิด ต้องจ่ายค่าลิขสิทธิ์ราคาสูงจึงจะสามารถคอมไพล์หรือใช้งานได้\n2: สถานะทรัพย์สินทางปัญญาคลุมเครือ ไม่มีสัญญาอนุญาตชัดเจน เสี่ยงต่อการถูกฟ้องร้องละเมิดลิขสิทธิ์\n3: สัญญาอนุญาตแบบ Copyleft เข้มงวด (เช่น GPLv3) บังคับให้ต้องเปิดเผยโค้ดทั้งหมดหากมีการแจกจ่าย\n4: สัญญาอนุญาตแบบเปิดที่มีเงื่อนไขน้อย (เช่น LGPL, CC-BY) อนุญาตให้นำไปพัฒนาต่อได้โดยระบุที่มา\n5: สัญญาอนุญาตแบบเสรีสมบูรณ์ (MIT, Apache 2.0, BSD) หรือเป็นสมบัติสาธารณะ นำไปใช้ประโยชน์ได้อิสระ 100%",
+                "score": 5,
+                "weight": 0.075,
+                "evidence": "Core OpenCV computer vision pipeline is Apache 2.0, Python analytics stack is BSD/MIT, and ESP-IDF firmware is Apache 2.0, completely free of commercial seat fees or viral copyleft restrictions.",
+                "descope": "Use OpenCV's native Farneback/Lucas-Kanade optical flow routines under Apache 2.0 rather than external GPLv3-licensed academic PIV code."
+            },
+            {
+                "id": "O-01",
+                "pillar": "ด้านปฏิบัติการ (Operational 2.5)",
+                "question": "ระดับความรุนแรงของผลกระทบเมื่อระบบขัดข้อง (User Failure Impact & Safety)?",
+                "rationale": "ประเมินความปลอดภัยของผู้ใช้งานและประชาชนเมื่อระบบเกิดความผิดพลาด ป้องกันความเสียหายต่อชีวิตและทรัพย์สิน",
+                "rubric": "1: อันตรายถึงชีวิต เกิดไฟฟ้าดูด เพลิงไหม้ อุบัติเหตุทางถนน หรือการพังทลายของโครงสร้าง\n2: อันตรายทางกายภาพรุนแรง อุปกรณ์เสียหายหนัก ก่อสารพิษ หรือหยุดชะงักโครงสร้างพื้นฐานฉุกเฉิน\n3: ผู้ใช้เกิดความโกลาหล สับสนในข้อมูล มีการสั่งการทับซ้อนและระบบหยุดชะงัก\n4: เกิดความล่าช้าเล็กน้อยในการปฏิบัติการ ระบบตัดการทำงานอย่างปลอดภัย สามารถรีบูตหรือสลับไปใช้ระบบสำรองได้\n5: เสียหายเพียงงบประมาณเล็กน้อย ไม่ก่ออันตรายต่อมนุษย์หรือกระทบกระบวนการทำงานหลัก",
+                "score": 4,
+                "weight": 0.05,
+                "evidence": "อ้างอิง solution-1.md บรรทัดที่ 14, 18, 33: ระบบทำหน้าที่แจ้ง alert เข้าหน่วยงานที่เกี่ยวข้อง (QRT/ฝ่ายซ่อมบำรุง) หากระบบ Optical Flow ขัดข้องในเวลากลางคืนหรือสภาพแสงน้อย ระบบจะส่งสัญญาณเตือนล่าช้าหรือหลุดการตรวจจับ แต่ไม่มีกลไกเชิงกายภาพหรือไฟฟ้าแรงสูงที่ก่อให้เกิดอันตรายถึงชีวิต เจ้าหน้าที่หน้างานสลับไปใช้ขั้นตอนมาตรฐานเดิมได้ทันที (Minor Operational Delay)",
+                "descope": "ติดตั้งระบบตรวจจับค่าความเชื่อมั่น (Confidence Threshold Scoring) หากค่าความสว่างของแสงหรือคุณภาพเฟรมต่ำกว่าเกณฑ์ ให้ตัดเข้าสู่โหมดเตือน 'Degraded - Manual Verification Required' พร้อมแนบลิงก์สตรีมภาพสดให้เจ้าหน้าที่กดดูเพื่อยืนยันสถานะได้ใน 1 คลิก"
+            },
+            {
+                "id": "O-02",
+                "pillar": "ด้านปฏิบัติการ (Operational 2.5)",
+                "question": "ความสอดคล้องกับพฤติกรรมผู้ใช้และแรงต้านทานในการปฏิบัติงาน (User Behavior & Solution Fit)?",
+                "rationale": "ป้องกัน The Tech Trap โดยตรวจสอบว่าผู้ปฏิบัติงานหน้างานยินดีใช้งานจริงและไม่เกิดแรงต้านในกระบวนการทำงาน",
+                "rubric": "1: รื้อระบบการทำงานเดิมทั้งหมด บังคับกรอกเอกสารเพิ่ม 5 ขั้นตอนขึ้นไป และผู้ปฏิบัติงานต่อต้านไม่ยอมใช้\n2: เพิ่มภาระการบันทึกข้อมูลอย่างมาก ผู้ปฏิบัติงานจะพยายามหาทางหลีกเลี่ยงหรือบายพาสระบบ\n3: ปรับเปลี่ยนกิจวัตรเล็กน้อย ต้องจัดอบรม 1–2 ครั้ง แต่ผู้ใช้ยอมรับแลกกับประสิทธิภาพที่ได้รับ\n4: ผสานรวมเข้ากับระบบงานเดิมได้อย่างราบรื่น (ส่งแจ้งเตือนเข้า LINE/Dashboard ที่ใช้อยู่แล้ว)\n5: ทำงานอยู่เบื้องหลังแบบอัตโนมัติ 100% ไร้แรงเสียดทาน ผู้ปฏิบัติงานไม่ต้องเปลี่ยนขั้นตอนใดๆ",
+                "score": 4,
+                "weight": 0.05,
+                "evidence": "อ้างอิง solution-1.md บรรทัดที่ 7-11, 30-33: วัตถุประสงค์หลักถูกออกแบบให้ลงตัวกับจุดคานงัดเดิม (Leverage point fit: QRT, Maintenance Queue) และส่งการแจ้งเตือนอัตโนมัติไปยังหน่วยงานที่รับผิดชอบ ซึ่งสอดคล้องกับพฤติกรรมการรับงานผ่านระบบแจ้งเหตุฉุกเฉิน (LINE Alert / Dashboard) ของเจ้าหน้าที่ กทม. ไม่ต้องบังคับให้เจ้าหน้าที่เปลี่ยนขั้นตอนการทำงานภาคสนาม (Low Friction)",
+                "descope": "ออกแบบการส่งข้อความแจ้งเตือนผ่าน LINE Messaging API แบบ Flex Message ที่สรุปค่าความเร็วการไหล ระดับน้ำคลอง และการวินิจฉัยต้นเหตุ (ฝนตก vs ท่อตัน) เป็นการ์ดสรุปข้อมูลที่เข้าใจได้ใน 3 วินาที"
+            },
+            {
+                "id": "O-03",
+                "pillar": "ด้านปฏิบัติการ (Operational 2.5)",
+                "question": "ข้อจำกัดด้านการเข้าถึงสถานที่และสิ่งอำนวยความสะดวกในการพัฒนา (Developer Contribution Dependency)?",
+                "rationale": "ประเมินความคล่องตัวในการเข้าถึงเครื่องมือ ห้องปฏิบัติการ และสิทธิ์ของนักพัฒนา เพื่อป้องกันการติดขัดจากระเบียบธุรการ",
+                "rubric": "1: ติดขั้นตอนอนุมัติราชการเข้มงวด ต้องเซ็น NDA ล็อกตู้แล็บ และถูกจำกัดสิทธิ์ Git Branch\n2: ต้องกรอกแบบฟอร์มขอใช้อุปกรณ์ของคณะ รอคิวเครื่องจักร และรอการอนุมัติ 3–5 วันทำการ\n3: เข้าใช้งานห้องแล็บและเครื่องมือได้ตามเวลาเปิดทำการปกติของมหาวิทยาลัย\n4: มีสิทธิ์เข้าแล็บ 24 ชม. มีสิทธิ์เขียนโค้ดลง Repository และมีงบประมาณย่อยพร้อมเบิกจ่ายทันที\n5: ทำงานได้อิสระ 100% ใช้ระบบ CI/CD บนคลาวด์ มีเครื่องมือประกอบต้นแบบที่บ้าน ไร้อุปสรรคทางธุรการ",
+                "score": 3,
+                "weight": 0.05,
+                "evidence": "อ้างอิง solution-1.md บรรทัดที่ 15, 24, 41: ระบบต้องดึงข้อมูลภาพวิดีโอจากกล้อง CCTV และระดับน้ำในคลองเดิม สำหรับการพัฒนาโครงงานในระดับมหาวิทยาลัย ทีมงานสามารถเข้าถึงฟีดกล้อง CCTV และระบบระบายน้ำภายในวิทยาเขต มจธ. ได้ในช่วงเวลาทำการปกติของมหาวิทยาลัย โดยมี JK (team-skills/jk.md บรรทัดที่ 48-50) ที่มีความพร้อมในการสื่อสารและประสานงานหน้างาน (Standard Campus Access)",
+                "descope": "บันทึกไฟล์วิดีโอน้ำไหลจำลองและชุดข้อมูลระดับน้ำในคลองของมหาวิทยาลัยเก็บไว้ใน Local Server/NAS เพื่อให้ทีมพัฒนาอัลกอริทึมได้ตลอด 24 ชม. โดยไม่ต้องพึ่งพาการเชื่อมต่อสัญญาณสดจากภายนอกตลอดเวลา"
+            },
+            {
+                "id": "O-04",
+                "pillar": "ด้านปฏิบัติการ (Operational 2.5)",
+                "question": "ความซับซ้อนในขั้นตอนการพัฒนาและการติดตั้งระบบ (Developer Complexity & Pipeline Friction)?",
+                "rationale": "ประเมินความซับซ้อนของขั้นตอนการบิวด์ คอมไพล์ และติดตั้ง เพื่อลดโอกาสเกิด Human Error ระหว่างพัฒนา",
+                "rubric": "1: ขั้นตอนการบิวด์และติดตั้งซับซ้อนมาก เครื่องมือพึ่งพาแพ็กเกจเปราะบาง เสี่ยงต่อข้อผิดพลาดสูง\n2: ต้องรันกระบวนการด้วยมือหลายขั้นตอน ติดปัญหาความไม่เข้ากันของไลบรารี และแฟลชบอร์ดได้ยาก\n3: กระบวนการประกอบและบิวด์ระบบมีหลายขั้นตอนตามมาตรฐาน สามารถทำซ้ำได้ตามคู่มือและเช็กลิสต์\n4: เวิร์กโฟลว์ตรงไปตรงมา ใช้ระบบสคริปต์อัตโนมัติ รันผ่าน IDE มาตรฐาน คำสั่งเดียวแฟลชบอร์ดได้\n5: ระบบเรียบง่ายแบบ Plug-and-Play ทำงานได้ในขั้นตอนเดียว ไม่ต้องตั้งค่าซับซ้อน",
+                "score": 3,
+                "weight": 0.05,
+                "evidence": "อ้างอิง solution-1.md บรรทัดที่ 27-40: ต้องประมวลผล Optical Flow, Particle Image Velocimetry (PIV), และ Particle Tracking Velocimetry (PTV) ร่วมกับการเกลี่ยข้อมูลระดับน้ำ 5 นาที แม้ JK มีทักษะพื้นฐานด้าน OpenCV (team-skills/jk.md บรรทัดที่ 42) แต่การต่อท่อส่งข้อมูลสตรีมวิดีโอเข้าสู่อัลกอริทึมประมวลผลเวกเตอร์ความเร็วยังคงเป็นกระบวนการหลายขั้นตอนที่ต้องทำตามคู่มืออย่างเป็นระบบ (Moderate Complexity)",
+                "descope": "ปรับลดความซับซ้อนจากการใช้ PIV/PTV เต็มรูปแบบ มาเป็นการใช้ Farneback Dense Optical Flow ของ OpenCV ที่กำหนดกรอบความสนใจ (ROI) เฉพาะผิวน้ำ และรวบกระบวนการติดตั้งไว้ใน Docker Container คำสั่งเดียว"
+            },
+            {
+                "id": "S-01",
+                "pillar": "ด้านแผนงานและเวลา (Schedule 2.6)",
+                "question": "ความพร้อมของแบบทางวิศวกรรมภายในกรอบเวลา 5 สัปดาห์ทำงาน (Engineering Design Maturity)?",
+                "rationale": "ประเมินวุฒิภาวะของการออกแบบเมื่อเทียบกับกรอบเวลา 5 สัปดาห์ทำการจริง และช่วงสอบคั่นกลาง 4 สัปดาห์",
+                "rubric": "1: อยู่ในระดับแนวคิดเท่านั้น (0% Design) ไม่มีโมเดล CAD ไม่มีผังวงจร และยังไม่ได้เขียนเฟิร์มแวร์\n2: แบบร่างเบื้องต้น (25% Design) มีเพียงบล็อกไดอะแกรม ผังวงจรวาดมือ รายการชิ้นส่วนที่ยังไม่ได้สอบทาน\n3: ความพร้อมระดับปานกลาง (50% Design) ประกอบ CAD ครบ มีผังวงจร Schematic สมบูรณ์ วางสถาปัตยกรรมโค้ดแล้ว\n4: พร้อมทดสอบพรีโปรดักชัน (75–80% Design) โมเดล 3D พร้อมพิมพ์/กัด มีไฟล์ Gerber ตรวจสอบ DRC แล้ว\n5: ออกแบบเสร็จสมบูรณ์ 100% (Production Ready) มีไฟล์ผลิตครบถ้วน ล็อกรายการ BOM และมีสคริปต์แฟลชพร้อมผลิต",
+                "score": 3,
+                "weight": 0.15,
+                "evidence": "อ้างอิง schedule-details/schedule.md: กำหนดกรอบเวลาทำงานจริง 5 สัปดาห์ทำการ (สัปดาห์ที่ 10, 11, 12, 14, 15) โดยมีช่วงสอบมหาวิทยาลัยคั่นกลางถึง 4 สัปดาห์ โครงงาน Solution 1 เน้นการประมวลผลซอฟต์แวร์บนฮาร์ดแวร์ COTS เดิม ไม่ต้องรอกัดกลึงชิ้นส่วนกลไก ทำให้ทีมสามารถส่งมอบแบบจำลองอัลกอริทึมและผังโครงสร้างสถาปัตยกรรมระดับต้นแบบห้องปฏิบัติการได้ตามกำหนด (Intermediate Maturity: 50% Design)",
+                "descope": "ล็อกชุดข้อมูลวิดีโอทดสอบและสูตรสมการคำนวณการไหลให้เสร็จสิ้นภายในสัปดาห์ที่ 11 เพื่อนำไปใช้ทดสอบ Bench PoC ในสัปดาห์ที่ 12-13 โดยสงวนสัปดาห์ที่ 14-15 ไว้สำหรับการรวมระบบและการจัดทำเอกสารรายงานฉบับสมบูรณ์"
+            },
+            {
+                "id": "SDG-01",
+                "pillar": "ด้านความยั่งยืน (+S / SDGs 2.7)",
+                "question": "ผลกระทบต่อสังคมและความทนทานของเมืองเทียบกับการฟอกเขียว (Public Impact vs. Greenwashing)?",
+                "rationale": "ประเมินผลกระทบที่แท้จริงต่อการลดความสูญเสียจากภัยพิบัติเมือง (SDG 11.5 / 13.1) เทียบกับโครงการสาธิตเชิงวิชาการ",
+                "rubric": "1: กล่าวอ้างความยั่งยืนโดยไม่มีข้อมูลรองรับ (Greenwashing) วัดผลไม่ได้จริง และไม่แก้ปัญหาของเมือง\n2: เชื่อมโยงทางอ้อม ทำหน้าที่เป็นเพียงโครงงานสาธิตในสถาบันการศึกษา ไม่สามารถประเมินการลดความเสียหายได้\n3: พิสูจน์ผลได้ในระดับท้องถิ่น (ลดเวลาตอบสนองหรือลดความร้อนได้เฉพาะจุดทดสอบ) แต่ยังขาดโมเดลขยายผล\n4: มีศักยภาพปกป้องโครงสร้างพื้นฐานหรือลดความเสียหายของประชาชนในระดับเขตพื้นที่เมืองอย่างชัดเจน\n5: เสริมสร้างความทนทานต่อภัยพิบัติของเมือง มีข้อมูลเชิงประจักษ์ยืนยันการลดความสูญเสียทางเศรษฐกิจและชีวิต",
+                "score": 3,
+                "weight": 0.0333,
+                "evidence": "Solution-1 utilizes roadside CCTV optical flow (PTV/PIV) combined with canal ultrasonic flow/level telemetry to detect surface runoff and differentiate canal backwater from pipe clogging, targeting rapid QRT dispatch and maintenance queueing. However, it explicitly operates only during daylight ('ภายในช่วงที่มีแสง') and has blind spots outside camera FOV ('บางท่ออยู่นอกขอบเขตของ CCTV'). Because tropical convective storms frequently peak during dark evening rush hours with high visual occlusion, it delivers verified localized proof of concept on monitored corridors but lacks a 24/7 all-weather district-wide scaling model (SDG 11.5 / 13.1).",
+                "descope": "Deploy near-infrared (NIR) feature tracking with rain-streak spatio-temporal filtering; install low-cost solar virtual flood gauge markers at blind-spot inlets; cross-reference TMD/BMA weather radar data to ensure night-time continuity."
+            },
+            {
+                "id": "SDG-02",
+                "pillar": "ด้านความยั่งยืน (+S / SDGs 2.7)",
+                "question": "รอยเท้าทางสิ่งแวดล้อม ขยะอิเล็กทรอนิกส์ และหลักการไม่สร้างผลเสีย (Do No Harm & E-Waste)?",
+                "rationale": "ป้องกันการทอดทิ้งขยะอิเล็กทรอนิกส์หรือสารพิษลงสู่ระบบระบายน้ำและสิ่งแวดล้อมเมือง (SDG 6.3 / 12.4)",
+                "rubric": "1: ก่ออันตรายและสารพิษในพื้นที่ กล่องอุปกรณ์แตกสลาย หรือแบตเตอรี่รั่วไหลหลุดลงสู่ระบบระบายน้ำ\n2: เทคโนโลยีเปราะบางแบบใช้แล้วทิ้ง เซนเซอร์อุดตันหรือผุกร่อนภายใน 2–3 สัปดาห์ และถูกทิ้งร้างในพื้นที่\n3: มีรอยเท้าสิ่งแวดล้อมตามมาตรฐาน ต้องเปลี่ยนแบตเตอรี่ตามรอบ มีสายยึดป้องกันอุปกรณ์สูญหาย\n4: กล่องหุ้มทนทานผลกระทบต่ำ กินไฟต่ำ ใช้วัสดุรีไซเคิลได้ และมีสายสลิงยึดโยงเพื่อความปลอดภัย\n5: ออกแบบตามหลักเศรษฐกิจหมุนเวียน 100% กู้คืนอุปกรณ์ได้ปลอดภัย ใช้วัสดุไม่เป็นพิษ ไร้รอยเท้าสิ่งแวดล้อม",
+                "score": 4,
+                "weight": 0.0333,
+                "evidence": "Solution-1 prioritizes existing municipal infrastructure reuse ('พยายามใช้ local sensor ที่มีก่อน' - CCTV and canal ultrasonic gauges). By mounting non-contact optical and ultrasonic sensors on elevated roadside poles and bridges, it completely avoids deploying submerged battery-powered electronic devices inside flowing sewers or canals. This prevents sensor dislodgement, casing breakdown, or toxic battery leakage into the drainage network (SDG 6.3 / 12.4). New hardware is confined to pole-mounted edge compute gateways with low environmental footprint.",
+                "descope": "House edge compute hardware in IP67-rated, UV-stabilized 100% recyclable polycarbonate (PC) enclosures with dual stainless steel safety lanyards; establish a formal end-of-life (EoL) hardware recycling agreement with BMA Department of Drainage and Sewerage (DDS)."
+            },
+            {
+                "id": "SDG-03",
+                "pillar": "ด้านความยั่งยืน (+S / SDGs 2.7)",
+                "question": "ความโปร่งใสของอัลกอริทึมและความเป็นธรรมในการตัดสินใจ (Algorithmic Equity & Transparency)?",
+                "rationale": "ป้องกันความลำเอียงในการจัดสรรความช่วยเหลือหรือการปิดบังตรรกะการตัดสินใจต่อประชาชน (SDG 10.2 / 16.6)",
+                "rubric": "1: อัลกอริทึมแบบ Black-box ไม่โปร่งใส ปรับเปลี่ยนหรือยกเลิกการช่วยเหลือโดยไม่มีคำอธิบาย เสี่ยงต่อความไม่เท่าเทียม\n2: ตรรกะการตัดสินใจคลุมเครือ ซ่อนอยู่ในโค้ดที่ซับซ้อน เจ้าหน้าที่ไม่สามารถอธิบายเหตุผลให้ประชาชนเข้าใจได้\n3: กฎเกณฑ์มีเอกสารบันทึกไว้สำหรับวิศวกร แต่ยังไม่มีระบบตรวจสอบสาธารณะหรือช่องทางอุทธรณ์ผลการตรวจวัด\n4: การตัดสินใจขับเคลื่อนด้วยสมการฟิสิกส์มาตรฐานเปิด ปฏิบัติต่อทุกพื้นที่ของเมืองด้วยเกณฑ์เดียวกันอย่างเป็นธรรม\n5: ตรวจสอบได้ 100% มีระบบบันทึก Audit Trail ดิจิทัลที่โปร่งใส เปิดให้ประชาชนและเจ้าหน้าที่เข้าถึงได้อย่างเท่าเทียม",
+                "score": 3,
+                "weight": 0.0334,
+                "evidence": "The physical decision logic for distinguishing pipe clogging from canal overflow is documented on paper for engineers. However, dispatch alerting and maintenance queue prioritization lack a transparent public audit trail. Furthermore, municipal CCTV cameras in Bangkok are heavily clustered on major commercial avenues, leaving low-income sois and informal settlements unmonitored ('บางท่ออยู่นอกขอบเขตของ CCTV'). Relying solely on CCTV feeds risks algorithmic bias, directing desilting crews toward affluent main roads while neglecting vulnerable communities (SDG 10.2 / 16.6).",
+                "descope": "Publish real-time optical flow vectors and maintenance queue scores on an open civic dashboard; incorporate an affirmative equity weighting coefficient in the dispatch algorithm that boosts priority for underserved sois lacking CCTV coverage, cross-referencing citizen Traffy Fondue reports."
+            }
+        ]
+    },
+    {
+        "sheet_title": "Solution_2_Acoustic_Sewer",
+        "concept": "Sewer Inspection by transmitter and receiver. Mapping Sewer profile",
+        "strength": "ใช้วิธีตรวจจับคลื่นเสียงสะท้อนผ่านอากาศในท่อ (Airborne Acoustic Reflectometry) ตรวจได้รวดเร็ว สามารถคำนวณพื้นที่หน้าตัด 2D และแปลงผลเป็นระดับความสะอาด 0-10 สเกล เพื่อจัดคิวลอกท่อได้ทันที ปลอดสารพิษ ไร้ e-waste (SDG Score สูงสุด)",
+        "bottleneck": "การเปิดฝาท่อบนผิวถนนมีความเสี่ยงด้านความปลอดภัยและกฎหมายจราจร/พื้นที่อับอากาศ (L-01=2) และไม่สามารถตรวจวัดในช่วงที่มีน้ำท่วมขังสูงในท่อได้ (ต้องตรวจช่วงปกติที่น้ำต่ำ)",
+        "advice": "จำกัดการทดสอบภาคเรียนนี้ในท่อจำลองพีวีซีบนโต๊ะทดลองแล็บหรือท่อระบายน้ำภายใน มจธ. และลดทอนการประมวลผลภาพ 2D ให้เหลือเพียงการคำนวณการสูญเสียพลังงานเสียงเทียบกับ Look-up table เพื่อลดความซับซ้อน",
+        "robotic_compatibility": {
+            "score": 5.8,
+            "domains": {
+                "perception": "Score 2.8/3.5: Airborne Acoustic Reflectometry (AAR) measuring acoustic wave propagation and energy attenuation across sewer air cavities under normal low-water conditions.",
+                "control_algorithms": "Score 2.4/3.5: Digital signal processing (bandpass filtering, FFT, deconvolution) with 2D cross-sectional reconstruction and automated 0-10 cleanliness scale classification.",
+                "actuation_mechanics": "Score 0.6/3.0: Manual transmitter/receiver placement across manholes; actuation is limited to acoustic transducer sound excitation without motorized traversal or mechanical manipulation."
+            },
+            "fibo_alignment_rationale": "Solution 2 is an advanced acoustic Non-Destructive Testing (NDT) diagnostic instrument. The user clarification regarding low-water operating protocol and automated 0-10 cleanliness classification elevates its sensing and DSP depth. However, it remains an open-loop diagnostic tool lacking autonomous locomotion or physical actuation, underutilizing the team's mechanical fabrication and transmission design skills."
+        },
+        "robotic_data": {
+            "score": 5.8,
+            "domains": {
+                "perception": "Score 2.8/3.5: Airborne Acoustic Reflectometry (AAR) measuring acoustic wave propagation and energy attenuation across sewer air cavities under normal low-water conditions.",
+                "control_algorithms": "Score 2.4/3.5: Digital signal processing (bandpass filtering, FFT, deconvolution) with 2D cross-sectional reconstruction and automated 0-10 cleanliness scale classification.",
+                "actuation_mechanics": "Score 0.6/3.0: Manual transmitter/receiver placement across manholes; actuation is limited to acoustic transducer sound excitation without motorized traversal or mechanical manipulation."
+            },
+            "fibo_alignment_rationale": "Solution 2 is an advanced acoustic Non-Destructive Testing (NDT) diagnostic instrument. The user clarification regarding low-water operating protocol and automated 0-10 cleanliness classification elevates its sensing and DSP depth. However, it remains an open-loop diagnostic tool lacking autonomous locomotion or physical actuation, underutilizing the team's mechanical fabrication and transmission design skills."
+        },
+        "assessment_data": [
+            {
+                "id": "T-01",
+                "pillar": "ด้านเทคนิค (Technical 2.2)",
+                "question": "ระดับการสร้างเองเทียบกับการซื้อสำเร็จรูป (Build vs. Buy Burden) ของระบบหัวส่ง-หัวรับคลื่นเสียงในท่อระบายน้ำ?",
+                "rationale": "ประเมินภาระการวิจัยและพัฒนาชิ้นส่วนกลไก อิเล็กทรอนิกส์ และอัลกอริทึม ป้องกันการเสียเวลากับงานประดิษฐ์ขึ้นใหม่โดยไม่จำเป็น",
+                "rubric": "1: ต้องวิจัยและสร้างขึ้นเองทั้งหมด 100% (ไม่มีพิมพ์เขียว อัลกอริทึม หรือไลบรารีอ้างอิง)\n2: มีชิ้นส่วนหลักในท้องตลาด แต่ต้องดัดแปลงโครงสร้างอย่างหนักและเขียนโค้ดเชื่อมต่อเองทั้งหมด\n3: บูรณาการชิ้นส่วน COTS เข้ากับแท่นยึดแบบกำหนดเอง และเขียนโค้ดเชื่อมต่อบางส่วน\n4: ประกอบจากโมดูลมาตรฐานสำเร็จรูป (DIN-rail, I2C/CAN shields) มีงานประกอบกลไกเล็กน้อย\n5: ซื้อมาติดตั้งใช้งานได้ทันที (Plug-and-Play) ไม่ต้องตัดกลึงหรือบัดกรีวงจรเพิ่มเติม",
+                "score": 3,
+                "weight": 0.04,
+                "evidence": "solution-details/solution-2.md lines 17-27, 43-47; team-skills/due.md line 26; standard COTS breakout boards (MAX98357 audio amp, MEMS mic, ESP32) integrated with 3D-printed acoustic horn brackets and custom glue code.",
+                "descope": "Use pre-assembled commercial acoustic transducers with weather-sealed rubber gaskets and standard 3.5mm jacks to eliminate point-to-point field wiring fragility."
+            },
+            {
+                "id": "T-02",
+                "pillar": "ด้านเทคนิค (Technical 2.2)",
+                "question": "สิทธิ์ในการเข้าถึงสตรีมวิดีโอและระบบนิเวศข้อมูล (Access & Permissions) ของระบบตรวจวัดคลื่นเสียงสะท้อน?",
+                "rationale": "ตรวจสอบข้อจำกัดด้านกรรมสิทธิ์ การล็อกไฟร์วอลล์ และการอนุญาตเข้าถึง เพื่อป้องกันการพัฒนาระบบบนฐานข้อมูลที่ไม่สามารถเข้าถึงได้จริง",
+                "rubric": "1: ล็อกสิทธิ์ภายใต้สัญญา NDA ระบบปิด ติดไฟร์วอลล์องค์กร หรือไม่มีสิทธิ์เข้าถึงฝั่งนักพัฒนา\n2: ซอฟต์แวร์หรือเฟิร์มแวร์กรรมสิทธิ์ปิด ทำงานแบบ Black-box โดยไม่มี Source Code หรือ Telemetry\n3: บัญชีเพื่อการศึกษา/ทดลองใช้ที่มีโควตาหรือ Rate Limit เข้มงวด ต้องรอการอนุมัติอย่างเป็นทางการ\n4: มี SDK หรือ Open API สาธารณะพร้อมเอกสารครบถ้วน แต่ไม่สามารถแก้ไขสถาปัตยกรรมระดับล่างได้\n5: สถาปัตยกรรมเปิดสมบูรณ์ (Open Source/Open HW) ทีมงานมีสิทธิ์ระดับ Root/Admin เต็มรูปแบบ",
+                "score": 5,
+                "weight": 0.04,
+                "evidence": "solution-details/solution-2.md lines 43-47; team-skills/due.md line 20, jk.md lines 36-37; fully open-source firmware (ESP-IDF, Arduino) and Python scientific libraries (SciPy, NumPy) with 100% root/admin development rights.",
+                "descope": "None required. Maintain version-locked requirements (requirements.txt, platformio.ini) in git."
+            },
+            {
+                "id": "T-03",
+                "pillar": "ด้านเทคนิค (Technical 2.2)",
+                "question": "ระดับความพร้อมทางเทคโนโลยี (Base Performance / TRL) ของเทคโนโลยี Airborne Acoustic Reflectometry ในท่อ?",
+                "rationale": "วัดวุฒิภาวะของเทคโนโลยีว่าผ่านการพิสูจน์ในสภาพแวดล้อมจริงแล้ว หรือเป็นเพียงแนวคิดเชิงทฤษฎีในห้องปฏิบัติการ",
+                "rubric": "1: ระดับแนวคิด/สมการคณิตศาสตร์ (TRL 2–3) ทดสอบเฉพาะในห้องทดลองที่ควบคุมสภาพแวดล้อมได้\n2: เบรดบอร์ดทำงานได้ในแล็บ (TRL 4) สายไฟเปราะบาง ยังไม่ผ่านการสอบเทียบในสภาพแวดล้อมจริง\n3: ตัวต้นแบบประกอบลงกล่อง (TRL 5–6) ผ่านการทดสอบในสภาพแวดล้อมจำลอง ต้องมีคนคอยดูแล\n4: ต้นแบบระดับพรีโปรดักชัน (TRL 7) ทำงานได้อย่างมีเสถียรภาพในสภาพแวดล้อมปฏิบัติงานจริง\n5: ผลิตภัณฑ์เชิงพาณิชย์สมบูรณ์ (TRL 8–9) ผ่านการรับรองมาตรฐาน มีค่า MTBF ยืนยันความทนทาน",
+                "score": 3,
+                "weight": 0.04,
+                "evidence": "solution-details/solution-2.md lines 17-40; schedule-details/schedule.md line 16; airborne acoustic reflectometry in pipes is verified in relevant simulated pipe networks (TRL 5-6) in literature, well-aligned for reaching course target of TRL 4 by Week 16.",
+                "descope": "Descope the complex 2D cross-sectional view from angular tomographic imaging to a simplified 1D axial blockage percentage graphic (A_blocked / A_pipe) and 0-10 cleanliness score."
+            },
+            {
+                "id": "T-04",
+                "pillar": "ด้านเทคนิค (Technical 2.2)",
+                "question": "ความพร้อมและความซ้ำซ้อนของทักษะสมาชิกในทีม (Team Compatibility & SPOF Risk) ในด้านสัญญาณเสียง ไมโครคอนโทรลเลอร์ และการขึ้นรูปแท่นจับ?",
+                "rationale": "ป้องกันความเสี่ยง Single Point of Failure (SPOF) ที่การดำเนินงานขึ้นอยู่กับสมาชิกเพียงคนเดียวจนไม่สามารถทดแทนกันได้",
+                "rubric": "1: มีผู้เชี่ยวชาญเพียงคนเดียว (SPOF) หากไม่อยู่ การพัฒนาระบบจะหยุดชะงัก 100%\n2: มีหัวหน้าทีมคนเดียว มีสมาชิกเข้าใจหลักการพื้นฐานแต่ไม่สามารถดีบักโค้ดหรือซ่อมแซมฮาร์ดแวร์ได้\n3: มีผู้รับผิดชอบหลักและผู้ช่วยสำรอง 1 คู่ที่สามารถดูแล แก้ไขปัญหา และปรับปรุงระบบทดแทนกันได้\n4: มีสมาชิกในทีมอย่างน้อย 3 คนที่มีความชำนาญ สามารถออกแบบ ประกอบ และแก้ไขระบบได้ทันที\n5: ทีมงานทุกคนมีความเชี่ยวชาญเต็มเปี่ยม สามารถสลับสับเปลี่ยนหน้าที่กันได้โดยไม่กระทบความเร็วงาน",
+                "score": 3,
+                "weight": 0.04,
+                "evidence": "team-skills/due.md line 26, fifa.md lines 12-25, jk.md lines 24-40, kin.md lines 12-32; Due leads audio hardware with Fifa/JK backup; JK leads signal processing/math with Kin/Due backup; Fifa leads mechanical fixtures with Due/Jay backup.",
+                "descope": "Structure modular interfaces allowing JK and Kin to simulate filtering on recorded WAV audio files while Due and Fifa finalize the acoustic housing."
+            },
+            {
+                "id": "T-05",
+                "pillar": "ด้านเทคนิค (Technical 2.2)",
+                "question": "ช่วงการเรียนรู้ทางเทคโนโลยีใหม่ (Learning Curve Burden) สำหรับการขับสัญญาณเสียง Chirp Sweep และการประมวลผล Cross-correlation?",
+                "rationale": "ประเมินระยะเวลาและภาระที่ทีมงานต้องใช้ในการฝึกฝนเครื่องมือ ภาษา หรือเทคโนโลยีใหม่ เพื่อไม่ให้กระทบต่อตารางส่งมอบ",
+                "rubric": "1: ต้องเริ่มเรียนรู้ใหม่ทั้งหมดจากศูนย์ ทั้งภาษา เครื่องมือ และฮาร์ดแวร์ที่ไม่เคยใช้งานมาก่อน\n2: มีความเข้าใจเชิงทฤษฎี แต่ขาดประสบการณ์ปฏิบัติจริง การเขียนโค้ดและต่อวงจรติดขัดล่าช้า\n3: มีทักษะในเทคโนโลยีใกล้เคียงที่เทียบเคียงได้ ใช้เวลาปรับตัวและฝึกฝนประมาณ 1 สัปดาห์\n4: คุ้นเคยกับชุดเครื่องมืออยู่แล้ว เพียงเรียนรู้ไลบรารีหรือคำสั่งเฉพาะของเซนเซอร์เพิ่มเติมเล็กน้อย\n5: ไม่ต้องเรียนรู้ใหม่ สามารถนำโค้ด เครื่องมือ และทักษะที่มีอยู่เดิมมาประยุกต์ใช้งานได้ทันที",
+                "score": 3,
+                "weight": 0.04,
+                "evidence": "team-skills/due.md line 26, jk.md lines 27, 33-40; team has proven adjacent mastery in ESP32, MAX98357 audio amplifier, and Python signal processing; requires a manageable 1-week curve to calibrate acoustic chirp sweeps and matched filtering.",
+                "descope": "Generate pre-computed linear chirp audio files stored on an SD card or flash memory to bypass real-time synthetic waveform generation on the microcontroller."
+            },
+            {
+                "id": "E-01",
+                "pillar": "ด้านเศรษฐศาสตร์ (Economic 2.3)",
+                "question": "ระยะเวลาคืนทุนและความคุ้มค่าทางเศรษฐกิจ (ROI & Payback Horizon) ของการคัดกรองท่อก่อนส่งรถดูดเลน?",
+                "rationale": "ประเมินผลตอบแทนทางการเงินและการประหยัดงบประมาณภาครัฐเทียบกับเงินลงทุน เพื่อป้องกันโครงการที่ใช้งบประมาณเกินคุ้มค่า",
+                "rubric": "1: ระยะเวลาคืนทุนนานมาก (>= 10 ปี) ต้นทุนเริ่มแรกสูงแต่ประหยัดค่าใช้จ่ายได้น้อยมาก ไม่คุ้มค่าเชิงพาณิชย์\n2: คืนทุนช้า (6–9 ปี) ใช้เงินลงทุนสูงและต้องได้รับการอุดหนุนงบประมาณระยะยาว\n3: คืนทุนปานกลาง (3–5 ปี) เหมาะสมกับโครงสร้างพื้นฐานสาธารณะ ชดเชยต้นทุนได้ตามรอบงบประมาณ\n4: คืนทุนเร็ว (2–3 ปี) ลดค่าใช้จ่ายด้านแรงงาน เชื้อเพลิง หรือการสูญเสียได้อย่างมีนัยสำคัญ\n5: คืนทุนทันที (<= 1–2 ปี) ลดความสูญเสียจากภัยพิบัติหรือความเสียหายซ้ำซากได้ตั้งแต่ฤดูกาลแรก",
+                "score": 3,
+                "weight": 0.0667,
+                "evidence": "Acoustic sewer inspection provides fast pipe triage compared to multi-million Baht crawler robots, but its explicit operational limitation (cannot operate during high water/rain) and custom transducer tooling lengthen municipal payback to 3-5 years.",
+                "descope": "Bundle acoustic screening kits with existing municipal dredging trucks as a rapid pre-screening tool to prioritize crawler camera deployments."
+            },
+            {
+                "id": "E-02",
+                "pillar": "ด้านเศรษฐศาสตร์ (Economic 2.3)",
+                "question": "ระดับการพึ่งพาชิ้นส่วนและสถาปัตยกรรมระบบ (Vendor Lock-in & Autonomy) ของทรานสดิวเซอร์เสียงและไมโครโฟน?",
+                "rationale": "ประเมินความเสี่ยงจากการผูกขาดเทคโนโลยีและค่าลิขสิทธิ์ต่อเนื่อง เพื่อให้ระบบสามารถบำรุงรักษาได้อย่างเป็นอิสระ",
+                "rubric": "1: ผูกขาดกับผู้ขาย 100% พึ่งพาคลาวด์และตัวเชื่อมต่อเฉพาะทางที่เข้ารหัส ปิดกั้นการซ่อมบำรุง\n2: ต้องใช้เครื่องมือตรวจวิเคราะห์เฉพาะของผู้ผลิต หรือเสียค่าธรรมเนียมรายปีเพื่อเปิดใช้งาน\n3: ฮาร์ดแวร์หลักใช้เฟิร์มแวร์กรรมสิทธิ์ แต่เปิดช่องทาง API และใช้อินเทอร์เฟซไฟฟ้าตามมาตรฐาน\n4: ใช้โพรโทคอลสื่อสารมาตรฐานเปิด (MQTT, Modbus, CAN) ซ่อมบำรุงด้วยเครื่องมือทั่วไปได้\n5: สถาปัตยกรรมเปิดสมบูรณ์ ชิ้นส่วนทุกชิ้นมีอะไหล่ทดแทนในท้องตลาด วิศวกรซ่อมบำรุงได้เอง 100%",
+                "score": 4,
+                "weight": 0.0667,
+                "evidence": "Built using standard generic COTS components (MAX98357 audio amplifier, I2S microphones, ESP32) with open communication protocols, though specialized acoustic waveguide coupling horns require custom fitting.",
+                "descope": "Standardize probe housings on generic commercial 4-ohm drivers and standard 1/2-inch condenser capsules with 3D-printed coupling adapters."
+            },
+            {
+                "id": "E-03",
+                "pillar": "ด้านเศรษฐศาสตร์ (Economic 2.3)",
+                "question": "สัดส่วนงบประมาณสำรองความเสียหายของชิ้นส่วน (Scrap Margin Allowance) สำหรับวงจรขับเสียงและหัววัด?",
+                "rationale": "ประเมินขีดความสามารถทางการเงินในการรองรับความเสียหายของอุปกรณ์จากการทดลอง เพื่อไม่ให้โครงการหยุดชะงักเมื่อเกิดข้อผิดพลาด",
+                "rubric": "1: ไม่มีงบสำรองอะไหล่ (0%) ซื้อฮาร์ดแวร์เพียง 1 ชุด หากชิปไหม้หรือโครงสร้างเสียหาย โครงการจะหยุดชะงัก\n2: งบสำรองเปราะบาง (20–30%) มีอะไหล่เฉพาะชิ้นส่วนพาสซีฟ ไม่มีไมโครคอนโทรลเลอร์หรือเซนเซอร์สำรอง\n3: งบสำรองปานกลาง (50%) มีอะไหล่พาสซีฟครบถ้วน และมีบอร์ดควบคุมหลักสำรอง 1 ชุด\n4: งบสำรองสูง (80%) มีอะไหล่สำรองสำหรับชิ้นส่วนแอคทีฟและเซนเซอร์เกือบทุกตัว รองรับความผิดพลาดได้หลายครั้ง\n5: มีอะไหล่ทดแทนสมบูรณ์ (>= 100%) สามารถประกอบชุดฮาร์ดแวร์ทำงานได้พร้อมกัน 2 ระบบเต็มรูปแบบ",
+                "score": 3,
+                "weight": 0.0666,
+                "evidence": "High-SPL acoustic transducers and audio amplifiers driven near saturation risk thermal burnouts; budget accommodates a 50% buffer (spare MCU and audio ICs), but cannot duplicate full heavy-duty transducer field rigs.",
+                "descope": "Use pre-assembled Class-D amplifier modules with thermal/short protection and stock a 50% spare reserve of amplifier ICs and microphone capsules."
+            },
+            {
+                "id": "L-01",
+                "pillar": "ด้านกฎหมายและสถาบัน (Legal 2.4)",
+                "question": "การปฏิบัติตามกฎหมายจราจร ความปลอดภัยในพื้นที่อับอากาศ และระเบียบการเปิดฝาท่อสาธารณะ?",
+                "rationale": "ตรวจสอบความสอดคล้องกับข้อกำหนดทางกฎหมายและสิทธิ์ความเป็นส่วนตัว เพื่อป้องกันการถูกระงับโครงการหรือดำเนินคดี",
+                "rubric": "1: ฝ่าฝืนกฎหมายชัดเจน (ละเมิด PDPA จากการสอดส่องที่สาธารณะ, กีดขวางการจราจร, คลื่นวิทยุผิดกฎหมาย)\n2: มีความเสี่ยงทางกฎหมายสูง มีข้อร้องเรียนเรื่องการสัญจรหรือความปลอดภัย ต้องขอข้อยกเว้นทางเทคนิคซับซ้อน\n3: ปฏิบัติการได้ภายใต้เงื่อนไข ต้องมีหนังสืออนุญาต บันทึกข้อตกลง (MoU) หรือใบอนุญาตจากเทศบาล\n4: ความเสี่ยงต่ำ ปฏิบัติการภายใต้ข้อยกเว้นงานวิจัยทางวิศวกรรมสาธารณะ เพียงแจ้งหน่วยงานและปฏิบัติตามมาตรฐาน\n5: ได้รับการยกเว้นตามกฎหมาย 100% ไม่มีความเสี่ยงต่อความปลอดภัยสาธารณะ และไม่มีการเก็บข้อมูลส่วนบุคคล (Zero PII)",
+                "score": 2,
+                "weight": 0.075,
+                "evidence": "Opening sewer manholes on active public roadways causes severe traffic disruption, hazardous road blockage under Land Traffic Act B.E. 2522, and toxic gas asphyxiation risks under Confined Space Ministerial Regulations B.E. 2562.",
+                "descope": "Confine semester testing to KMUTT campus drainage conduits or an above-ground PVC pipe testbench, requiring official BMA crew accompaniment for any public street trials."
+            },
+            {
+                "id": "L-02",
+                "pillar": "ด้านกฎหมายและสถาบัน (Legal 2.4)",
+                "question": "เงื่อนไขสัญญาอนุญาตซอฟต์แวร์และทรัพย์สินทางปัญญา (IP & Licensing Framework) ของอัลกอริทึมวิเคราะห์สัญญาณเสียง?",
+                "rationale": "ป้องกันการละเมิดลิขสิทธิ์ซอฟต์แวร์หรือข้อผูกมัดทางกฎหมายแบบ Copyleft ที่อาจบังคับเปิดเผยทรัพย์สินทางปัญญาของระบบ",
+                "rubric": "1: สัญญาอนุญาตเชิงพาณิชย์แบบปิด ต้องจ่ายค่าลิขสิทธิ์ราคาสูงจึงจะสามารถคอมไพล์หรือใช้งานได้\n2: สถานะทรัพย์สินทางปัญญาคลุมเครือ ไม่มีสัญญาอนุญาตชัดเจน เสี่ยงต่อการถูกฟ้องร้องละเมิดลิขสิทธิ์\n3: สัญญาอนุญาตแบบ Copyleft เข้มงวด (เช่น GPLv3) บังคับให้ต้องเปิดเผยโค้ดทั้งหมดหากมีการแจกจ่าย\n4: สัญญาอนุญาตแบบเปิดที่มีเงื่อนไขน้อย (เช่น LGPL, CC-BY) อนุญาตให้นำไปพัฒนาต่อได้โดยระบุที่มา\n5: สัญญาอนุญาตแบบเสรีสมบูรณ์ (MIT, Apache 2.0, BSD) หรือเป็นสมบัติสาธารณะ นำไปใช้ประโยชน์ได้อิสระ 100%",
+                "score": 5,
+                "weight": 0.075,
+                "evidence": "Acoustic reflectometry physics is public domain; embedded DSP routines utilize CMSIS-DSP (Apache 2.0) and NumPy/SciPy (BSD) with zero proprietary licensing encumbrances.",
+                "descope": "Rely exclusively on Apache 2.0 and MIT signal processing libraries for FFT and cross-correlation filtering."
+            },
+            {
+                "id": "O-01",
+                "pillar": "ด้านปฏิบัติการ (Operational 2.5)",
+                "question": "ระดับความรุนแรงของผลกระทบเมื่อระบบขัดข้อง (User Failure Impact & Safety) ระหว่างการตรวจวัดท่อ?",
+                "rationale": "ประเมินความปลอดภัยของผู้ใช้งานและประชาชนเมื่อระบบเกิดความผิดพลาด ป้องกันความเสียหายต่อชีวิตและทรัพย์สิน",
+                "rubric": "1: อันตรายถึงชีวิต เกิดไฟฟ้าดูด เพลิงไหม้ อุบัติเหตุทางถนน หรือการพังทลายของโครงสร้าง\n2: อันตรายทางกายภาพรุนแรง อุปกรณ์เสียหายหนัก ก่อสารพิษ หรือหยุดชะงักโครงสร้างพื้นฐานฉุกเฉิน\n3: ผู้ใช้เกิดความโกลาหล สับสนในข้อมูล มีการสั่งการทับซ้อนและระบบหยุดชะงัก\n4: เกิดความล่าช้าเล็กน้อยในการปฏิบัติการ ระบบตัดการทำงานอย่างปลอดภัย สามารถรีบูตหรือสลับไปใช้ระบบสำรองได้\n5: เสียหายเพียงงบประมาณเล็กน้อย ไม่ก่ออันตรายต่อมนุษย์หรือกระทบกระบวนการทำงานหลัก",
+                "score": 4,
+                "weight": 0.05,
+                "evidence": "อ้างอิง solution-2.md บรรทัดที่ 17, 30, 48-54: การตรวจสอบท่อด้วยคลื่นเสียงสะท้อนดำเนินการโดยการหย่อนหัวส่งและหัวรับจากผิวถนนลงไปที่ปากท่อ ไม่มีการส่งมนุษย์ลงไปใต้ดิน หากอุปกรณ์ขัดข้องหรือสัญญาณสะท้อนผิดเพี้ยนจากระดับน้ำ สามารถดึงก้านหย่อนกลับขึ้นมาได้อย่างปลอดภัย และสลับไปใช้วิธีลอกท่อเชิงกลตามปกติได้โดยปราศจากความเสี่ยงต่อชีวิต (Minor Operational Delay)",
+                "descope": "ติดตั้งสายสลิงนิรภัยคู่ (Dual Mechanical Tether) ยึดหัวเซนเซอร์กับก้านหย่อน และเพิ่มสถานะแจ้งเตือนบนหน้าจอว่า 'Signal Unreliable / High Water Level' เพื่อสั่งยกเลิกการวัดโดยอัตโนมัติเมื่อค่าการสะท้อนผิดเพี้ยน"
+            },
+            {
+                "id": "O-02",
+                "pillar": "ด้านปฏิบัติการ (Operational 2.5)",
+                "question": "ความสอดคล้องกับพฤติกรรมผู้ใช้และแรงต้านทานในการปฏิบัติงาน (User Behavior & Solution Fit) ของคะแนนความสะอาด 0-10?",
+                "rationale": "ป้องกัน The Tech Trap โดยตรวจสอบว่าผู้ปฏิบัติงานหน้างานยินดีใช้งานจริงและไม่เกิดแรงต้านในกระบวนการทำงาน",
+                "rubric": "1: รื้อระบบการทำงานเดิมทั้งหมด บังคับกรอกเอกสารเพิ่ม 5 ขั้นตอนขึ้นไป และผู้ปฏิบัติงานต่อต้านไม่ยอมใช้\n2: เพิ่มภาระการบันทึกข้อมูลอย่างมาก ผู้ปฏิบัติงานจะพยายามหาทางหลีกเลี่ยงหรือบายพาสระบบ\n3: ปรับเปลี่ยนกิจวัตรเล็กน้อย ต้องจัดอบรม 1–2 ครั้ง แต่ผู้ใช้ยอมรับแลกกับประสิทธิภาพที่ได้รับ\n4: ผสานรวมเข้ากับระบบงานเดิมได้อย่างราบรื่น (ส่งแจ้งเตือนเข้า LINE/Dashboard ที่ใช้อยู่แล้ว)\n5: ทำงานอยู่เบื้องหลังแบบอัตโนมัติ 100% ไร้แรงเสียดทาน ผู้ปฏิบัติงานไม่ต้องเปลี่ยนขั้นตอนใดๆ",
+                "score": 4,
+                "weight": 0.05,
+                "evidence": "อ้างอิง solution-2.md บรรทัดที่ 5-6, 12, 27, 40, 50: จุดเด่นของระบบคือความรวดเร็ว ('Fast') และการแปลงผลลัพธ์เป็นตัวเลขดัชนีความสะอาด 0-10 สเกล พร้อมระบุ Good/Bad ชัดเจนเพื่อจัดคิวลอกท่อ (Maintenance Queue) ได้ทันที เจ้าหน้าที่ภาคสนามไม่ต้องตีความสัญญาณฟิสิกส์ซับซ้อน เกิดแรงต้านในการปรับเปลี่ยนพฤติกรรมต่ำ (Low Friction)",
+                "descope": "พัฒนา Web UI บนแท็บเล็ต/สมาร์ตโฟนที่แสดงผลสถานะท่อเป็นสีเขียว-เหลือง-แดง พร้อมปุ่มกดส่งพิกัด GPS เข้าสู่คิวงานบำรุงรักษาได้ทันที เพื่อตัดขั้นตอนการกรอกรายงานด้วยมือ"
+            },
+            {
+                "id": "O-03",
+                "pillar": "ด้านปฏิบัติการ (Operational 2.5)",
+                "question": "ข้อจำกัดด้านการเข้าถึงสถานที่และสิ่งอำนวยความสะดวกในการพัฒนา (Developer Contribution Dependency) สำหรับการทดสอบท่อ?",
+                "rationale": "ประเมินความคล่องตัวในการเข้าถึงเครื่องมือ ห้องปฏิบัติการ และสิทธิ์ของนักพัฒนา เพื่อป้องกันการติดขัดจากระเบียบธุรการ",
+                "rubric": "1: ติดขั้นตอนอนุมัติราชการเข้มงวด ต้องเซ็น NDA ล็อกตู้แล็บ และถูกจำกัดสิทธิ์ Git Branch\n2: ต้องกรอกแบบฟอร์มขอใช้อุปกรณ์ของคณะ รอคิวเครื่องจักร และรอการอนุมัติ 3–5 วันทำการ\n3: เข้าใช้งานห้องแล็บและเครื่องมือได้ตามเวลาเปิดทำการปกติของมหาวิทยาลัย\n4: มีสิทธิ์เข้าแล็บ 24 ชม. มีสิทธิ์เขียนโค้ดลง Repository และมีงบประมาณย่อยพร้อมเบิกจ่ายทันที\n5: ทำงานได้อิสระ 100% ใช้ระบบ CI/CD บนคลาวด์ มีเครื่องมือประกอบต้นแบบที่บ้าน ไร้อุปสรรคทางธุรการ",
+                "score": 3,
+                "weight": 0.05,
+                "evidence": "อ้างอิง solution-2.md บรรทัดที่ 17-23, 33-38: การทดสอบระบบรับส่งคลื่นเสียงจำเป็นต้องใช้ท่อทดสอบที่มีมิติจำลองใกล้เคียงท่อจริง ซึ่งทีมงานต้องขอเข้าใช้พื้นที่ห้องปฏิบัติการหรือท่อระบายน้ำภายใน มจธ. ในช่วงเวลาทำการปกติ แต่ชิ้นส่วนอิเล็กทรอนิกส์สามารถประกอบและทดสอบเบื้องต้นบนโต๊ะแล็บได้ (Standard Campus Access)",
+                "descope": "ประกอบท่อทดสอบจำลอง (Acoustic Testbed) จากท่อพีวีซีขนาดเส้นผ่านศูนย์กลาง 4 นิ้ว ขนาดยาว 3-6 เมตร ติดตั้งไว้ในห้องปฏิบัติการ FIBO เพื่อใช้ทดสอบและสอบเทียบค่าการลดทอนของเสียงได้ตลอดเวลาโดยไม่ต้องลงพื้นที่ท่อจริง"
+            },
+            {
+                "id": "O-04",
+                "pillar": "ด้านปฏิบัติการ (Operational 2.5)",
+                "question": "ความซับซ้อนในขั้นตอนการพัฒนาและการติดตั้งระบบ (Developer Complexity & Pipeline Friction) ของการประมวลผลเสียง?",
+                "rationale": "ประเมินความซับซ้อนของขั้นตอนการบิวด์ คอมไพล์ และติดตั้ง เพื่อลดโอกาสเกิด Human Error ระหว่างพัฒนา",
+                "rubric": "1: ขั้นตอนการบิวด์และติดตั้งซับซ้อนมาก เครื่องมือพึ่งพาแพ็กเกจเปราะบาง เสี่ยงต่อข้อผิดพลาดสูง\n2: ต้องรันกระบวนการด้วยมือหลายขั้นตอน ติดปัญหาความไม่เข้ากันของไลบรารี และแฟลชบอร์ดได้ยาก\n3: กระบวนการประกอบและบิวด์ระบบมีหลายขั้นตอนตามมาตรฐาน สามารถทำซ้ำได้ตามคู่มือและเช็กลิสต์\n4: เวิร์กโฟลว์ตรงไปตรงมา ใช้ระบบสคริปต์อัตโนมัติ รันผ่าน IDE มาตรฐาน คำสั่งเดียวแฟลชบอร์ดได้\n5: ระบบเรียบง่ายแบบ Plug-and-Play ทำงานได้ในขั้นตอนเดียว ไม่ต้องตั้งค่าซับซ้อน",
+                "score": 3,
+                "weight": 0.05,
+                "evidence": "อ้างอิง solution-2.md บรรทัดที่ 32-46: ระบบต้องสร้างสัญญาณ Chirp, ส่งผ่านแอมป์, ดักจับด้วยไมโครโฟน, กรองสัญญาณ, และคำนวณการลดทอน Due มีทักษะตรงในการต่อโมดูลขยายเสียง MAX98357 และ ESP32 (due.md) ขณะที่ JK เชี่ยวชาญคณิตศาสตร์การประมวลผลสัญญาณ (jk.md) กระบวนการพัฒนาจึงบริหารจัดการได้ตามคู่มือและเช็กลิสต์อย่างเป็นระบบ (Moderate Complexity)",
+                "descope": "ลดทอนฟังก์ชันการสร้างภาพตัดขวาง 2D ให้เหลือเพียงการคำนวณอัตราส่วนการสูญเสียพลังงานเสียง (Acoustic Energy Attenuation Ratio) แล้วเทียบกับตาราง Look-up Table เพื่อแปลงเป็นคะแนน 0-10 เพื่อตัดความซับซ้อนของอัลกอริทึม Inverse Scattering"
+            },
+            {
+                "id": "S-01",
+                "pillar": "ด้านแผนงานและเวลา (Schedule 2.6)",
+                "question": "ความพร้อมของแบบทางวิศวกรรมภายในกรอบเวลา 5 สัปดาห์ทำงาน (Engineering Design Maturity) สำหรับชุดตรวจวัดคลื่นเสียง?",
+                "rationale": "ประเมินวุฒิภาวะของการออกแบบเมื่อเทียบกับกรอบเวลา 5 สัปดาห์ทำการจริง และช่วงสอบคั่นกลาง 4 สัปดาห์",
+                "rubric": "1: อยู่ในระดับแนวคิดเท่านั้น (0% Design) ไม่มีโมเดล CAD ไม่มีผังวงจร และยังไม่ได้เขียนเฟิร์มแวร์\n2: แบบร่างเบื้องต้น (25% Design) มีเพียงบล็อกไดอะแกรม ผังวงจรวาดมือ รายการชิ้นส่วนที่ยังไม่ได้สอบทาน\n3: ความพร้อมระดับปานกลาง (50% Design) ประกอบ CAD ครบ มีผังวงจร Schematic สมบูรณ์ วางสถาปัตยกรรมโค้ดแล้ว\n4: พร้อมทดสอบพรีโปรดักชัน (75–80% Design) โมเดล 3D พร้อมพิมพ์/กัด มีไฟล์ Gerber ตรวจสอบ DRC แล้ว\n5: ออกแบบเสร็จสมบูรณ์ 100% (Production Ready) มีไฟล์ผลิตครบถ้วน ล็อกรายการ BOM และมีสคริปต์แฟลชพร้อมผลิต",
+                "score": 3,
+                "weight": 0.15,
+                "evidence": "อ้างอิง schedule-details/schedule.md: ภายใต้กรอบเวลา 5 สัปดาห์ทำการ และการหยุดชะงัก 4 สัปดาห์ช่วงสอบ midterms/finals เพื่อมุ่งสู่ TRL3 (สัปดาห์ที่ 13) และ TRL4 (สัปดาห์ที่ 16) ด้วยทักษะการออกแบบ 3D CAD ของ Fifa (fifa.md) และความเชี่ยวชาญด้านเฟิร์มแวร์เสียงของ Due ทำให้ทีมสามารถออกแบบผังวงจร ขึ้นรูปแท่นยึดกระบอกส่งสัญญาณ และสร้างโค้ดทดสอบบน Bench ท่อจำลองได้ทันตามเกณฑ์วุฒิภาวะ 50% (Intermediate Maturity: 50% Design)",
+                "descope": "จัดซื้อลำโพงกันน้ำขนาดเล็กและไมโครโฟน MEMS I2S สำเร็จรูปภายในสัปดาห์ที่ 9 เพื่อให้ Fifa ขึ้นรูปเคส 3D Print ให้เสร็จสิ้นในสัปดาห์ที่ 11 สำหรับนำไปทดสอบ Proof-of-Concept ในสัปดาห์ที่ 13"
+            },
+            {
+                "id": "SDG-01",
+                "pillar": "ด้านความยั่งยืน (+S / SDGs 2.7)",
+                "question": "ผลกระทบต่อสังคมและความทนทานของเมืองเทียบกับการฟอกเขียว (Public Impact vs. Greenwashing) ของการตรวจคัดกรองท่อ?",
+                "rationale": "ประเมินผลกระทบที่แท้จริงต่อการลดความสูญเสียจากภัยพิบัติเมือง (SDG 11.5 / 13.1) เทียบกับโครงการสาธิตเชิงวิชาการ",
+                "rubric": "1: กล่าวอ้างความยั่งยืนโดยไม่มีข้อมูลรองรับ (Greenwashing) วัดผลไม่ได้จริง และไม่แก้ปัญหาของเมือง\n2: เชื่อมโยงทางอ้อม ทำหน้าที่เป็นเพียงโครงงานสาธิตในสถาบันการศึกษา ไม่สามารถประเมินการลดความเสียหายได้\n3: พิสูจน์ผลได้ในระดับท้องถิ่น (ลดเวลาตอบสนองหรือลดความร้อนได้เฉพาะจุดทดสอบ) แต่ยังขาดโมเดลขยายผล\n4: มีศักยภาพปกป้องโครงสร้างพื้นฐานหรือลดความเสียหายของประชาชนในระดับเขตพื้นที่เมืองอย่างชัดเจน\n5: เสริมสร้างความทนทานต่อภัยพิบัติของเมือง มีข้อมูลเชิงประจักษ์ยืนยันการลดความสูญเสียทางเศรษฐกิจและชีวิต",
+                "score": 4,
+                "weight": 0.0333,
+                "evidence": "Solution-2 utilizes Airborne Acoustic Reflectometry between adjacent manholes to map sewer pipe cross-sections and produce an empirical cleanliness score (0-10 scale). Taking only minutes per manhole segment, this rapid non-destructive screening technology allows mobile municipal crews to survey entire subdistrict drainage networks prior to the monsoon season. Proactive detection of severe silt and grease blockages enables targeted preventative desilting, directly mitigating road waterlogging and protecting urban transport infrastructure across multiple roads/alleys (SDG 11.5 / 13.1).",
+                "descope": "Integrate acoustic inspection logs into a mobile GIS-based maintenance dispatch pipeline for district public works crews (ฝ่ายโยธา); correlate acoustic blockage scores with upstream catchment runoff models to prioritize critical drainage bottlenecks."
+            },
+            {
+                "id": "SDG-02",
+                "pillar": "ด้านความยั่งยืน (+S / SDGs 2.7)",
+                "question": "รอยเท้าทางสิ่งแวดล้อม ขยะอิเล็กทรอนิกส์ และหลักการไม่สร้างผลเสีย (Do No Harm & E-Waste) ของหัววัดแบบพกพา?",
+                "rationale": "ป้องกันการทอดทิ้งขยะอิเล็กทรอนิกส์หรือสารพิษลงสู่ระบบระบายน้ำและสิ่งแวดล้อมเมือง (SDG 6.3 / 12.4)",
+                "rubric": "1: ก่ออันตรายและสารพิษในพื้นที่ กล่องอุปกรณ์แตกสลาย หรือแบตเตอรี่รั่วไหลหลุดลงสู่ระบบระบายน้ำ\n2: เทคโนโลยีเปราะบางแบบใช้แล้วทิ้ง เซนเซอร์อุดตันหรือผุกร่อนภายใน 2–3 สัปดาห์ และถูกทิ้งร้างในพื้นที่\n3: มีรอยเท้าสิ่งแวดล้อมตามมาตรฐาน ต้องเปลี่ยนแบตเตอรี่ตามรอบ มีสายยึดป้องกันอุปกรณ์สูญหาย\n4: กล่องหุ้มทนทานผลกระทบต่ำ กินไฟต่ำ ใช้วัสดุรีไซเคิลได้ และมีสายสลิงยึดโยงเพื่อความปลอดภัย\n5: ออกแบบตามหลักเศรษฐกิจหมุนเวียน 100% กู้คืนอุปกรณ์ได้ปลอดภัย ใช้วัสดุไม่เป็นพิษ ไร้รอยเท้าสิ่งแวดล้อม",
+                "score": 5,
+                "weight": 0.0333,
+                "evidence": "Solution-2 is an active, human-operated portable diagnostic tool rather than a permanently installed IoT node. Crews temporarily place the transmitter and receiver at opposite manholes, emit acoustic pulses through the sewer air column, record transmission loss, and immediately retrieve the equipment upon test completion. Because zero hardware, probes, or batteries are left unattended in the sewer, it achieves 100% fail-safe retrieval, leaves zero field trace, and generates zero marine litter or toxic leaching into the urban drainage network (SDG 6.3 / 12.4).",
+                "descope": "Standardize handheld enclosures using non-toxic recyclable TPU and aluminum with replaceable hydrophobic ePTFE acoustic membranes to withstand sewer moisture without requiring harsh chemical cleaning agents."
+            },
+            {
+                "id": "SDG-03",
+                "pillar": "ด้านความยั่งยืน (+S / SDGs 2.7)",
+                "question": "ความโปร่งใสของอัลกอริทึมและความเป็นธรรมในการตัดสินใจ (Algorithmic Equity & Transparency) ของสมการคลื่นเสียง?",
+                "rationale": "ป้องกันความลำเอียงในการจัดสรรความช่วยเหลือหรือการปิดบังตรรกะการตัดสินใจต่อประชาชน (SDG 10.2 / 16.6)",
+                "rubric": "1: อัลกอริทึมแบบ Black-box ไม่โปร่งใส ปรับเปลี่ยนหรือยกเลิกการช่วยเหลือโดยไม่มีคำอธิบาย เสี่ยงต่อความไม่เท่าเทียม\n2: ตรรกะการตัดสินใจคลุมเครือ ซ่อนอยู่ในโค้ดที่ซับซ้อน เจ้าหน้าที่ไม่สามารถอธิบายเหตุผลให้ประชาชนเข้าใจได้\n3: กฎเกณฑ์มีเอกสารบันทึกไว้สำหรับวิศวกร แต่ยังไม่มีระบบตรวจสอบสาธารณะหรือช่องทางอุทธรณ์ผลการตรวจวัด\n4: การตัดสินใจขับเคลื่อนด้วยสมการฟิสิกส์มาตรฐานเปิด ปฏิบัติต่อทุกพื้นที่ของเมืองด้วยเกณฑ์เดียวกันอย่างเป็นธรรม\n5: ตรวจสอบได้ 100% มีระบบบันทึก Audit Trail ดิจิทัลที่โปร่งใส เปิดให้ประชาชนและเจ้าหน้าที่เข้าถึงได้อย่างเท่าเทียม",
+                "score": 4,
+                "weight": 0.0334,
+                "evidence": "Pipe cleanliness scoring (0-10) is derived from deterministic acoustic waveguide physics (transmission loss and boundary attenuation governed by cross-sectional blockage area). Decisions are based on transparent physical equations applied equally across all city zones regardless of neighborhood socio-economic status (SDG 10.2). It achieves Level 4 rather than 5 because inspection datasets currently remain internal engineering logs without a live, tamper-evident civic open-data portal (SDG 16.6).",
+                "descope": "Release the acoustic inversion calibration curves as open-source documentation; automatically push all 0-10 pipe cleanliness ratings to Open Data BMA with timestamped GPS coordinates for transparent public oversight."
+            }
+        ]
+    },
+    {
+        "sheet_title": "Solution_3_Adaptive_Misting",
+        "concept": "ระบบปล่อยน้ำแบบ Adaptive เพื่อระบายความร้อนบนทางเดินเท้าและตรอกซอยอย่างมีประสิทธิภาพสูงสุด",
+        "strength": "เป็นระบบหุ่นยนต์และเมคคาทรอนิกส์แบบ Closed-loop สมบูรณ์ (Robotics Score 8.0/10 สูงสุด) ใช้ COTS สำเร็จรูป ทีมงานมีความพร้อมทางเทคนิคครบถ้วน (TRL 7)",
+        "bottleneck": "ตกเกณฑ์ข้อบังคับวิกฤตด้านเศรษฐศาสตร์ (E-01=1 VETOED) เนื่องจากใช้น้ำประปาและพลังงานต่อเนื่องโดยไม่มีผลตอบแทนทางการเงิน และมีความเสี่ยงสูงต่อการลื่นล้มของคนเดินถนน (O-01=2) รวมถึงการต่อต้านจากร้านค้าริมทาง (O-02=2)",
+        "advice": "เปลี่ยนพื้นที่ติดตั้งจากตรอกซอยทางเดินแคบไปเป็นศาลาพักผู้โดยสารหรือลานกิจกรรมกลางแจ้งที่มีระบบระบายน้ำ และใช้น้ำฝนบำบัดแทนน้ำประปา พร้อมติดแผ่นยางกันลื่น",
+        "robotic_compatibility": {
+            "score": 8.0,
+            "domains": {
+                "perception": "Score 2.7/3.5: Non-contact radiometric infrared surface temperature sensing and ambient microclimate relative humidity monitoring.",
+                "control_algorithms": "Score 3.0/3.5: Closed-loop feedback control incorporating thermodynamic latent heat balance modeling, anti-runoff mass flux limits, and adaptive PWM/hysteresis solenoid modulation.",
+                "actuation_mechanics": "Score 2.3/3.0: Active electro-fluidic actuation featuring a high-pressure pump, fast-switching solenoid valves, atomizing mist nozzle array, and hydraulic manifold mechanical structures."
+            },
+            "fibo_alignment_rationale": "Solution 3 represents a complete closed-loop cyber-physical mechatronic automation system (Sense -> Think -> Act -> Feedback). It achieves 100% synergy with the team's multidisciplinary curriculum, fully engaging CAD/FEA mechanical design (Fifa/Jay), custom driver PCB and firmware (Due), feedback control theory and differential heat modeling (JK), and telemetry analytics (Kin). It scores 8.0/10.0 due to its stationary configuration lacking multi-DOF kinematics or mobile locomotion."
+        },
+        "robotic_data": {
+            "score": 8.0,
+            "domains": {
+                "perception": "Score 2.7/3.5: Non-contact radiometric infrared surface temperature sensing and ambient microclimate relative humidity monitoring.",
+                "control_algorithms": "Score 3.0/3.5: Closed-loop feedback control incorporating thermodynamic latent heat balance modeling, anti-runoff mass flux limits, and adaptive PWM/hysteresis solenoid modulation.",
+                "actuation_mechanics": "Score 2.3/3.0: Active electro-fluidic actuation featuring a high-pressure pump, fast-switching solenoid valves, atomizing mist nozzle array, and hydraulic manifold mechanical structures."
+            },
+            "fibo_alignment_rationale": "Solution 3 represents a complete closed-loop cyber-physical mechatronic automation system (Sense -> Think -> Act -> Feedback). It achieves 100% synergy with the team's multidisciplinary curriculum, fully engaging CAD/FEA mechanical design (Fifa/Jay), custom driver PCB and firmware (Due), feedback control theory and differential heat modeling (JK), and telemetry analytics (Kin). It scores 8.0/10.0 due to its stationary configuration lacking multi-DOF kinematics or mobile locomotion."
+        },
+        "assessment_data": [
+            {
+                "id": "T-01",
+                "pillar": "ด้านเทคนิค (Technical 2.2)",
+                "question": "ระดับการสร้างเองเทียบกับการซื้อสำเร็จรูป (Build vs. Buy Burden) ของระบบพ่นละอองน้ำปรับตัวตามอุณหภูมิ?",
+                "rationale": "ประเมินภาระการวิจัยและพัฒนาชิ้นส่วนกลไก อิเล็กทรอนิกส์ และอัลกอริทึม ป้องกันการเสียเวลากับงานประดิษฐ์ขึ้นใหม่โดยไม่จำเป็น",
+                "rubric": "1: ต้องวิจัยและสร้างขึ้นเองทั้งหมด 100% (ไม่มีพิมพ์เขียว อัลกอริทึม หรือไลบรารีอ้างอิง)\n2: มีชิ้นส่วนหลักในท้องตลาด แต่ต้องดัดแปลงโครงสร้างอย่างหนักและเขียนโค้ดเชื่อมต่อเองทั้งหมด\n3: บูรณาการชิ้นส่วน COTS เข้ากับแท่นยึดแบบกำหนดเอง และเขียนโค้ดเชื่อมต่อบางส่วน\n4: ประกอบจากโมดูลมาตรฐานสำเร็จรูป (DIN-rail, I2C/CAN shields) มีงานประกอบกลไกเล็กน้อย\n5: ซื้อมาติดตั้งใช้งานได้ทันที (Plug-and-Play) ไม่ต้องตัดกลึงหรือบัดกรีวงจรเพิ่มเติม",
+                "score": 3,
+                "weight": 0.04,
+                "evidence": "solution-details/solution-3.md lines 16-24, 32-35; team-skills/due.md line 20, fifa.md lines 12-25, jk.md lines 24-29; standard COTS breakout boards (MLX90614 IR sensor, relay, ESP32) integrated with commercial misting plumbing and custom 3D-printed brackets.",
+                "descope": "Use pre-assembled quick-connect misting kits and pre-wired DIN-rail relay enclosures to eliminate custom mechanical plumbing fabrication and reduce water leak hazards."
+            },
+            {
+                "id": "T-02",
+                "pillar": "ด้านเทคนิค (Technical 2.2)",
+                "question": "สิทธิ์ในการเข้าถึงสตรีมวิดีโอและระบบนิเวศข้อมูล (Access & Permissions) ของเซนเซอร์ IR และรีเลย์ควบคุมวาล์ว?",
+                "rationale": "ตรวจสอบข้อจำกัดด้านกรรมสิทธิ์ การล็อกไฟร์วอลล์ และการอนุญาตเข้าถึง เพื่อป้องกันการพัฒนาระบบบนฐานข้อมูลที่ไม่สามารถเข้าถึงได้จริง",
+                "rubric": "1: ล็อกสิทธิ์ภายใต้สัญญา NDA ระบบปิด ติดไฟร์วอลล์องค์กร หรือไม่มีสิทธิ์เข้าถึงฝั่งนักพัฒนา\n2: ซอฟต์แวร์หรือเฟิร์มแวร์กรรมสิทธิ์ปิด ทำงานแบบ Black-box โดยไม่มี Source Code หรือ Telemetry\n3: บัญชีเพื่อการศึกษา/ทดลองใช้ที่มีโควตาหรือ Rate Limit เข้มงวด ต้องรอการอนุมัติอย่างเป็นทางการ\n4: มี SDK หรือ Open API สาธารณะพร้อมเอกสารครบถ้วน แต่ไม่สามารถแก้ไขสถาปัตยกรรมระดับล่างได้\n5: สถาปัตยกรรมเปิดสมบูรณ์ (Open Source/Open HW) ทีมงานมีสิทธิ์ระดับ Root/Admin เต็มรูปแบบ",
+                "score": 5,
+                "weight": 0.04,
+                "evidence": "solution-details/solution-3.md lines 32-35; team-skills/jk.md lines 36-37, due.md line 20; 100% full-stack access using open-source hardware (ESP32) and permissive open-source libraries (Adafruit MLX90614 under MIT/BSD).",
+                "descope": "None needed. Utilize a local RTC breakout (DS3231) to eliminate outdoor Wi-Fi NTP synchronization dependencies."
+            },
+            {
+                "id": "T-03",
+                "pillar": "ด้านเทคนิค (Technical 2.2)",
+                "question": "ระดับความพร้อมทางเทคโนโลยี (Base Performance / TRL) ของระบบพ่นหมอกระบายความร้อนและเซนเซอร์ IR ผิวทางเท้า?",
+                "rationale": "วัดวุฒิภาวะของเทคโนโลยีว่าผ่านการพิสูจน์ในสภาพแวดล้อมจริงแล้ว หรือเป็นเพียงแนวคิดเชิงทฤษฎีในห้องปฏิบัติการ",
+                "rubric": "1: ระดับแนวคิด/สมการคณิตศาสตร์ (TRL 2–3) ทดสอบเฉพาะในห้องทดลองที่ควบคุมสภาพแวดล้อมได้\n2: เบรดบอร์ดทำงานได้ในแล็บ (TRL 4) สายไฟเปราะบาง ยังไม่ผ่านการสอบเทียบในสภาพแวดล้อมจริง\n3: ตัวต้นแบบประกอบลงกล่อง (TRL 5–6) ผ่านการทดสอบในสภาพแวดล้อมจำลอง ต้องมีคนคอยดูแล\n4: ต้นแบบระดับพรีโปรดักชัน (TRL 7) ทำงานได้อย่างมีเสถียรภาพในสภาพแวดล้อมปฏิบัติงานจริง\n5: ผลิตภัณฑ์เชิงพาณิชย์สมบูรณ์ (TRL 8–9) ผ่านการรับรองมาตรฐาน มีค่า MTBF ยืนยันความทนทาน",
+                "score": 4,
+                "weight": 0.04,
+                "evidence": "Commercial off-the-shelf automated misting systems and non-contact IR temperature sensors are field-proven pre-production/commercial hardware (TRL 7) widely deployed in urban cooling and agriculture.",
+                "descope": "Install a 50-micron inline sediment pre-filter upstream of the misting manifold to prevent nozzle calcification and clogging from municipal tap water."
+            },
+            {
+                "id": "T-04",
+                "pillar": "ด้านเทคนิค (Technical 2.2)",
+                "question": "ความพร้อมและความซ้ำซ้อนของทักษะสมาชิกในทีม (Team Compatibility & SPOF Risk) ในด้านสมองกลฝังตัวและระบบท่อจ่ายน้ำ?",
+                "rationale": "ป้องกันความเสี่ยง Single Point of Failure (SPOF) ที่การดำเนินงานขึ้นอยู่กับสมาชิกเพียงคนเดียวจนไม่สามารถทดแทนกันได้",
+                "rubric": "1: มีผู้เชี่ยวชาญเพียงคนเดียว (SPOF) หากไม่อยู่ การพัฒนาระบบจะหยุดชะงัก 100%\n2: มีหัวหน้าทีมคนเดียว มีสมาชิกเข้าใจหลักการพื้นฐานแต่ไม่สามารถดีบักโค้ดหรือซ่อมแซมฮาร์ดแวร์ได้\n3: มีผู้รับผิดชอบหลักและผู้ช่วยสำรอง 1 คู่ที่สามารถดูแล แก้ไขปัญหา และปรับปรุงระบบทดแทนกันได้\n4: มีสมาชิกในทีมอย่างน้อย 3 คนที่มีความชำนาญ สามารถออกแบบ ประกอบ และแก้ไขระบบได้ทันที\n5: ทีมงานทุกคนมีความเชี่ยวชาญเต็มเปี่ยม สามารถสลับสับเปลี่ยนหน้าที่กันได้โดยไม่กระทบความเร็วงาน",
+                "score": 4,
+                "weight": 0.04,
+                "evidence": "team-skills/due.md lines 12-28, fifa.md lines 12-28, jk.md lines 24-37, kin.md line 16, jay.md line 2; 4 members (Due, Fifa, JK, Kin) have verified proficiency in ESP32/Arduino, I2C, and GPIO relay control; 3 members (Fifa, Due, Jay) can handle mechanical brackets and plumbing.",
+                "descope": "Standardize GPIO pinouts in a single PlatformIO configuration header so all members can build and flash firmware from their local machines."
+            },
+            {
+                "id": "T-05",
+                "pillar": "ด้านเทคนิค (Technical 2.2)",
+                "question": "ช่วงการเรียนรู้ทางเทคโนโลยีใหม่ (Learning Curve Burden) สำหรับการอ่านค่าเซนเซอร์ IR และควบคุมโซลินอยด์วาล์ว?",
+                "rationale": "ประเมินระยะเวลาและภาระที่ทีมงานต้องใช้ในการฝึกฝนเครื่องมือ ภาษา หรือเทคโนโลยีใหม่ เพื่อไม่ให้กระทบต่อตารางส่งมอบ",
+                "rubric": "1: ต้องเริ่มเรียนรู้ใหม่ทั้งหมดจากศูนย์ ทั้งภาษา เครื่องมือ และฮาร์ดแวร์ที่ไม่เคยใช้งานมาก่อน\n2: มีความเข้าใจเชิงทฤษฎี แต่ขาดประสบการณ์ปฏิบัติจริง การเขียนโค้ดและต่อวงจรติดขัดล่าช้า\n3: มีทักษะในเทคโนโลยีใกล้เคียงที่เทียบเคียงได้ ใช้เวลาปรับตัวและฝึกฝนประมาณ 1 สัปดาห์\n4: คุ้นเคยกับชุดเครื่องมืออยู่แล้ว เพียงเรียนรู้ไลบรารีหรือคำสั่งเฉพาะของเซนเซอร์เพิ่มเติมเล็กน้อย\n5: ไม่ต้องเรียนรู้ใหม่ สามารถนำโค้ด เครื่องมือ และทักษะที่มีอยู่เดิมมาประยุกต์ใช้งานได้ทันที",
+                "score": 4,
+                "weight": 0.04,
+                "evidence": "team-skills/due.md line 20, fifa.md line 23, jk.md line 37; solution-details/solution-3.md lines 21-25; familiar tech stack; only requires importing Adafruit_MLX90614 library and writing a basic threshold comparison loop.",
+                "descope": "Validate sensor I2C communication on a desktop breadboard using example code prior to final field box assembly."
+            },
+            {
+                "id": "E-01",
+                "pillar": "ด้านเศรษฐศาสตร์ (Economic 2.3)",
+                "question": "ระยะเวลาคืนทุนและความคุ้มค่าทางเศรษฐกิจ (ROI & Payback Horizon) ของการพ่นละอองน้ำบนทางเท้าสาธารณะ?",
+                "rationale": "ประเมินผลตอบแทนทางการเงินและการประหยัดงบประมาณภาครัฐเทียบกับเงินลงทุน เพื่อป้องกันโครงการที่ใช้งบประมาณเกินคุ้มค่า",
+                "rubric": "1: ระยะเวลาคืนทุนนานมาก (>= 10 ปี) ต้นทุนเริ่มแรกสูงแต่ประหยัดค่าใช้จ่ายได้น้อยมาก ไม่คุ้มค่าเชิงพาณิชย์\n2: คืนทุนช้า (6–9 ปี) ใช้เงินลงทุนสูงและต้องได้รับการอุดหนุนงบประมาณระยะยาว\n3: คืนทุนปานกลาง (3–5 ปี) เหมาะสมกับโครงสร้างพื้นฐานสาธารณะ ชดเชยต้นทุนได้ตามรอบงบประมาณ\n4: คืนทุนเร็ว (2–3 ปี) ลดค่าใช้จ่ายด้านแรงงาน เชื้อเพลิง หรือการสูญเสียได้อย่างมีนัยสำคัญ\n5: คืนทุนทันที (<= 1–2 ปี) ลดความสูญเสียจากภัยพิบัติหรือความเสียหายซ้ำซากได้ตั้งแต่ฤดูกาลแรก",
+                "score": 1,
+                "weight": 0.0667,
+                "evidence": "High CapEx for pumps, high-pressure tubing, and solenoid valves combined with perpetual potable water and power consumption produces zero direct financial savings or labor reductions in humid tropical climate (70-85% RH), resulting in an economically non-viable payback period >= 10 years (FATAL FLAW).",
+                "descope": "Descope from open sidewalk misting to targeted public transit waiting shelters using rainwater harvesting, though economic ROI remains non-viable."
+            },
+            {
+                "id": "E-02",
+                "pillar": "ด้านเศรษฐศาสตร์ (Economic 2.3)",
+                "question": "ระดับการพึ่งพาชิ้นส่วนและสถาปัตยกรรมระบบ (Vendor Lock-in & Autonomy) ของปั๊มน้ำ โซลินอยด์วาล์ว และหัวพ่นหมอก?",
+                "rationale": "ประเมินความเสี่ยงจากการผูกขาดเทคโนโลยีและค่าลิขสิทธิ์ต่อเนื่อง เพื่อให้ระบบสามารถบำรุงรักษาได้อย่างเป็นอิสระ",
+                "rubric": "1: ผูกขาดกับผู้ขาย 100% พึ่งพาคลาวด์และตัวเชื่อมต่อเฉพาะทางที่เข้ารหัส ปิดกั้นการซ่อมบำรุง\n2: ต้องใช้เครื่องมือตรวจวิเคราะห์เฉพาะของผู้ผลิต หรือเสียค่าธรรมเนียมรายปีเพื่อเปิดใช้งาน\n3: ฮาร์ดแวร์หลักใช้เฟิร์มแวร์กรรมสิทธิ์ แต่เปิดช่องทาง API และใช้อินเทอร์เฟซไฟฟ้าตามมาตรฐาน\n4: ใช้โพรโทคอลสื่อสารมาตรฐานเปิด (MQTT, Modbus, CAN) ซ่อมบำรุงด้วยเครื่องมือทั่วไปได้\n5: สถาปัตยกรรมเปิดสมบูรณ์ ชิ้นส่วนทุกชิ้นมีอะไหล่ทดแทนในท้องตลาด วิศวกรซ่อมบำรุงได้เอง 100%",
+                "score": 5,
+                "weight": 0.0667,
+                "evidence": "100% open architecture utilizing generic commodity COTS parts (solenoid valves, misting nozzles, diaphragm pumps, I2C IR thermometers) completely interchangeable across multiple plumbing and electronics vendors.",
+                "descope": "Standardize on standard 1/4-inch push-lock fittings and open I2C temperature sensors."
+            },
+            {
+                "id": "E-03",
+                "pillar": "ด้านเศรษฐศาสตร์ (Economic 2.3)",
+                "question": "สัดส่วนงบประมาณสำรองความเสียหายของชิ้นส่วน (Scrap Margin Allowance) สำหรับวงจรขับวาล์วและปั๊ม?",
+                "rationale": "ประเมินขีดความสามารถทางการเงินในการรองรับความเสียหายของอุปกรณ์จากการทดลอง เพื่อไม่ให้โครงการหยุดชะงักเมื่อเกิดข้อผิดพลาด",
+                "rubric": "1: ไม่มีงบสำรองอะไหล่ (0%) ซื้อฮาร์ดแวร์เพียง 1 ชุด หากชิปไหม้หรือโครงสร้างเสียหาย โครงการจะหยุดชะงัก\n2: งบสำรองเปราะบาง (20–30%) มีอะไหล่เฉพาะชิ้นส่วนพาสซีฟ ไม่มีไมโครคอนโทรลเลอร์หรือเซนเซอร์สำรอง\n3: งบสำรองปานกลาง (50%) มีอะไหล่พาสซีฟครบถ้วน และมีบอร์ดควบคุมหลักสำรอง 1 ชุด\n4: งบสำรองสูง (80%) มีอะไหล่สำรองสำหรับชิ้นส่วนแอคทีฟและเซนเซอร์เกือบทุกตัว รองรับความผิดพลาดได้หลายครั้ง\n5: มีอะไหล่ทดแทนสมบูรณ์ (>= 100%) สามารถประกอบชุดฮาร์ดแวร์ทำงานได้พร้อมกัน 2 ระบบเต็มรูปแบบ",
+                "score": 2,
+                "weight": 0.0666,
+                "evidence": "High physical BOM cost for pumps, valves, and power supplies limits the team to a fragile 20-30% buffer; inductive flyback from solenoids and pumps easily blows driver ICs with JK's soldering limitations, and zero backup pump exists if dry-run burnout occurs.",
+                "descope": "Incorporate optoisolated relay modules with integrated flyback protection diodes and software dry-run interlocks."
+            },
+            {
+                "id": "L-01",
+                "pillar": "ด้านกฎหมายและสถาบัน (Legal 2.4)",
+                "question": "การปฏิบัติตามกฎหมายจราจร ความรับผิดทางละเมิดจากพื้นลื่น และ พ.ร.บ. รักษาความสะอาดฯ?",
+                "rationale": "ตรวจสอบความสอดคล้องกับข้อกำหนดทางกฎหมายและสิทธิ์ความเป็นส่วนตัว เพื่อป้องกันการถูกระงับโครงการหรือดำเนินคดี",
+                "rubric": "1: ฝ่าฝืนกฎหมายชัดเจน (ละเมิด PDPA จากการสอดส่องที่สาธารณะ, กีดขวางการจราจร, คลื่นวิทยุผิดกฎหมาย)\n2: มีความเสี่ยงทางกฎหมายสูง มีข้อร้องเรียนเรื่องการสัญจรหรือความปลอดภัย ต้องขอข้อยกเว้นทางเทคนิคซับซ้อน\n3: ปฏิบัติการได้ภายใต้เงื่อนไข ต้องมีหนังสืออนุญาต บันทึกข้อตกลง (MoU) หรือใบอนุญาตจากเทศบาล\n4: ความเสี่ยงต่ำ ปฏิบัติการภายใต้ข้อยกเว้นงานวิจัยทางวิศวกรรมสาธารณะ เพียงแจ้งหน่วยงานและปฏิบัติตามมาตรฐาน\n5: ได้รับการยกเว้นตามกฎหมาย 100% ไม่มีความเสี่ยงต่อความปลอดภัยสาธารณะ และไม่มีการเก็บข้อมูลส่วนบุคคล (Zero PII)",
+                "score": 2,
+                "weight": 0.075,
+                "evidence": "Discharging water onto public walkways creates severe slip-and-fall tort liability under Civil and Commercial Code Section 420 and violates Cleanliness and Order Act B.E. 2535 Section 12, compounded by unauthorized water tapping across public right-of-ways.",
+                "descope": "Re-direct misting solely onto vegetated roadside planter beds, install rubber non-slip drainage mats, and obtain formal District Office (Khet) pilot permits."
+            },
+            {
+                "id": "L-02",
+                "pillar": "ด้านกฎหมายและสถาบัน (Legal 2.4)",
+                "question": "เงื่อนไขสัญญาอนุญาตซอฟต์แวร์และทรัพย์สินทางปัญญา (IP & Licensing Framework) ของระบบควบคุมการรดน้ำ?",
+                "rationale": "ป้องกันการละเมิดลิขสิทธิ์ซอฟต์แวร์หรือข้อผูกมัดทางกฎหมายแบบ Copyleft ที่อาจบังคับเปิดเผยทรัพย์สินทางปัญญาของระบบ",
+                "rubric": "1: สัญญาอนุญาตเชิงพาณิชย์แบบปิด ต้องจ่ายค่าลิขสิทธิ์ราคาสูงจึงจะสามารถคอมไพล์หรือใช้งานได้\n2: สถานะทรัพย์สินทางปัญญาคลุมเครือ ไม่มีสัญญาอนุญาตชัดเจน เสี่ยงต่อการถูกฟ้องร้องละเมิดลิขสิทธิ์\n3: สัญญาอนุญาตแบบ Copyleft เข้มงวด (เช่น GPLv3) บังคับให้ต้องเปิดเผยโค้ดทั้งหมดหากมีการแจกจ่าย\n4: สัญญาอนุญาตแบบเปิดที่มีเงื่อนไขน้อย (เช่น LGPL, CC-BY) อนุญาตให้นำไปพัฒนาต่อได้โดยระบุที่มา\n5: สัญญาอนุญาตแบบเสรีสมบูรณ์ (MIT, Apache 2.0, BSD) หรือเป็นสมบัติสาธารณะ นำไปใช้ประโยชน์ได้อิสระ 100%",
+                "score": 5,
+                "weight": 0.075,
+                "evidence": "Firmware uses basic threshold logic and open MIT-licensed Adafruit MLX90614 libraries on top of the Apache 2.0 / LGPL Arduino core with zero commercial licensing barriers.",
+                "descope": "Retain standard open-source MIT license attribution."
+            },
+            {
+                "id": "O-01",
+                "pillar": "ด้านปฏิบัติการ (Operational 2.5)",
+                "question": "ระดับความรุนแรงของผลกระทบเมื่อระบบขัดข้อง (User Failure Impact & Safety) ของการพ่นน้ำบนทางเท้า?",
+                "rationale": "ประเมินความปลอดภัยของผู้ใช้งานและประชาชนเมื่อระบบเกิดความผิดพลาด ป้องกันความเสียหายต่อชีวิตและทรัพย์สิน",
+                "rubric": "1: อันตรายถึงชีวิต เกิดไฟฟ้าดูด เพลิงไหม้ อุบัติเหตุทางถนน หรือการพังทลายของโครงสร้าง\n2: อันตรายทางกายภาพรุนแรง อุปกรณ์เสียหายหนัก ก่อสารพิษ หรือหยุดชะงักโครงสร้างพื้นฐานฉุกเฉิน\n3: ผู้ใช้เกิดความโกลาหล สับสนในข้อมูล มีการสั่งการทับซ้อนและระบบหยุดชะงัก\n4: เกิดความล่าช้าเล็กน้อยในการปฏิบัติการ ระบบตัดการทำงานอย่างปลอดภัย สามารถรีบูตหรือสลับไปใช้ระบบสำรองได้\n5: เสียหายเพียงงบประมาณเล็กน้อย ไม่ก่ออันตรายต่อมนุษย์หรือกระทบกระบวนการทำงานหลัก",
+                "score": 2,
+                "weight": 0.05,
+                "evidence": "อ้างอิง solution-3.md บรรทัดที่ 1, 16, 21-28: ระบบพ่นละอองน้ำลงบนทางเดินเท้าและตรอกซอยเมื่ออุณหภูมิเกิน 45 °C ในช่วง 11:00–14:00 น. ซึ่งเป็นช่วงที่มีคนสัญจรสูงสุด หากระบบขัดข้อง วาล์วค้างเปิดหรือท่อแตก น้ำจะไหลนองท่วมผิวทางเท้าคอนกรีต เกิดคราบลื่น ตะไคร่น้ำ ส่งผลให้คนเดินถนนลื่นล้ม หรือรถจักรยานยนต์ในซอยลื่นไถลเกิดอุบัติเหตุรุนแรง (Severe Physical Hazard)",
+                "descope": "เลือกใช้โซลินอยด์วาล์วชนิดปิดสนิทเมื่อไร้กระแสไฟ (Normally-Closed Brass Valve) พร้อมติดตั้งวงจร Hardware Watchdog Timer ที่สั่งตัดระบบจ่ายน้ำอัตโนมัติหากวาล์วเปิดค้างต่อเนื่องเกิน 60 วินาที และติดตั้งสวิตช์ลูกลอยตรวจจับระดับน้ำขังบนพื้นเพื่อตัดการทำงาน"
+            },
+            {
+                "id": "O-02",
+                "pillar": "ด้านปฏิบัติการ (Operational 2.5)",
+                "question": "ความสอดคล้องกับพฤติกรรมผู้ใช้และแรงต้านทานในการปฏิบัติงาน (User Behavior & Solution Fit) ในตรอกซอย?",
+                "rationale": "ป้องกัน The Tech Trap โดยตรวจสอบว่าผู้ปฏิบัติงานหน้างานยินดีใช้งานจริงและไม่เกิดแรงต้านในกระบวนการทำงาน",
+                "rubric": "1: รื้อระบบการทำงานเดิมทั้งหมด บังคับกรอกเอกสารเพิ่ม 5 ขั้นตอนขึ้นไป และผู้ปฏิบัติงานต่อต้านไม่ยอมใช้\n2: เพิ่มภาระการบันทึกข้อมูลอย่างมาก ผู้ปฏิบัติงานจะพยายามหาทางหลีกเลี่ยงหรือบายพาสระบบ\n3: ปรับเปลี่ยนกิจวัตรเล็กน้อย ต้องจัดอบรม 1–2 ครั้ง แต่ผู้ใช้ยอมรับแลกกับประสิทธิภาพที่ได้รับ\n4: ผสานรวมเข้ากับระบบงานเดิมได้อย่างราบรื่น (ส่งแจ้งเตือนเข้า LINE/Dashboard ที่ใช้อยู่แล้ว)\n5: ทำงานอยู่เบื้องหลังแบบอัตโนมัติ 100% ไร้แรงเสียดทาน ผู้ปฏิบัติงานไม่ต้องเปลี่ยนขั้นตอนใดๆ",
+                "score": 2,
+                "weight": 0.05,
+                "evidence": "อ้างอิง solution-3.md บรรทัดที่ 17, 28, 42-43: ในซอยไม่มีแหล่งน้ำสะอาด ต้องต่อท่อน้ำจากอาคาร การพ่นละอองน้ำในตรอกซอยแคบช่วงเที่ยงวันสร้างความรำคาญแก่ประชาชนที่สัญจร (ละอองน้ำเปียกเสื้อผ้า แว่นตา หน้าจอโทรศัพท์) และเจ้าของอาคาร/ร้านค้าริมทางจะต่อต้านเพราะกลัวสินค้า หน้าร้าน หรืออาหารเปียกชื้น ผู้มีส่วนได้ส่วนเสียจะหาทางถอดปลั๊กหรือตัดสายยางบายพาสระบบทิ้ง (High Friction)",
+                "descope": "ปรับเปลี่ยนขอบเขตพื้นที่ติดตั้งจากตรอกซอยส่วนบุคคล ไปติดตั้งเฉพาะในพื้นที่สาธารณะที่มีการควบคุม เช่น สวนสาธารณะเทศบาล ลานกิจกรรมกลางแจ้ง หรือศาลาพักผู้โดยสาร พร้อมป้ายแจ้งเตือนละอองน้ำลดความร้อนที่ชัดเจน"
+            },
+            {
+                "id": "O-03",
+                "pillar": "ด้านปฏิบัติการ (Operational 2.5)",
+                "question": "ข้อจำกัดด้านการเข้าถึงสถานที่และสิ่งอำนวยความสะดวกในการพัฒนา (Developer Contribution Dependency) ของชุดทดลองพ่นน้ำ?",
+                "rationale": "ประเมินความคล่องตัวในการเข้าถึงเครื่องมือ ห้องปฏิบัติการ และสิทธิ์ของนักพัฒนา เพื่อป้องกันการติดขัดจากระเบียบธุรการ",
+                "rubric": "1: ติดขั้นตอนอนุมัติราชการเข้มงวด ต้องเซ็น NDA ล็อกตู้แล็บ และถูกจำกัดสิทธิ์ Git Branch\n2: ต้องกรอกแบบฟอร์มขอใช้อุปกรณ์ของคณะ รอคิวเครื่องจักร และรอการอนุมัติ 3–5 วันทำการ\n3: เข้าใช้งานห้องแล็บและเครื่องมือได้ตามเวลาเปิดทำการปกติของมหาวิทยาลัย\n4: มีสิทธิ์เข้าแล็บ 24 ชม. มีสิทธิ์เขียนโค้ดลง Repository และมีงบประมาณย่อยพร้อมเบิกจ่ายทันที\n5: ทำงานได้อิสระ 100% ใช้ระบบ CI/CD บนคลาวด์ มีเครื่องมือประกอบต้นแบบที่บ้าน ไร้อุปสรรคทางธุรการ",
+                "score": 4,
+                "weight": 0.05,
+                "evidence": "อ้างอิง solution-3.md บรรทัดที่ 30-35: ใช้อุปกรณ์พื้นฐานสำเร็จรูป ได้แก่ เซนเซอร์ IR, โซลินอยด์วาล์ว, และหัวพ่นหมอก COTS ทีมงานสามารถประกอบและทดลองฉีดน้ำทดสอบกับก๊อกน้ำและถังพักน้ำในบ้านหรือระเบียงแล็บได้ทันที มีสิทธิ์ในการเข้าถึงโค้ดและเครื่องมือแบบอิสระ ไม่ต้องรอทำหนังสือขออนุญาตหน่วยงานภายนอก (High Autonomy)",
+                "descope": "ใช้ถังบรรจุน้ำขนาด 20 ลิตรแบบแรงโน้มถ่วงร่วมกับปั๊มไดอะแฟรม 12V ขนาดกะทัดรัดสำหรับชุดทดสอบในห้องปฏิบัติการ เพื่อตัดการพึ่งพาระบบท่อประปาของอาคารมหาวิทยาลัยอย่างเด็ดขาด"
+            },
+            {
+                "id": "O-04",
+                "pillar": "ด้านปฏิบัติการ (Operational 2.5)",
+                "question": "ความซับซ้อนในขั้นตอนการพัฒนาและการติดตั้งระบบ (Developer Complexity & Pipeline Friction) ของระบบควบคุมลูปเดี่ยว?",
+                "rationale": "ประเมินความซับซ้อนของขั้นตอนการบิวด์ คอมไพล์ และติดตั้ง เพื่อลดโอกาสเกิด Human Error ระหว่างพัฒนา",
+                "rubric": "1: ขั้นตอนการบิวด์และติดตั้งซับซ้อนมาก เครื่องมือพึ่งพาแพ็กเกจเปราะบาง เสี่ยงต่อข้อผิดพลาดสูง\n2: ต้องรันกระบวนการด้วยมือหลายขั้นตอน ติดปัญหาความไม่เข้ากันของไลบรารี และแฟลชบอร์ดได้ยาก\n3: กระบวนการประกอบและบิวด์ระบบมีหลายขั้นตอนตามมาตรฐาน สามารถทำซ้ำได้ตามคู่มือและเช็กลิสต์\n4: เวิร์กโฟลว์ตรงไปตรงมา ใช้ระบบสคริปต์อัตโนมัติ รันผ่าน IDE มาตรฐาน คำสั่งเดียวแฟลชบอร์ดได้\n5: ระบบเรียบง่ายแบบ Plug-and-Play ทำงานได้ในขั้นตอนเดียว ไม่ต้องตั้งค่าซับซ้อน",
+                "score": 4,
+                "weight": 0.05,
+                "evidence": "อ้างอิง solution-3.md บรรทัดที่ 21-25: โครงสร้างซอฟต์แวร์และการต่อวงจรเป็นแบบ Single-Loop ควบคุมเปิดปิดวาล์วตามเงื่อนไข (อุณหภูมิผิว > 45 °C และอยู่ในช่วง 11:00-14:00 น.) ทั้ง Fifa และ Due มีความเชี่ยวชาญการเขียนโปรแกรม ESP32 และขับรีเลย์อยู่แล้ว การคอมไพล์และอัปโหลดโค้ดผ่าน Arduino IDE หรือ PlatformIO ดำเนินการได้ในขั้นตอนเดียว (Low Complexity)",
+                "descope": "ใช้บอร์ด Screw Terminal Shield สำเร็จรูปสำหรับเชื่อมต่อสายสัญญาณเซนเซอร์ I2C และรีเลย์ควบคุมวาล์ว เพื่อให้การวายริ่งสายไฟเป็นระเบียบและสามารถถอดเปลี่ยนชิ้นส่วนได้รวดเร็วโดยไม่ต้องบัดกรี"
+            },
+            {
+                "id": "S-01",
+                "pillar": "ด้านแผนงานและเวลา (Schedule 2.6)",
+                "question": "ความพร้อมของแบบทางวิศวกรรมภายในกรอบเวลา 5 สัปดาห์ทำงาน (Engineering Design Maturity) สำหรับระบบพ่นหมอก?",
+                "rationale": "ประเมินวุฒิภาวะของการออกแบบเมื่อเทียบกับกรอบเวลา 5 สัปดาห์ทำการจริง และช่วงสอบคั่นกลาง 4 สัปดาห์",
+                "rubric": "1: อยู่ในระดับแนวคิดเท่านั้น (0% Design) ไม่มีโมเดล CAD ไม่มีผังวงจร และยังไม่ได้เขียนเฟิร์มแวร์\n2: แบบร่างเบื้องต้น (25% Design) มีเพียงบล็อกไดอะแกรม ผังวงจรวาดมือ รายการชิ้นส่วนที่ยังไม่ได้สอบทาน\n3: ความพร้อมระดับปานกลาง (50% Design) ประกอบ CAD ครบ มีผังวงจร Schematic สมบูรณ์ วางสถาปัตยกรรมโค้ดแล้ว\n4: พร้อมทดสอบพรีโปรดักชัน (75–80% Design) โมเดล 3D พร้อมพิมพ์/กัด มีไฟล์ Gerber ตรวจสอบ DRC แล้ว\n5: ออกแบบเสร็จสมบูรณ์ 100% (Production Ready) มีไฟล์ผลิตครบถ้วน ล็อกรายการ BOM และมีสคริปต์แฟลชพร้อมผลิต",
+                "score": 4,
+                "weight": 0.15,
+                "evidence": "อ้างอิง schedule-details/schedule.md: ภายในกรอบเวลา 5 สัปดาห์ทำการ Solution 3 มีความซับซ้อนทางเทคนิคต่ำที่สุด ชิ้นส่วนกลไกมีเพียงขายึดหัวฉีดและกล่องหุ้มวงจร ซึ่ง Fifa มีทักษะการออกแบบ 3D CAD ด้วย SolidWorks (fifa.md) และ Due มีประสบการณ์ออกแบบ Custom PCB (due.md) ทำให้ทีมสามารถออกแบบไฟล์ 3D Print จัดทำ Schematics/PCB Layout และล็อกพินเอาต์พร้อมประกอบทดสอบระดับ Pre-Production ได้อย่างรวดเร็ว (Pre-Production: 75–80% Design)",
+                "descope": "ขึ้นรูปเคสกันน้ำสำหรับเซนเซอร์ IR และวงจรควบคุมด้วยเครื่องพิมพ์ 3 มิติให้เสร็จสิ้นในสัปดาห์ที่ 10 เพื่อให้พร้อมทดสอบบูรณาการระบบทั้งระบบ (Full Bench Integration) ภายในสัปดาห์ที่ 12 ก่อนการนำเสนอ TRL3"
+            },
+            {
+                "id": "SDG-01",
+                "pillar": "ด้านความยั่งยืน (+S / SDGs 2.7)",
+                "question": "ผลกระทบต่อสังคมและความทนทานของเมืองเทียบกับการฟอกเขียว (Public Impact vs. Greenwashing) ของการลดเกาะความร้อน?",
+                "rationale": "ประเมินผลกระทบที่แท้จริงต่อการลดความสูญเสียจากภัยพิบัติเมือง (SDG 11.5 / 13.1) เทียบกับโครงการสาธิตเชิงวิชาการ",
+                "rubric": "1: กล่าวอ้างความยั่งยืนโดยไม่มีข้อมูลรองรับ (Greenwashing) วัดผลไม่ได้จริง และไม่แก้ปัญหาของเมือง\n2: เชื่อมโยงทางอ้อม ทำหน้าที่เป็นเพียงโครงงานสาธิตในสถาบันการศึกษา ไม่สามารถประเมินการลดความเสียหายได้\n3: พิสูจน์ผลได้ในระดับท้องถิ่น (ลดเวลาตอบสนองหรือลดความร้อนได้เฉพาะจุดทดสอบ) แต่ยังขาดโมเดลขยายผล\n4: มีศักยภาพปกป้องโครงสร้างพื้นฐานหรือลดความเสียหายของประชาชนในระดับเขตพื้นที่เมืองอย่างชัดเจน\n5: เสริมสร้างความทนทานต่อภัยพิบัติของเมือง มีข้อมูลเชิงประจักษ์ยืนยันการลดความสูญเสียทางเศรษฐกิจและชีวิต",
+                "score": 3,
+                "weight": 0.0333,
+                "evidence": "Solution-3 deploys IR surface temperature sensors and solenoid misting valves to cool sidewalk pavement when surface temperatures exceed 45°C between 11:00 and 14:00. While evaporative cooling provides verified localized temperature drops on the immediate 10-20 meter sidewalk test strip, the proposal explicitly notes that it 'ต้องใช้พื้นที่ในปริมาณมากเพื่อทำให้เกิดผลที่ต้องการ' (requires vast spatial coverage) and lacks nearby clean water sources in sois. In Bangkok's high-humidity tropical climate, evaporative cooling is severely limited by small wet-bulb depression and rapid convective wind dissipation, lacking a scalable model for district-level heat resilience (SDG 11.5 / 13.1).",
+                "descope": "Constrain deployment to high-density covered pedestrian transit nodes (bus stops, skywalk plazas) where shade canopies sustain the microclimate; integrate wet-bulb globe temperature (WBGT) cutoffs to inhibit misting above 75% RH to prevent muggy heat stress."
+            },
+            {
+                "id": "SDG-02",
+                "pillar": "ด้านความยั่งยืน (+S / SDGs 2.7)",
+                "question": "รอยเท้าทางสิ่งแวดล้อม ขยะอิเล็กทรอนิกส์ และหลักการไม่สร้างผลเสีย (Do No Harm & E-Waste) ของการพ่นน้ำประปา?",
+                "rationale": "ป้องกันการทอดทิ้งขยะอิเล็กทรอนิกส์หรือสารพิษลงสู่ระบบระบายน้ำและสิ่งแวดล้อมเมือง (SDG 6.3 / 12.4)",
+                "rubric": "1: ก่ออันตรายและสารพิษในพื้นที่ กล่องอุปกรณ์แตกสลาย หรือแบตเตอรี่รั่วไหลหลุดลงสู่ระบบระบายน้ำ\n2: เทคโนโลยีเปราะบางแบบใช้แล้วทิ้ง เซนเซอร์อุดตันหรือผุกร่อนภายใน 2–3 สัปดาห์ และถูกทิ้งร้างในพื้นที่\n3: มีรอยเท้าสิ่งแวดล้อมตามมาตรฐาน ต้องเปลี่ยนแบตเตอรี่ตามรอบ มีสายยึดป้องกันอุปกรณ์สูญหาย\n4: กล่องหุ้มทนทานผลกระทบต่ำ กินไฟต่ำ ใช้วัสดุรีไซเคิลได้ และมีสายสลิงยึดโยงเพื่อความปลอดภัย\n5: ออกแบบตามหลักเศรษฐกิจหมุนเวียน 100% กู้คืนอุปกรณ์ได้ปลอดภัย ใช้วัสดุไม่เป็นพิษ ไร้รอยเท้าสิ่งแวดล้อม",
+                "score": 3,
+                "weight": 0.0333,
+                "evidence": "Solution-3 uses wall/pole-mounted fixtures (solenoid valves, misting lines, IR sensors), avoiding toxic waterway litter. However, it generates notable operational footprints: (1) high consumption of potable municipal tap water during peak heat hours, while non-potable water cannot be used due to pathogen aerosolization risks (Legionella/coliforms); (2) severe mineral scale calcification (CaCO3) in fine mist nozzles under hard water, causing rapid clogging, frequent nozzle discards, and polyurethane line UV degradation (SDG 6.3 / 12.4).",
+                "descope": "Install inline multi-stage sediment and catalytic water-softening filters to extend nozzle lifespan by 300%; integrate a closed-loop condensate harvesting system from adjacent building air conditioners to minimize municipal tap water consumption."
+            },
+            {
+                "id": "SDG-03",
+                "pillar": "ด้านความยั่งยืน (+S / SDGs 2.7)",
+                "question": "ความโปร่งใสของอัลกอริทึมและความเป็นธรรมในการตัดสินใจ (Algorithmic Equity & Transparency) ของการเข้าถึงน้ำ?",
+                "rationale": "ป้องกันความลำเอียงในการจัดสรรความช่วยเหลือหรือการปิดบังตรรกะการตัดสินใจต่อประชาชน (SDG 10.2 / 16.6)",
+                "rubric": "1: อัลกอริทึมแบบ Black-box ไม่โปร่งใส ปรับเปลี่ยนหรือยกเลิกการช่วยเหลือโดยไม่มีคำอธิบาย เสี่ยงต่อความไม่เท่าเทียม\n2: ตรรกะการตัดสินใจคลุมเครือ ซ่อนอยู่ในโค้ดที่ซับซ้อน เจ้าหน้าที่ไม่สามารถอธิบายเหตุผลให้ประชาชนเข้าใจได้\n3: กฎเกณฑ์มีเอกสารบันทึกไว้สำหรับวิศวกร แต่ยังไม่มีระบบตรวจสอบสาธารณะหรือช่องทางอุทธรณ์ผลการตรวจวัด\n4: การตัดสินใจขับเคลื่อนด้วยสมการฟิสิกส์มาตรฐานเปิด ปฏิบัติต่อทุกพื้นที่ของเมืองด้วยเกณฑ์เดียวกันอย่างเป็นธรรม\n5: ตรวจสอบได้ 100% มีระบบบันทึก Audit Trail ดิจิทัลที่โปร่งใส เปิดให้ประชาชนและเจ้าหน้าที่เข้าถึงได้อย่างเท่าเทียม",
+                "score": 3,
+                "weight": 0.0334,
+                "evidence": "Operational rules are based on documented engineering thresholds (>45°C surface temp, 11:00-14:00 window, humidity cutoff). However, the system faces severe socio-spatial inequality: it requires tapping water and power from adjacent private buildings ('ต้องต่อน้ำจากอาคารซึ่งอาจมีข้อจำกัดด้านสิทธิ์การใช้พื้นที่'). Consequently, cooling will disproportionately benefit commercial shopfronts with cooperative owners, leaving low-income residential alleys neglected. Additionally, there is no public audit log or civic appeal mechanism explaining misting activations or shutdowns (SDG 10.2 / 16.6).",
+                "descope": "Establish a municipal spatial siting framework prioritizing public community pathways and transit hubs independent of commercial property agreements; deploy a public QR code at each misting pole linking to a real-time civic telemetry dashboard displaying temperature, humidity, and water consumption data."
+            }
+        ]
+    }
+]
+
+with open("feasibility-outcome/jury_eval_data.json", "w", encoding="utf-8") as f:
+    json.dump(data, f, ensure_ascii=False, indent=2)
+
+print("Saved updated jury_eval_data.json successfully!")
