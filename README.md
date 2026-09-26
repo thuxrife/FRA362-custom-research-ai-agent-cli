@@ -31,18 +31,20 @@ flowchart TD
         J --> OP["(2-5-operational-feasibility)"]
         J --> SCH["(2-6-schedule-feasibility)"]
         J --> SDG["(2-7-sdgs-expert)"]
+        J --> ROB["(2-8-robotics-auditor)"]
     end
-
+    
     NT --> D1[("📁 note-taker-log/")]
     R --> D2[("📁 research-outcome/")]
     S & J --> D3[("📁 summarize-outcome/")]
-    J --> D4[("📁 feasibility-outcome/<br>{month}-{date}-{year}-{time}_{seq}.xlsx")]
+    J --> D4[("📁 feasibility-outcome/<br>{date}_{seq}.xlsx<br>jury_eval_data.json")]
+    J --> D6[("📁 summary-image/<br>column_bar.png<br>cross_matrix.png")]
     T --> D5[("📁 teammate-persona/<br>team_skills.md")]
 ```
 
 ---
 
-## The 12 Roles & Tag Protocol
+## The 13 Roles & Tag Protocol
 
 ### Group 1: Dialectical Research Team
 - `(1-1-manager)`: Primary user communicator; clarifies ambiguous queries; concludes debate.
@@ -59,6 +61,7 @@ flowchart TD
 - `(2-5-operational-feasibility)`: **The "Will It Actually Be Used?" Stress-Tester (Weight 20%)**: Audits dispatcher adoption, procedural resistance (e.g. Traffy Fondue photo evidence rules), workflow disruption, training burdens, and developer burnout.
 - `(2-6-schedule-feasibility)`: **Conflict & Deadline Realist (Weight 15%)**: Audits milestone delivery realism against formal TRL levels (TRL2, TRL3, TRL4), stress-testing against university exam blackouts and procurement lead times.
 - `(2-7-sdgs-expert)`: **Systemic Sustainability Consultant (Weight 10%)**: Evaluates multi-layer Stockholm Wedding Cake impact (Biosphere, Society, Economy), UN SDG indicators, and Do-No-Harm safeguards (preventing e-waste and vulnerability shifts).
+- `(2-8-robotics-auditor)`: **FIBO Robotics Knowledge Compatibility Auditor (Orthogonal 0.0 to 10.0 Scale)**: Independently audits the **Sense-Think-Act triad** (Perception: 3.5, Processing/Algorithms: 3.5, Actuation/Mechanics: 3.0), measuring how deeply the solution leverages the institute's robotics engineering curriculum without diluting real-world TELOS+S operational viability.
 
 ---
 
@@ -106,6 +109,31 @@ The system natively understands and generates natural, professional Thai (ภา
 
 ---
 
+---
+
+## 🎨 Executive Visualizations & Slides (`summary-image/`)
+
+The system provides presentation-ready visual deliverables rendered in a clean **White-Purple Minimalist** aesthetic, compiled as both **Pure Vector SVGs** and **300 DPI Ultra-HD PNGs** ready for Canva or slide decks:
+
+1. **3 Big Columns Comparison** ([`summary-image/telos_s_robotics_column_bar.png`](summary-image/telos_s_robotics_column_bar.png) & [`.svg`](summary-image/telos_s_robotics_column_bar.svg)):
+   - **1 Big Column per Candidate Solution** side-by-side.
+   - Prominently displays the **Overall Feasibility Score (out of 100)**.
+   - Individual 7-pillar bar chart on a discrete **$0.0 - 5.0\text{ ★}$ scale** (`T`, `E`, `L`, `O`, `S`, `+S`, `Robotic`).
+2. **Feasibility vs. Robotic Potential Cross-Matrix** ([`summary-image/feasibility_robotics_cross_matrix.png`](summary-image/feasibility_robotics_cross_matrix.png) & [`.svg`](summary-image/feasibility_robotics_cross_matrix.svg)):
+   - Evaluates **Real-World Viability ($0 - 100$)** on the X-axis against **FIBO Robotics Depth ($0 - 10$)** on the Y-axis.
+   - Features complete 0–10 ticks, minimal threshold lines, and 1-2-3 legend ordering.
+
+---
+
+## 🧠 Persistent Session Context Ledger (`CONTEXT.md`)
+
+To guarantee continuity across restarts or session closures, the system maintains **[`CONTEXT.md`](CONTEXT.md)** at the root directory:
+- Records active candidate solutions, current audited scores, and fatal flaw logs.
+- Synchronizes subagent conversation IDs, prompt specifications, and file output locations.
+- Read automatically whenever a new session begins to resume instantly without context loss.
+
+---
+
 ## 🚀 In-Chat Workflow & Usage
 
 No local terminal installation or Python scripts required. The agents operate directly within this chat interface:
@@ -124,5 +152,6 @@ Provide project files in the 3 intake folders (`solution-details/`, `team-skills
 - *Trigger*: `/feasibility` or `ประเมินความเป็นไปได้จากโฟลเดอร์ intake`
 - *Process*:
   1. `(2-1-jury)` reads the 3 intake files, eliminates solution-biased and generic questions, and broadcasts facts.
-  2. The 6 Feasibility Specialists audit Man & Machine capabilities, funding reality vs. zero-action, statutory policy, operational dispatcher adoption, exam conflicts, and systemic SDGs.
-  3. `(2-1-jury)` compiles `{month}-{date}-{year}-{time}.xlsx` in `feasibility-outcome/` with strict integer scores `{1, 2, 3, 4, 5}` aligned horizontally, complete with rationales, evidence citations, and a De-scoping Advisory.
+  2. The 7 Feasibility Specialists (`2.2` to `2.8`) audit Man & Machine capabilities, funding reality vs. zero-action, statutory policy, operational dispatcher adoption, exam conflicts, systemic SDGs, and FIBO robotics compatibility.
+  3. `(2-1-jury)` compiles `feasibility-outcome/jury_eval_data.json` and runs `feasibility-analysis.py` to compile the final `.xlsx` workbook.
+  4. `generate_summary_images.py` automatically updates and exports the executive SVGs and 300 DPI PNGs in `summary-image/`.

@@ -5,7 +5,7 @@ This project implements a **Dual Multi-Agent Architecture**:
 - **Group 1: Dialectical Research Team (Thesis → Antithesis → Synthesis)**
   - Roles: 1.1 Manager, 1.2 Researcher, 1.3 Objectionist, 1.4 Note-Taker, 1.5 Summarizer
 - **Group 2: TELOS+S Feasibility Consulting Team (Systems-Thinking Robotics Audit)**
-  - Roles: 2.1 The Jury, 2.2 Technology, 2.3 Economic, 2.4 Legal & Outreach, 2.5 Operational, 2.6 Schedule, 2.7 SDGs Expert
+  - Roles: 2.1 The Jury, 2.2 Technology, 2.3 Economic, 2.4 Legal & Outreach, 2.5 Operational, 2.6 Schedule, 2.7 SDGs Expert, 2.8 Robotics Auditor
 
 All agent personas and SOPs are maintained in modular Markdown files located in `agents/`.
 
@@ -38,8 +38,12 @@ Every session creates matching subfolders formatted as:
 
 ```text
 feasibility-outcome/
-├── jury_eval_data.json                  <-- Dynamic TELOS+S JSON generated autonomously by The Jury alone
+├── jury_eval_data.json                  <-- Master source of truth evaluation JSON
 └── {month}-{date}-{year}-{time}_{seq}.xlsx <-- Transposed horizontal Excel workbook (Strict integers 1-5)
+
+summary-image/
+├── telos_s_robotics_column_bar.png & .svg <-- 3 Big Columns comparison (1 column per solution)
+└── feasibility_robotics_cross_matrix.png & .svg <-- 2D Viability vs. Robotics Potential Cross-Matrix
 
 teammate-persona/
 └── <session>/
@@ -59,8 +63,9 @@ summarize-outcome/
     └── summary.md                      <-- Clean Markdown report
 ```
 
-### C. Root Execution Tool
-- **`feasibility-analysis.py`**: Automated Python script at the root directory that ingests the 3 intake folders, executes the TELOS+S stress-test, and compiles the transposed horizontal Excel matrix directly into `feasibility-outcome/{month}-{date}-{year}-{time}_{seq}.xlsx`.
+### C. Root Execution Tools
+- **`feasibility-analysis.py`**: Automated Python script at the root directory that ingests `feasibility-outcome/jury_eval_data.json`, executes the TELOS+S mathematical compilation, and builds the transposed horizontal Excel matrix directly into `feasibility-outcome/{month}-{date}-{year}-{time}_{seq}.xlsx`.
+- **`generate_summary_images.py`**: Dynamic visualization compiler that loads `feasibility-outcome/jury_eval_data.json`, computes quadrant coordinates and pillar star ratings, and renders both **Pure Vector SVGs** and **300 DPI Ultra-HD PNGs** in `summary-image/`.
 
 ---
 

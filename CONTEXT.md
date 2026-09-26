@@ -52,6 +52,9 @@ Currently, only **3 active solutions** are being evaluated (solutions 4 and 5 we
 ### Latest Generated Deliverables:
 - **JSON Matrix**: `feasibility-outcome/jury_eval_data.json`
 - **Master Excel**: `feasibility-outcome/9-26-2026-1648_0.xlsx`
+- **Executive Visualizations (`summary-image/`)**:
+  - `summary-image/feasibility_robotics_cross_matrix.png` & `.svg` (2D Cross-Matrix: complete 0–10 Y-axis, clean minimal without zone boxes or footer clutter)
+  - `summary-image/telos_s_robotics_column_bar.png` & `.svg` (3 Big Columns Comparison: 1 column per solution with individual 7-pillar bar chart & overall score)
 - **Subagent Conversation Roster**:
   - `fe13f96f-6ed8-4e39-9331-dcd8dcfebe1a` (`fibo_robotics_auditor`)
   - `36f568c7-bf8e-40e3-b01b-63f688946acf` (`telos_specialist_auditor` - Technical 2.2)
@@ -135,13 +138,16 @@ All solutions are benchmarked against the exact same 18 problem-space questions 
 ## 6. Execution Command Quick Reference
 
 ```powershell
-# 1. Update/check jury evaluation JSON (if running via helper script)
+# 1. Update/check jury evaluation JSON (Master Source of Truth)
 python update_jury_eval.py
 
 # 2. Compile Excel workbook from jury_eval_data.json
 python feasibility-analysis.py
 
-# 3. Check git status
+# 3. Generate Executive Visualizations (SVGs & 300 DPI PNGs in summary-image/)
+python generate_summary_images.py
+
+# 4. Check git status
 git status
 ```
 
