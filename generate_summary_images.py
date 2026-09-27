@@ -26,7 +26,7 @@ def load_evaluation_data():
                 for p in ["T", "E", "L", "O", "S", "SDG"]:
                     scs = [q["score"] for q in s["assessment_data"] if q["id"].split("-")[0] == p]
                     pillars[p] = round((sum(scs) / len(scs)) * 2) / 2 if scs else 3.0
-                pillars["Robotic"] = round((rob / 2.0) * 2) / 2
+                pillars["Robotic"] = round((rob / 12.0 * 5.0) * 2) / 2
                 parsed.append({
                     "title": s.get("sheet_title", ""),
                     "concept": s.get("concept", ""),
@@ -40,9 +40,9 @@ def load_evaluation_data():
 
     # Defaults
     return [
-        {"title": "Solution_1_CCTV_Flow", "concept": "Optical Flow + Canal Ultrasonic Alert", "tot": 65.93, "rob": 4.8, "pillars": {"T": 1.5, "E": 4.5, "L": 4.0, "O": 3.5, "S": 3.0, "SDG": 3.5, "Robotic": 2.5}},
-        {"title": "Solution_2_Acoustic_Sewer", "concept": "Acoustic Inversion + Cleanliness Scale", "tot": 69.10, "rob": 5.8, "pillars": {"T": 3.5, "E": 3.5, "L": 3.5, "O": 3.5, "S": 3.0, "SDG": 4.5, "Robotic": 3.0}},
-        {"title": "Solution_3_Adaptive_Misting", "concept": "IR Surface Thermometer + Solenoids", "tot": 67.17, "rob": 8.0, "pillars": {"T": 4.0, "E": 2.5, "L": 3.5, "O": 3.0, "S": 4.0, "SDG": 3.0, "Robotic": 4.0}}
+        {"title": "Solution_1_CCTV_Flow", "concept": "Optical Flow + Canal Ultrasonic Alert", "tot": 66.27, "rob": 6.0, "pillars": {"T": 1.5, "E": 4.5, "L": 4.0, "O": 3.5, "S": 3.0, "SDG": 3.5, "Robotic": 2.5}},
+        {"title": "Solution_2_Acoustic_Sewer", "concept": "Acoustic Inversion + Cleanliness Scale", "tot": 69.43, "rob": 8.0, "pillars": {"T": 3.5, "E": 3.5, "L": 3.5, "O": 3.5, "S": 3.0, "SDG": 4.5, "Robotic": 3.5}},
+        {"title": "Solution_3_Adaptive_Misting", "concept": "IR Surface Thermometer + Solenoids", "tot": 67.17, "rob": 10.0, "pillars": {"T": 4.0, "E": 2.5, "L": 3.5, "O": 3.0, "S": 4.0, "SDG": 3.0, "Robotic": 4.0}}
     ]
 
 
@@ -61,7 +61,7 @@ def load_evaluation_data():
 
 
 # ==============================================================================
-# 1. WHITE-PURPLE CROSS MATRIX (Y-Axis 0–10 complete, 1-2-3 Legend, No Zones)
+# 1. WHITE-PURPLE CROSS MATRIX (Y-Axis 0–12 complete, 1-2-3 Legend, No Zones)
 # ==============================================================================
 
 def generate_clean_cross_matrix():
@@ -79,10 +79,10 @@ def generate_clean_cross_matrix():
         return x_min + (telos / 100.0) * (x_max - x_min)
         
     def get_y(robotics):
-        return y_max - (robotics / 10.0) * (y_max - y_min)
+        return y_max - (robotics / 12.0) * (y_max - y_min)
         
     x_thresh_60 = get_x(60)
-    y_thresh_7 = get_y(7.0)
+    y_thresh_8_0 = get_y(8.0)
 
     # Dynamic Solution Coordinates
     s1_x, s1_y = get_x(s1["tot"]), get_y(s1["rob"])
@@ -96,7 +96,7 @@ def generate_clean_cross_matrix():
     <!-- Header -->
     <g transform="translate(60, 36)">
         <text x="0" y="20" fill="#1E1B4B" font-size="20" font-weight="700" letter-spacing="-0.3">Feasibility Analysis vs. Robotic Potential Matrix</text>
-        <text x="0" y="42" fill="#6B7280" font-size="13">TELOS+S Feasibility Score (0–100) vs. Robotic Potential Scale (0–10)</text>
+        <text x="0" y="42" fill="#6B7280" font-size="13">TELOS+S Feasibility Score (0–100) vs. Robotic Potential Scale (0–12)</text>
     </g>
 
     <!-- Top Legend Arranged Strictly as 1, 2, 3 (White-Purple Theme) -->
@@ -130,10 +130,10 @@ def generate_clean_cross_matrix():
         <text x="{xp}" y="{y_max + 20}" fill="{'#1E1B4B' if is_key else '#6B7280'}" font-size="11" font-weight="{'700' if is_key else '400'}" text-anchor="middle">{x_val}</text>
         '''
 
-    # Y-axis ticks: COMPLETE 0 TO 10 (INCLUDING 3 AND 9)
-    for y_val in range(0, 11):
+    # Y-axis ticks: COMPLETE 0 TO 12
+    for y_val in range(0, 13):
         yp = get_y(y_val)
-        is_key = (y_val in [0, 5, 7, 10])
+        is_key = (y_val in [0, 4, 8, 12])
         svg += f'''
         <line x1="{x_min}" y1="{yp}" x2="{x_max}" y2="{yp}" stroke="#F5F3FF" stroke-width="1" />
         <line x1="{x_min - 5}" y1="{yp}" x2="{x_min}" y2="{yp}" stroke="#C4B5FD" stroke-width="1" />
@@ -146,16 +146,16 @@ def generate_clean_cross_matrix():
     <line x1="{x_thresh_60}" y1="{y_min}" x2="{x_thresh_60}" y2="{y_max}" stroke="#7C3AED" stroke-width="1.3" stroke-dasharray="4,4" />
     <text x="{x_thresh_60}" y="{y_min - 8}" fill="#581C87" font-size="10" font-weight="700" text-anchor="middle">Min Viable (60.0)</text>
 
-    <!-- Horizontal Cutoff at Y=7.0 -->
-    <line x1="{x_min}" y1="{y_thresh_7}" x2="{x_max}" y2="{y_thresh_7}" stroke="#8B5CF6" stroke-width="1.3" stroke-dasharray="4,4" />
-    <text x="{x_min + 10}" y="{y_thresh_7 - 8}" fill="#581C87" font-size="10" font-weight="600">Highly related to perception, processing and actuation (≥ 7.0)</text>
+    <!-- Horizontal Cutoff at Y=8.0 (Corresponds to High Robotics Content) -->
+    <line x1="{x_min}" y1="{y_thresh_8_0}" x2="{x_max}" y2="{y_thresh_8_0}" stroke="#8B5CF6" stroke-width="1.3" stroke-dasharray="4,4" />
+    <text x="{x_min + 10}" y="{y_thresh_8_0 - 8}" fill="#581C87" font-size="10" font-weight="600">High Robotics Content: Perception, Processing &amp; Actuation (≥ 8.0)</text>
 
     <!-- Axis Labels -->
     <text x="{(x_min + x_max)/2}" y="{y_max + 46}" fill="#1E1B4B" font-size="12" font-weight="600" text-anchor="middle">
         TELOS+S Feasibility Score (0 – 100) →
     </text>
     <text x="0" y="0" fill="#1E1B4B" font-size="12" font-weight="600" text-anchor="middle" transform="translate({x_min - 45}, {(y_min + y_max)/2}) rotate(-90)">
-        Robotic Potential Scale (0 – 10) →
+        Robotic Potential Scale (0 – 12) →
     </text>
 
     <!-- ============================================================== -->
@@ -173,7 +173,7 @@ def generate_clean_cross_matrix():
         <rect x="8" y="8" width="60" height="16" rx="2" fill="#FAF5FF" stroke="#E9D5FF" stroke-width="0.8"/>
         <text x="38" y="19" fill="#7E22CE" font-size="9" font-weight="700" text-anchor="middle">SOL 3</text>
         <text x="76" y="20" fill="#1E1B4B" font-size="11" font-weight="700">Adaptive Misting</text>
-        <text x="8" y="42" fill="#6B7280" font-size="10">TELOS+S: <tspan fill="#7E22CE" font-weight="700">{s3['tot']:.2f}</tspan> | Robotic: <tspan fill="#581C87" font-weight="700">{s3['rob']:.1f} / 10</tspan></text>
+        <text x="8" y="42" fill="#6B7280" font-size="10">TELOS+S: <tspan fill="#7E22CE" font-weight="700">{s3['tot']:.2f}</tspan> | Robotic: <tspan fill="#581C87" font-weight="700">{s3['rob']:.1f} / 12</tspan></text>
     </g>
 
     <!-- SOLUTION 2: Sewer AAR -->
@@ -187,7 +187,7 @@ def generate_clean_cross_matrix():
         <rect x="8" y="8" width="60" height="16" rx="2" fill="#F5F3FF" stroke="#C4B5FD" stroke-width="0.8"/>
         <text x="38" y="19" fill="#581C87" font-size="9" font-weight="700" text-anchor="middle">SOL 2</text>
         <text x="76" y="20" fill="#1E1B4B" font-size="11" font-weight="700">Sewer Reflectometry</text>
-        <text x="8" y="42" fill="#6B7280" font-size="10">TELOS+S: <tspan fill="#581C87" font-weight="700">{s2['tot']:.2f}</tspan> | Robotic: <tspan fill="#581C87" font-weight="700">{s2['rob']:.1f} / 10</tspan></text>
+        <text x="8" y="42" fill="#6B7280" font-size="10">TELOS+S: <tspan fill="#581C87" font-weight="700">{s2['tot']:.2f}</tspan> | Robotic: <tspan fill="#581C87" font-weight="700">{s2['rob']:.1f} / 12</tspan></text>
     </g>
 
     <!-- SOLUTION 1: CCTV Flow -->
@@ -201,7 +201,7 @@ def generate_clean_cross_matrix():
         <rect x="8" y="8" width="60" height="16" rx="2" fill="#F5F3FF" stroke="#C4B5FD" stroke-width="0.8"/>
         <text x="38" y="19" fill="#5B21B6" font-size="9" font-weight="700" text-anchor="middle">SOL 1</text>
         <text x="76" y="20" fill="#1E1B4B" font-size="11" font-weight="700">CCTV Flow + Canal</text>
-        <text x="8" y="42" fill="#6B7280" font-size="10">TELOS+S: <tspan fill="#5B21B6" font-weight="700">{s1['tot']:.2f}</tspan> | Robotic: <tspan fill="#5B21B6" font-weight="700">{s1['rob']:.1f} / 10</tspan></text>
+        <text x="8" y="42" fill="#6B7280" font-size="10">TELOS+S: <tspan fill="#5B21B6" font-weight="700">{s1['tot']:.2f}</tspan> | Robotic: <tspan fill="#5B21B6" font-weight="700">{s1['rob']:.1f} / 12</tspan></text>
     </g>
 </svg>'''
 

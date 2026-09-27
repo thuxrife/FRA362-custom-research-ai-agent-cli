@@ -5,18 +5,18 @@
     <!-- Header -->
     <g transform="translate(60, 36)">
         <text x="0" y="20" fill="#1E1B4B" font-size="20" font-weight="700" letter-spacing="-0.3">Feasibility Analysis vs. Robotic Potential Matrix</text>
-        <text x="0" y="42" fill="#6B7280" font-size="13">TELOS+S Feasibility Score (0–100) vs. Robotic Potential Scale (0–10)</text>
+        <text x="0" y="42" fill="#6B7280" font-size="13">TELOS+S Feasibility Score (0–100) vs. Robotic Potential Scale (0–12)</text>
     </g>
 
     <!-- Top Legend Arranged Strictly as 1, 2, 3 (White-Purple Theme) -->
     <g transform="translate(590, 42)">
         <!-- Solution 1 -->
         <circle cx="8" cy="8" r="5" fill="#8B5CF6" />
-        <text x="18" y="12" fill="#1E1B4B" font-size="11.5" font-weight="600">Solution 1 (65.93)</text>
+        <text x="18" y="12" fill="#1E1B4B" font-size="11.5" font-weight="600">Solution 1 (66.27)</text>
 
         <!-- Solution 2 -->
         <circle cx="175" cy="8" r="5" fill="#581C87" />
-        <text x="185" y="12" fill="#1E1B4B" font-size="11.5" font-weight="700">Solution 2 (69.10)</text>
+        <text x="185" y="12" fill="#1E1B4B" font-size="11.5" font-weight="700">Solution 2 (69.43)</text>
 
         <!-- Solution 3 -->
         <circle cx="345" cy="8" r="5" fill="#C084FC" />
@@ -76,60 +76,68 @@
         <line x1="85" y1="660.0" x2="90" y2="660.0" stroke="#C4B5FD" stroke-width="1" />
         <text x="80" y="664.0" fill="#1E1B4B" font-size="11" font-weight="700" text-anchor="end">0</text>
         
-        <line x1="90" y1="604.0" x2="1130" y2="604.0" stroke="#F5F3FF" stroke-width="1" />
-        <line x1="85" y1="604.0" x2="90" y2="604.0" stroke="#C4B5FD" stroke-width="1" />
-        <text x="80" y="608.0" fill="#6B7280" font-size="11" font-weight="400" text-anchor="end">1</text>
+        <line x1="90" y1="613.3333333333334" x2="1130" y2="613.3333333333334" stroke="#F5F3FF" stroke-width="1" />
+        <line x1="85" y1="613.3333333333334" x2="90" y2="613.3333333333334" stroke="#C4B5FD" stroke-width="1" />
+        <text x="80" y="617.3333333333334" fill="#6B7280" font-size="11" font-weight="400" text-anchor="end">1</text>
         
-        <line x1="90" y1="548.0" x2="1130" y2="548.0" stroke="#F5F3FF" stroke-width="1" />
-        <line x1="85" y1="548.0" x2="90" y2="548.0" stroke="#C4B5FD" stroke-width="1" />
-        <text x="80" y="552.0" fill="#6B7280" font-size="11" font-weight="400" text-anchor="end">2</text>
+        <line x1="90" y1="566.6666666666666" x2="1130" y2="566.6666666666666" stroke="#F5F3FF" stroke-width="1" />
+        <line x1="85" y1="566.6666666666666" x2="90" y2="566.6666666666666" stroke="#C4B5FD" stroke-width="1" />
+        <text x="80" y="570.6666666666666" fill="#6B7280" font-size="11" font-weight="400" text-anchor="end">2</text>
         
-        <line x1="90" y1="492.0" x2="1130" y2="492.0" stroke="#F5F3FF" stroke-width="1" />
-        <line x1="85" y1="492.0" x2="90" y2="492.0" stroke="#C4B5FD" stroke-width="1" />
-        <text x="80" y="496.0" fill="#6B7280" font-size="11" font-weight="400" text-anchor="end">3</text>
+        <line x1="90" y1="520.0" x2="1130" y2="520.0" stroke="#F5F3FF" stroke-width="1" />
+        <line x1="85" y1="520.0" x2="90" y2="520.0" stroke="#C4B5FD" stroke-width="1" />
+        <text x="80" y="524.0" fill="#6B7280" font-size="11" font-weight="400" text-anchor="end">3</text>
         
-        <line x1="90" y1="436.0" x2="1130" y2="436.0" stroke="#F5F3FF" stroke-width="1" />
-        <line x1="85" y1="436.0" x2="90" y2="436.0" stroke="#C4B5FD" stroke-width="1" />
-        <text x="80" y="440.0" fill="#6B7280" font-size="11" font-weight="400" text-anchor="end">4</text>
+        <line x1="90" y1="473.33333333333337" x2="1130" y2="473.33333333333337" stroke="#F5F3FF" stroke-width="1" />
+        <line x1="85" y1="473.33333333333337" x2="90" y2="473.33333333333337" stroke="#C4B5FD" stroke-width="1" />
+        <text x="80" y="477.33333333333337" fill="#1E1B4B" font-size="11" font-weight="700" text-anchor="end">4</text>
+        
+        <line x1="90" y1="426.66666666666663" x2="1130" y2="426.66666666666663" stroke="#F5F3FF" stroke-width="1" />
+        <line x1="85" y1="426.66666666666663" x2="90" y2="426.66666666666663" stroke="#C4B5FD" stroke-width="1" />
+        <text x="80" y="430.66666666666663" fill="#6B7280" font-size="11" font-weight="400" text-anchor="end">5</text>
         
         <line x1="90" y1="380.0" x2="1130" y2="380.0" stroke="#F5F3FF" stroke-width="1" />
         <line x1="85" y1="380.0" x2="90" y2="380.0" stroke="#C4B5FD" stroke-width="1" />
-        <text x="80" y="384.0" fill="#1E1B4B" font-size="11" font-weight="700" text-anchor="end">5</text>
+        <text x="80" y="384.0" fill="#6B7280" font-size="11" font-weight="400" text-anchor="end">6</text>
         
-        <line x1="90" y1="324.0" x2="1130" y2="324.0" stroke="#F5F3FF" stroke-width="1" />
-        <line x1="85" y1="324.0" x2="90" y2="324.0" stroke="#C4B5FD" stroke-width="1" />
-        <text x="80" y="328.0" fill="#6B7280" font-size="11" font-weight="400" text-anchor="end">6</text>
+        <line x1="90" y1="333.3333333333333" x2="1130" y2="333.3333333333333" stroke="#F5F3FF" stroke-width="1" />
+        <line x1="85" y1="333.3333333333333" x2="90" y2="333.3333333333333" stroke="#C4B5FD" stroke-width="1" />
+        <text x="80" y="337.3333333333333" fill="#6B7280" font-size="11" font-weight="400" text-anchor="end">7</text>
         
-        <line x1="90" y1="268.0" x2="1130" y2="268.0" stroke="#F5F3FF" stroke-width="1" />
-        <line x1="85" y1="268.0" x2="90" y2="268.0" stroke="#C4B5FD" stroke-width="1" />
-        <text x="80" y="272.0" fill="#1E1B4B" font-size="11" font-weight="700" text-anchor="end">7</text>
+        <line x1="90" y1="286.6666666666667" x2="1130" y2="286.6666666666667" stroke="#F5F3FF" stroke-width="1" />
+        <line x1="85" y1="286.6666666666667" x2="90" y2="286.6666666666667" stroke="#C4B5FD" stroke-width="1" />
+        <text x="80" y="290.6666666666667" fill="#1E1B4B" font-size="11" font-weight="700" text-anchor="end">8</text>
         
-        <line x1="90" y1="212.0" x2="1130" y2="212.0" stroke="#F5F3FF" stroke-width="1" />
-        <line x1="85" y1="212.0" x2="90" y2="212.0" stroke="#C4B5FD" stroke-width="1" />
-        <text x="80" y="216.0" fill="#6B7280" font-size="11" font-weight="400" text-anchor="end">8</text>
+        <line x1="90" y1="240.0" x2="1130" y2="240.0" stroke="#F5F3FF" stroke-width="1" />
+        <line x1="85" y1="240.0" x2="90" y2="240.0" stroke="#C4B5FD" stroke-width="1" />
+        <text x="80" y="244.0" fill="#6B7280" font-size="11" font-weight="400" text-anchor="end">9</text>
         
-        <line x1="90" y1="156.0" x2="1130" y2="156.0" stroke="#F5F3FF" stroke-width="1" />
-        <line x1="85" y1="156.0" x2="90" y2="156.0" stroke="#C4B5FD" stroke-width="1" />
-        <text x="80" y="160.0" fill="#6B7280" font-size="11" font-weight="400" text-anchor="end">9</text>
+        <line x1="90" y1="193.33333333333331" x2="1130" y2="193.33333333333331" stroke="#F5F3FF" stroke-width="1" />
+        <line x1="85" y1="193.33333333333331" x2="90" y2="193.33333333333331" stroke="#C4B5FD" stroke-width="1" />
+        <text x="80" y="197.33333333333331" fill="#6B7280" font-size="11" font-weight="400" text-anchor="end">10</text>
+        
+        <line x1="90" y1="146.66666666666674" x2="1130" y2="146.66666666666674" stroke="#F5F3FF" stroke-width="1" />
+        <line x1="85" y1="146.66666666666674" x2="90" y2="146.66666666666674" stroke="#C4B5FD" stroke-width="1" />
+        <text x="80" y="150.66666666666674" fill="#6B7280" font-size="11" font-weight="400" text-anchor="end">11</text>
         
         <line x1="90" y1="100.0" x2="1130" y2="100.0" stroke="#F5F3FF" stroke-width="1" />
         <line x1="85" y1="100.0" x2="90" y2="100.0" stroke="#C4B5FD" stroke-width="1" />
-        <text x="80" y="104.0" fill="#1E1B4B" font-size="11" font-weight="700" text-anchor="end">10</text>
+        <text x="80" y="104.0" fill="#1E1B4B" font-size="11" font-weight="700" text-anchor="end">12</text>
         
     <!-- Vertical Cutoff at X=60 (Minimum Viability) -->
     <line x1="714.0" y1="100" x2="714.0" y2="660" stroke="#7C3AED" stroke-width="1.3" stroke-dasharray="4,4" />
     <text x="714.0" y="92" fill="#581C87" font-size="10" font-weight="700" text-anchor="middle">Min Viable (60.0)</text>
 
-    <!-- Horizontal Cutoff at Y=7.0 -->
-    <line x1="90" y1="268.0" x2="1130" y2="268.0" stroke="#8B5CF6" stroke-width="1.3" stroke-dasharray="4,4" />
-    <text x="100" y="260.0" fill="#581C87" font-size="10" font-weight="600">Highly related to perception, processing and actuation (≥ 7.0)</text>
+    <!-- Horizontal Cutoff at Y=8.0 (Corresponds to High Robotics Content) -->
+    <line x1="90" y1="286.6666666666667" x2="1130" y2="286.6666666666667" stroke="#8B5CF6" stroke-width="1.3" stroke-dasharray="4,4" />
+    <text x="100" y="278.6666666666667" fill="#581C87" font-size="10" font-weight="600">High Robotics Content: Perception, Processing &amp; Actuation (≥ 8.0)</text>
 
     <!-- Axis Labels -->
     <text x="610.0" y="706" fill="#1E1B4B" font-size="12" font-weight="600" text-anchor="middle">
         TELOS+S Feasibility Score (0 – 100) →
     </text>
     <text x="0" y="0" fill="#1E1B4B" font-size="12" font-weight="600" text-anchor="middle" transform="translate(45, 380.0) rotate(-90)">
-        Robotic Potential Scale (0 – 10) →
+        Robotic Potential Scale (0 – 12) →
     </text>
 
     <!-- ============================================================== -->
@@ -137,7 +145,7 @@
     <!-- ============================================================== -->
 
     <!-- SOLUTION 3: Adaptive Misting -->
-    <g transform="translate(788.568, 212.0)">
+    <g transform="translate(788.568, 193.33333333333331)">
         <circle cx="0" cy="0" r="7" fill="#C084FC" stroke="#FFFFFF" stroke-width="2" />
         <circle cx="0" cy="0" r="13" fill="none" stroke="#C084FC" stroke-width="1" stroke-opacity="0.4" />
         <line x1="0" y1="0" x2="-45" y2="-20" stroke="#DDD6FE" stroke-width="1" stroke-dasharray="2,2" />
@@ -147,11 +155,11 @@
         <rect x="8" y="8" width="60" height="16" rx="2" fill="#FAF5FF" stroke="#E9D5FF" stroke-width="0.8"/>
         <text x="38" y="19" fill="#7E22CE" font-size="9" font-weight="700" text-anchor="middle">SOL 3</text>
         <text x="76" y="20" fill="#1E1B4B" font-size="11" font-weight="700">Adaptive Misting</text>
-        <text x="8" y="42" fill="#6B7280" font-size="10">TELOS+S: <tspan fill="#7E22CE" font-weight="700">67.17</tspan> | Robotic: <tspan fill="#581C87" font-weight="700">8.0 / 10</tspan></text>
+        <text x="8" y="42" fill="#6B7280" font-size="10">TELOS+S: <tspan fill="#7E22CE" font-weight="700">67.17</tspan> | Robotic: <tspan fill="#581C87" font-weight="700">10.0 / 12</tspan></text>
     </g>
 
     <!-- SOLUTION 2: Sewer AAR -->
-    <g transform="translate(808.64, 335.20000000000005)">
+    <g transform="translate(812.072, 286.6666666666667)">
         <circle cx="0" cy="0" r="8" fill="#581C87" stroke="#FFFFFF" stroke-width="2" />
         <circle cx="0" cy="0" r="16" fill="none" stroke="#6D28D9" stroke-width="1.5" stroke-opacity="0.4" />
         <line x1="0" y1="0" x2="40" y2="0" stroke="#581C87" stroke-width="1.2" />
@@ -161,11 +169,11 @@
         <rect x="8" y="8" width="60" height="16" rx="2" fill="#F5F3FF" stroke="#C4B5FD" stroke-width="0.8"/>
         <text x="38" y="19" fill="#581C87" font-size="9" font-weight="700" text-anchor="middle">SOL 2</text>
         <text x="76" y="20" fill="#1E1B4B" font-size="11" font-weight="700">Sewer Reflectometry</text>
-        <text x="8" y="42" fill="#6B7280" font-size="10">TELOS+S: <tspan fill="#581C87" font-weight="700">69.10</tspan> | Robotic: <tspan fill="#581C87" font-weight="700">5.8 / 10</tspan></text>
+        <text x="8" y="42" fill="#6B7280" font-size="10">TELOS+S: <tspan fill="#581C87" font-weight="700">69.43</tspan> | Robotic: <tspan fill="#581C87" font-weight="700">8.0 / 12</tspan></text>
     </g>
 
     <!-- SOLUTION 1: CCTV Flow -->
-    <g transform="translate(775.6720000000001, 391.2)">
+    <g transform="translate(779.208, 380.0)">
         <circle cx="0" cy="0" r="7" fill="#8B5CF6" stroke="#FFFFFF" stroke-width="2" />
         <circle cx="0" cy="0" r="13" fill="none" stroke="#8B5CF6" stroke-width="1" stroke-opacity="0.4" />
         <line x1="0" y1="0" x2="-45" y2="20" stroke="#DDD6FE" stroke-width="1" stroke-dasharray="2,2" />
@@ -175,6 +183,6 @@
         <rect x="8" y="8" width="60" height="16" rx="2" fill="#F5F3FF" stroke="#C4B5FD" stroke-width="0.8"/>
         <text x="38" y="19" fill="#5B21B6" font-size="9" font-weight="700" text-anchor="middle">SOL 1</text>
         <text x="76" y="20" fill="#1E1B4B" font-size="11" font-weight="700">CCTV Flow + Canal</text>
-        <text x="8" y="42" fill="#6B7280" font-size="10">TELOS+S: <tspan fill="#5B21B6" font-weight="700">65.93</tspan> | Robotic: <tspan fill="#5B21B6" font-weight="700">4.8 / 10</tspan></text>
+        <text x="8" y="42" fill="#6B7280" font-size="10">TELOS+S: <tspan fill="#5B21B6" font-weight="700">66.27</tspan> | Robotic: <tspan fill="#5B21B6" font-weight="700">6.0 / 12</tspan></text>
     </g>
 </svg>

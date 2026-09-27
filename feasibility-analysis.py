@@ -470,7 +470,7 @@ def write_solution_sheet(wb, sheet_title, assessment_data, solution_name="Soluti
 
     # =========================================================================
     # เมทริกซ์ประเมินความเข้ากันได้กับองค์ความรู้ด้านวิศวกรรมหุ่นยนต์ (Robotics Knowledge Compatibility)
-    # เกณฑ์เฉพาะทาง FIBO (เต็ม 10 คะแนน) - เป็นเอกเทศ ไม่นับรวมในคะแนน TELOS 100 คะแนน
+    # เกณฑ์เฉพาะทาง FIBO (เต็ม 12 คะแนน) - เป็นเอกเทศ ไม่นับรวมในคะแนน TELOS 100 คะแนน
     # =========================================================================
     if robotic_data:
         r_spacer = tot_r + 1
@@ -486,11 +486,11 @@ def write_solution_sheet(wb, sheet_title, assessment_data, solution_name="Soluti
         ws.row_dimensions[r_data].height = 95
 
         ws.cell(row=r_title, column=1, value="เมทริกซ์ประเมินความเข้ากันได้กับองค์ความรู้ด้านวิศวกรรมหุ่นยนต์ (Robotics Knowledge Compatibility)").font = title_font
-        ws.cell(row=r_note, column=1, value="* หมายเหตุ: การประเมินส่วนนี้วัดศักยภาพในการประยุกต์ใช้องค์ความรู้ด้านวิศวกรรมหุ่นยนต์ (Perception, Control, Actuation, Mechatronics) เต็ม 10 คะแนน | เป็นเอกเทศ ไม่นับรวมในคะแนน TELOS 100 คะแนน").font = sub_font
+        ws.cell(row=r_note, column=1, value="* หมายเหตุ: การประเมินส่วนนี้วัดศักยภาพในการประยุกต์ใช้องค์ความรู้ด้านวิศวกรรมหุ่นยนต์ (Perception, Control, Actuation) เต็ม 12 คะแนน (แกนละ 4 คะแนน) | เป็นเอกเทศ ไม่นับรวมในคะแนน TELOS 100 คะแนน").font = sub_font
 
         robotic_headers = [
             (1, "มิติการประเมิน (Robotics Dimension)"),
-            (2, "คะแนนศักยภาพ (/10)"),
+            (2, "คะแนนศักยภาพ (/12)"),
             (3, "แกน Perception & Sensing (การรับรู้)"),
             (4, "แกน Control & Algorithms (การควบคุม)"),
             (5, "แกน Actuation & Mechanisms (กลไก)"),
@@ -568,9 +568,9 @@ def write_comparison_sheet(wb, solutions_info, has_sdg=False):
     )
 
     ws.cell(row=1, column=1, value="ตารางเปรียบเทียบความเป็นไปได้ของทุกข้อเสนอ (Multi-Solution Feasibility Summary)").font = title_font
-    sub_title = ("วิเคราะห์เปรียบเทียบเชิงระบบตามเกณฑ์ TELOS+S (เต็ม 100) และเมทริกซ์ศักยภาพด้านวิศวกรรมหุ่นยนต์ (เต็ม 10 แยกอิสระ)" 
+    sub_title = ("วิเคราะห์เปรียบเทียบเชิงระบบตามเกณฑ์ TELOS+S (เต็ม 100) และเมทริกซ์ศักยภาพด้านวิศวกรรมหุ่นยนต์ (เต็ม 12 แยกอิสระ)" 
                  if has_sdg else 
-                 "วิเคราะห์เปรียบเทียบเชิงระบบตามเกณฑ์ TELOS 5 เสาหลัก (เต็ม 100) และเมทริกซ์ศักยภาพด้านวิศวกรรมหุ่นยนต์ (เต็ม 10 แยกอิสระ)")
+                 "วิเคราะห์เปรียบเทียบเชิงระบบตามเกณฑ์ TELOS 5 เสาหลัก (เต็ม 100) และเมทริกซ์ศักยภาพด้านวิศวกรรมหุ่นยนต์ (เต็ม 12 แยกอิสระ)")
     ws.cell(row=2, column=1, value=sub_title).font = sub_font
 
     if not has_sdg:
@@ -588,7 +588,7 @@ def write_comparison_sheet(wb, solutions_info, has_sdg=False):
             ("จุดแข็งสำคัญ (Key Strengths)", 35),
             ("จุดติดขัดวิกฤต (Critical Bottlenecks)", 35),
             ("คำแนะนำเชิงระบบ (Strategic Advice)", 35),
-            ("Robotics Potential (/10)", 22),
+            ("Robotics Potential (/12)", 22),
             ("เหตุผลความเข้ากันได้ด้านหุ่นยนต์ (Robotics Engineering Rationale)", 45)
         ]
         robotic_cols = (14, 15)
@@ -610,7 +610,7 @@ def write_comparison_sheet(wb, solutions_info, has_sdg=False):
             ("จุดแข็งสำคัญ (Key Strengths)", 35),
             ("จุดติดขัดวิกฤต (Critical Bottlenecks)", 35),
             ("คำแนะนำเชิงระบบ (Strategic Advice)", 35),
-            ("Robotics Potential (/10)", 22),
+            ("Robotics Potential (/12)", 22),
             ("เหตุผลความเข้ากันได้ด้านหุ่นยนต์ (Robotics Engineering Rationale)", 45)
         ]
         robotic_cols = (15, 16)
@@ -700,7 +700,7 @@ def write_comparison_sheet(wb, solutions_info, has_sdg=False):
         ws.cell(row=r_idx, column=next_c + 1, value=sol.get("bottleneck", "-")).alignment = Alignment(horizontal="left", vertical="center", wrap_text=True)
         ws.cell(row=r_idx, column=next_c + 2, value=sol.get("advice", "-")).alignment = Alignment(horizontal="left", vertical="center", wrap_text=True)
 
-        # เมทริกซ์ความเข้ากันได้ด้านหุ่นยนต์ (Robotics Knowledge Compatibility: แยกอิสระ เต็ม 10 คะแนน)
+        # เมทริกซ์ความเข้ากันได้ด้านหุ่นยนต์ (Robotics Knowledge Compatibility: แยกอิสระ เต็ม 12 คะแนน)
         rob_score_col = next_c + 3
         rob_rat_col = next_c + 4
 

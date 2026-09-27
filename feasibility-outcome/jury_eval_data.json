@@ -6,20 +6,20 @@
     "bottleneck": "ติดกำแพงไฟร์วอลล์และสิทธิ์เข้าถึงสตรีมกล้อง กทม. (T-02=1), อัลกอริทึม PIV/PTV จากกล้องที่ไม่มีการสอบเทียบเป็นเพียง TRL 2-3 (T-03=1), และพึ่งพา JK เพียงคนเดียว (T-04=1)",
     "advice": "ยกเลิกการพึ่งพากล้องวงจรปิด กทม. แล้วหันมาใช้กล้องหรือเซนเซอร์วัดระดับน้ำ/แรงดันของทีมเองในจุดทดสอบเฉพาะ พร้อมใช้อัลกอริทึมตรวจจับความเคลื่อนไหวพื้นฐานแทน PIV",
     "robotic_compatibility": {
-      "score": 4.8,
+      "score": 6.0,
       "domains": {
-        "perception": "Score 2.5/3.5: Computer vision optical flow, PIV, and PTV via municipal CCTV combined with ultrasonic canal water level sensing.",
-        "control_algorithms": "Score 2.1/3.5: Rule-based diagnostic threshold logic separating rain runoff from clogged sewers; lacks dynamic plant state estimation and closed-loop feedback.",
-        "actuation_mechanics": "Score 0.2/3.0: Static mounting brackets with zero mechanical actuation, moving parts, power transmission, or physical intervention on the environment."
+        "perception": "Level 3.0 / 4.0: Computer vision optical flow, PIV, and PTV via municipal CCTV combined with ultrasonic canal water level sensing.",
+        "control_algorithms": "Level 2.0 / 4.0: Rule-based diagnostic threshold logic separating rain runoff from clogged sewers; lacks dynamic plant state estimation and closed-loop feedback.",
+        "actuation_mechanics": "Level 1.0 / 4.0: Static mounting brackets with zero mechanical actuation, moving parts, power transmission, or physical intervention on the environment."
       },
       "fibo_alignment_rationale": "Solution 1 operates as a smart city telemetry and video monitoring platform rather than a robotic system. It suffers from a broken Sense-Think-Act triad, as actuation terminates in human alerts. It underutilizes team capabilities in mechanical design, fabrication, custom PCB design, and dynamic feedback control."
     },
     "robotic_data": {
-      "score": 4.8,
+      "score": 6.0,
       "domains": {
-        "perception": "Score 2.5/3.5: Computer vision optical flow, PIV, and PTV via municipal CCTV combined with ultrasonic canal water level sensing.",
-        "control_algorithms": "Score 2.1/3.5: Rule-based diagnostic threshold logic separating rain runoff from clogged sewers; lacks dynamic plant state estimation and closed-loop feedback.",
-        "actuation_mechanics": "Score 0.2/3.0: Static mounting brackets with zero mechanical actuation, moving parts, power transmission, or physical intervention on the environment."
+        "perception": "Level 3.0 / 4.0: Computer vision optical flow, PIV, and PTV via municipal CCTV combined with ultrasonic canal water level sensing.",
+        "control_algorithms": "Level 2.0 / 4.0: Rule-based diagnostic threshold logic separating rain runoff from clogged sewers; lacks dynamic plant state estimation and closed-loop feedback.",
+        "actuation_mechanics": "Level 1.0 / 4.0: Static mounting brackets with zero mechanical actuation, moving parts, power transmission, or physical intervention on the environment."
       },
       "fibo_alignment_rationale": "Solution 1 operates as a smart city telemetry and video monitoring platform rather than a robotic system. It suffers from a broken Sense-Think-Act triad, as actuation terminates in human alerts. It underutilizes team capabilities in mechanical design, fabrication, custom PCB design, and dynamic feedback control."
     },
@@ -192,13 +192,13 @@
       {
         "id": "SDG-01",
         "pillar": "ด้านความยั่งยืน (+S / SDGs 2.7)",
-        "question": "ผลกระทบต่อสังคมและความทนทานของเมืองเทียบกับการฟอกเขียว (Public Impact vs. Greenwashing)?",
-        "rationale": "ประเมินผลกระทบที่แท้จริงต่อการลดความสูญเสียจากภัยพิบัติเมือง (SDG 11.5 / 13.1) เทียบกับโครงการสาธิตเชิงวิชาการ",
-        "rubric": "1: กล่าวอ้างความยั่งยืนโดยไม่มีข้อมูลรองรับ (Greenwashing) วัดผลไม่ได้จริง และไม่แก้ปัญหาของเมือง\n2: เชื่อมโยงทางอ้อม ทำหน้าที่เป็นเพียงโครงงานสาธิตในสถาบันการศึกษา ไม่สามารถประเมินการลดความเสียหายได้\n3: พิสูจน์ผลได้ในระดับท้องถิ่น (ลดเวลาตอบสนองหรือลดความร้อนได้เฉพาะจุดทดสอบ) แต่ยังขาดโมเดลขยายผล\n4: มีศักยภาพปกป้องโครงสร้างพื้นฐานหรือลดความเสียหายของประชาชนในระดับเขตพื้นที่เมืองอย่างชัดเจน\n5: เสริมสร้างความทนทานต่อภัยพิบัติของเมือง มีข้อมูลเชิงประจักษ์ยืนยันการลดความสูญเสียทางเศรษฐกิจและชีวิต",
+        "question": "ระดับการครอบคลุมเสาหลักความยั่งยืนตามโมเดล Stockholm Wedding Cake (Planet, People, Prosperity)?",
+        "rationale": "ประเมินความครอบคลุมของผลกระทบเชิงระบบว่าตอบโจทย์เสาหลักความยั่งยืน 3 ชั้นหลักของ Stockholm Resilience Centre (ชีวมณฑล/Planet, สังคม/People, และเศรษฐกิจ/Prosperity) อย่างเป็นองค์รวม ไม่ใช่โครงการแก้ปัญหาจุดเดียวที่ละเลยมิติอื่น",
+        "rubric": "1: หลุดจาก Wedding Cake หรือสร้างผลกระทบเชิงลบต่อเสาหลักใดเสาหลักหนึ่งอย่างรุนแรง\n2: สัมผัสเพียง 1 เสาหลักอย่างผิวเผิน ขาดการเชื่อมโยงเชิงประจักษ์ไปยังสังคมหรือสิ่งแวดล้อมจริง\n3: ครอบคลุม 1 เสาหลักอย่างเป็นรูปธรรม หรือ 2 เสาหลักแบบมีข้อจำกัดเฉพาะจุด/เฉพาะช่วงเวลา\n4: บูรณาการ 2 เสาหลักสำคัญ (เช่น Planet + People) ควบคู่กันอย่างชัดเจนและมีตัวชี้วัดรองรับ\n5: บูรณาการครบทั้ง 3 เสาหลัก (Planet, People, Prosperity) อย่างสมดุลและครบวงจร",
         "score": 3,
-        "weight": 0.0333,
-        "evidence": "Solution-1 utilizes roadside CCTV optical flow (PTV/PIV) combined with canal ultrasonic flow/level telemetry to detect surface runoff and differentiate canal backwater from pipe clogging, targeting rapid QRT dispatch and maintenance queueing. However, it explicitly operates only during daylight ('ภายในช่วงที่มีแสง') and has blind spots outside camera FOV ('บางท่ออยู่นอกขอบเขตของ CCTV'). Because tropical convective storms frequently peak during dark evening rush hours with high visual occlusion, it delivers verified localized proof of concept on monitored corridors but lacks a 24/7 all-weather district-wide scaling model (SDG 11.5 / 13.1).",
-        "descope": "Deploy near-infrared (NIR) feature tracking with rain-streak spatio-temporal filtering; install low-cost solar virtual flood gauge markers at blind-spot inlets; cross-reference TMD/BMA weather radar data to ensure night-time continuity."
+        "weight": 0.05,
+        "evidence": "Solution-1 touches across the Wedding Cake tiers: (1) Planet/Biosphere via SDG 13.1 (flood risk mitigation) & SDG 6.3 (canal level monitoring); (2) People/Society via SDG 11.5 (urban road flood alerting to reduce vehicle & commuter losses); and (3) Prosperity/Economy via SDG 12.5 (municipal asset sweating by reusing existing CCTV and canal gauges). However, its operation is strictly daylight-only ('ภายในช่วงที่มีแสง') with blind spots outside camera FOV ('บางท่ออยู่นอกขอบเขตของ CCTV'), meaning its societal alerting and environmental tracking remain a localized proof-of-concept rather than an all-weather district-wide systemic integration (Level 3: Robust Single-Pillar / Limited Dual-Tier).",
+        "descope": "Deploy near-infrared (NIR) feature tracking with rain-streak filtering, and cross-reference TMD weather radar data to ensure night-time continuity, expanding Wedding Cake resilience across Planet and People to 24/7 coverage."
       },
       {
         "id": "SDG-02",
@@ -207,20 +207,9 @@
         "rationale": "ป้องกันการทอดทิ้งขยะอิเล็กทรอนิกส์หรือสารพิษลงสู่ระบบระบายน้ำและสิ่งแวดล้อมเมือง (SDG 6.3 / 12.4)",
         "rubric": "1: ก่ออันตรายและสารพิษในพื้นที่ กล่องอุปกรณ์แตกสลาย หรือแบตเตอรี่รั่วไหลหลุดลงสู่ระบบระบายน้ำ\n2: เทคโนโลยีเปราะบางแบบใช้แล้วทิ้ง เซนเซอร์อุดตันหรือผุกร่อนภายใน 2–3 สัปดาห์ และถูกทิ้งร้างในพื้นที่\n3: มีรอยเท้าสิ่งแวดล้อมตามมาตรฐาน ต้องเปลี่ยนแบตเตอรี่ตามรอบ มีสายยึดป้องกันอุปกรณ์สูญหาย\n4: กล่องหุ้มทนทานผลกระทบต่ำ กินไฟต่ำ ใช้วัสดุรีไซเคิลได้ และมีสายสลิงยึดโยงเพื่อความปลอดภัย\n5: ออกแบบตามหลักเศรษฐกิจหมุนเวียน 100% กู้คืนอุปกรณ์ได้ปลอดภัย ใช้วัสดุไม่เป็นพิษ ไร้รอยเท้าสิ่งแวดล้อม",
         "score": 4,
-        "weight": 0.0333,
+        "weight": 0.05,
         "evidence": "Solution-1 prioritizes existing municipal infrastructure reuse ('พยายามใช้ local sensor ที่มีก่อน' - CCTV and canal ultrasonic gauges). By mounting non-contact optical and ultrasonic sensors on elevated roadside poles and bridges, it completely avoids deploying submerged battery-powered electronic devices inside flowing sewers or canals. This prevents sensor dislodgement, casing breakdown, or toxic battery leakage into the drainage network (SDG 6.3 / 12.4). New hardware is confined to pole-mounted edge compute gateways with low environmental footprint.",
         "descope": "House edge compute hardware in IP67-rated, UV-stabilized 100% recyclable polycarbonate (PC) enclosures with dual stainless steel safety lanyards; establish a formal end-of-life (EoL) hardware recycling agreement with BMA Department of Drainage and Sewerage (DDS)."
-      },
-      {
-        "id": "SDG-03",
-        "pillar": "ด้านความยั่งยืน (+S / SDGs 2.7)",
-        "question": "ความโปร่งใสของอัลกอริทึมและความเป็นธรรมในการตัดสินใจ (Algorithmic Equity & Transparency)?",
-        "rationale": "ป้องกันความลำเอียงในการจัดสรรความช่วยเหลือหรือการปิดบังตรรกะการตัดสินใจต่อประชาชน (SDG 10.2 / 16.6)",
-        "rubric": "1: อัลกอริทึมแบบ Black-box ไม่โปร่งใส ปรับเปลี่ยนหรือยกเลิกการช่วยเหลือโดยไม่มีคำอธิบาย เสี่ยงต่อความไม่เท่าเทียม\n2: ตรรกะการตัดสินใจคลุมเครือ ซ่อนอยู่ในโค้ดที่ซับซ้อน เจ้าหน้าที่ไม่สามารถอธิบายเหตุผลให้ประชาชนเข้าใจได้\n3: กฎเกณฑ์มีเอกสารบันทึกไว้สำหรับวิศวกร แต่ยังไม่มีระบบตรวจสอบสาธารณะหรือช่องทางอุทธรณ์ผลการตรวจวัด\n4: การตัดสินใจขับเคลื่อนด้วยสมการฟิสิกส์มาตรฐานเปิด ปฏิบัติต่อทุกพื้นที่ของเมืองด้วยเกณฑ์เดียวกันอย่างเป็นธรรม\n5: ตรวจสอบได้ 100% มีระบบบันทึก Audit Trail ดิจิทัลที่โปร่งใส เปิดให้ประชาชนและเจ้าหน้าที่เข้าถึงได้อย่างเท่าเทียม",
-        "score": 3,
-        "weight": 0.0334,
-        "evidence": "The physical decision logic for distinguishing pipe clogging from canal overflow is documented on paper for engineers. However, dispatch alerting and maintenance queue prioritization lack a transparent public audit trail. Furthermore, municipal CCTV cameras in Bangkok are heavily clustered on major commercial avenues, leaving low-income sois and informal settlements unmonitored ('บางท่ออยู่นอกขอบเขตของ CCTV'). Relying solely on CCTV feeds risks algorithmic bias, directing desilting crews toward affluent main roads while neglecting vulnerable communities (SDG 10.2 / 16.6).",
-        "descope": "Publish real-time optical flow vectors and maintenance queue scores on an open civic dashboard; incorporate an affirmative equity weighting coefficient in the dispatch algorithm that boosts priority for underserved sois lacking CCTV coverage, cross-referencing citizen Traffy Fondue reports."
       }
     ]
   },
@@ -231,20 +220,20 @@
     "bottleneck": "การเปิดฝาท่อบนผิวถนนมีความเสี่ยงด้านความปลอดภัยและกฎหมายจราจร/พื้นที่อับอากาศ (L-01=2) และไม่สามารถตรวจวัดในช่วงที่มีน้ำท่วมขังสูงในท่อได้ (ต้องตรวจช่วงปกติที่น้ำต่ำ)",
     "advice": "จำกัดการทดสอบภาคเรียนนี้ในท่อจำลองพีวีซีบนโต๊ะทดลองแล็บหรือท่อระบายน้ำภายใน มจธ. และลดทอนการประมวลผลภาพ 2D ให้เหลือเพียงการคำนวณการสูญเสียพลังงานเสียงเทียบกับ Look-up table เพื่อลดความซับซ้อน",
     "robotic_compatibility": {
-      "score": 5.8,
+      "score": 8.0,
       "domains": {
-        "perception": "Score 2.8/3.5: Airborne Acoustic Reflectometry (AAR) measuring acoustic wave propagation and energy attenuation across sewer air cavities under normal low-water conditions.",
-        "control_algorithms": "Score 2.4/3.5: Digital signal processing (bandpass filtering, FFT, deconvolution) with 2D cross-sectional reconstruction and automated 0-10 cleanliness scale classification.",
-        "actuation_mechanics": "Score 0.6/3.0: Manual transmitter/receiver placement across manholes; actuation is limited to acoustic transducer sound excitation without motorized traversal or mechanical manipulation."
+        "perception": "Level 3.5 / 4.0: Airborne Acoustic Reflectometry (AAR) measuring acoustic wave propagation and energy attenuation across sewer air cavities under normal low-water conditions.",
+        "control_algorithms": "Level 3.0 / 4.0: Digital signal processing (bandpass filtering, FFT, deconvolution) with 2D cross-sectional reconstruction and automated 0-10 cleanliness scale classification.",
+        "actuation_mechanics": "Level 1.5 / 4.0: Manual transmitter/receiver placement across manholes; actuation features acoustic transducer sound wave excitation without motorized traversal or mechanical manipulation."
       },
       "fibo_alignment_rationale": "Solution 2 is an advanced acoustic Non-Destructive Testing (NDT) diagnostic instrument. The user clarification regarding low-water operating protocol and automated 0-10 cleanliness classification elevates its sensing and DSP depth. However, it remains an open-loop diagnostic tool lacking autonomous locomotion or physical actuation, underutilizing the team's mechanical fabrication and transmission design skills."
     },
     "robotic_data": {
-      "score": 5.8,
+      "score": 8.0,
       "domains": {
-        "perception": "Score 2.8/3.5: Airborne Acoustic Reflectometry (AAR) measuring acoustic wave propagation and energy attenuation across sewer air cavities under normal low-water conditions.",
-        "control_algorithms": "Score 2.4/3.5: Digital signal processing (bandpass filtering, FFT, deconvolution) with 2D cross-sectional reconstruction and automated 0-10 cleanliness scale classification.",
-        "actuation_mechanics": "Score 0.6/3.0: Manual transmitter/receiver placement across manholes; actuation is limited to acoustic transducer sound excitation without motorized traversal or mechanical manipulation."
+        "perception": "Level 3.5 / 4.0: Airborne Acoustic Reflectometry (AAR) measuring acoustic wave propagation and energy attenuation across sewer air cavities under normal low-water conditions.",
+        "control_algorithms": "Level 3.0 / 4.0: Digital signal processing (bandpass filtering, FFT, deconvolution) with 2D cross-sectional reconstruction and automated 0-10 cleanliness scale classification.",
+        "actuation_mechanics": "Level 1.5 / 4.0: Manual transmitter/receiver placement across manholes; actuation features acoustic transducer sound wave excitation without motorized traversal or mechanical manipulation."
       },
       "fibo_alignment_rationale": "Solution 2 is an advanced acoustic Non-Destructive Testing (NDT) diagnostic instrument. The user clarification regarding low-water operating protocol and automated 0-10 cleanliness classification elevates its sensing and DSP depth. However, it remains an open-loop diagnostic tool lacking autonomous locomotion or physical actuation, underutilizing the team's mechanical fabrication and transmission design skills."
     },
@@ -417,13 +406,13 @@
       {
         "id": "SDG-01",
         "pillar": "ด้านความยั่งยืน (+S / SDGs 2.7)",
-        "question": "ผลกระทบต่อสังคมและความทนทานของเมืองเทียบกับการฟอกเขียว (Public Impact vs. Greenwashing) ของการตรวจคัดกรองท่อ?",
-        "rationale": "ประเมินผลกระทบที่แท้จริงต่อการลดความสูญเสียจากภัยพิบัติเมือง (SDG 11.5 / 13.1) เทียบกับโครงการสาธิตเชิงวิชาการ",
-        "rubric": "1: กล่าวอ้างความยั่งยืนโดยไม่มีข้อมูลรองรับ (Greenwashing) วัดผลไม่ได้จริง และไม่แก้ปัญหาของเมือง\n2: เชื่อมโยงทางอ้อม ทำหน้าที่เป็นเพียงโครงงานสาธิตในสถาบันการศึกษา ไม่สามารถประเมินการลดความเสียหายได้\n3: พิสูจน์ผลได้ในระดับท้องถิ่น (ลดเวลาตอบสนองหรือลดความร้อนได้เฉพาะจุดทดสอบ) แต่ยังขาดโมเดลขยายผล\n4: มีศักยภาพปกป้องโครงสร้างพื้นฐานหรือลดความเสียหายของประชาชนในระดับเขตพื้นที่เมืองอย่างชัดเจน\n5: เสริมสร้างความทนทานต่อภัยพิบัติของเมือง มีข้อมูลเชิงประจักษ์ยืนยันการลดความสูญเสียทางเศรษฐกิจและชีวิต",
+        "question": "ระดับการครอบคลุมเสาหลักความยั่งยืนตามโมเดล Stockholm Wedding Cake (Planet, People, Prosperity)?",
+        "rationale": "ประเมินความครอบคลุมของผลกระทบเชิงระบบว่าตอบโจทย์เสาหลักความยั่งยืน 3 ชั้นหลักของ Stockholm Resilience Centre (ชีวมณฑล/Planet, สังคม/People, และเศรษฐกิจ/Prosperity) อย่างเป็นองค์รวม ไม่ใช่โครงการแก้ปัญหาจุดเดียวที่ละเลยมิติอื่น",
+        "rubric": "1: หลุดจาก Wedding Cake หรือสร้างผลกระทบเชิงลบต่อเสาหลักใดเสาหลักหนึ่งอย่างรุนแรง\n2: สัมผัสเพียง 1 เสาหลักอย่างผิวเผิน ขาดการเชื่อมโยงเชิงประจักษ์ไปยังสังคมหรือสิ่งแวดล้อมจริง\n3: ครอบคลุม 1 เสาหลักอย่างเป็นรูปธรรม หรือ 2 เสาหลักแบบมีข้อจำกัดเฉพาะจุด/เฉพาะช่วงเวลา\n4: บูรณาการ 2 เสาหลักสำคัญ (เช่น Planet + People) ควบคู่กันอย่างชัดเจนและมีตัวชี้วัดรองรับ\n5: บูรณาการครบทั้ง 3 เสาหลัก (Planet, People, Prosperity) อย่างสมดุลและครบวงจร",
         "score": 4,
-        "weight": 0.0333,
-        "evidence": "Solution-2 utilizes Airborne Acoustic Reflectometry between adjacent manholes to map sewer pipe cross-sections and produce an empirical cleanliness score (0-10 scale). Taking only minutes per manhole segment, this rapid non-destructive screening technology allows mobile municipal crews to survey entire subdistrict drainage networks prior to the monsoon season. Proactive detection of severe silt and grease blockages enables targeted preventative desilting, directly mitigating road waterlogging and protecting urban transport infrastructure across multiple roads/alleys (SDG 11.5 / 13.1).",
-        "descope": "Integrate acoustic inspection logs into a mobile GIS-based maintenance dispatch pipeline for district public works crews (ฝ่ายโยธา); correlate acoustic blockage scores with upstream catchment runoff models to prioritize critical drainage bottlenecks."
+        "weight": 0.05,
+        "evidence": "Solution-2 achieves deep systemic alignment across the Wedding Cake: (1) Planet/Biosphere via SDG 6.3 (detecting sludge/grease blockages to prevent foul wastewater overflows into natural waterways); (2) People/Society via SDG 11.5 (pre-monsoon screening mitigating urban road flooding) and SDG 8.8 (protecting municipal workers by eliminating dangerous confined-space manual sewer entries); and (3) Prosperity/Economy by translating acoustic decay into a quantitative 0-10 Cleanliness Score to optimize municipal truck dispatch. It strongly secures Level 4 (robust dual-tier with active economic dispatch linkage).",
+        "descope": "Integrate acoustic inspection logs into a mobile GIS-based maintenance dispatch pipeline for district public works crews (ฝ่ายโยธา) to formalize multi-subdistrict economic ROI into a full Level 5 city-wide deployment."
       },
       {
         "id": "SDG-02",
@@ -432,20 +421,9 @@
         "rationale": "ป้องกันการทอดทิ้งขยะอิเล็กทรอนิกส์หรือสารพิษลงสู่ระบบระบายน้ำและสิ่งแวดล้อมเมือง (SDG 6.3 / 12.4)",
         "rubric": "1: ก่ออันตรายและสารพิษในพื้นที่ กล่องอุปกรณ์แตกสลาย หรือแบตเตอรี่รั่วไหลหลุดลงสู่ระบบระบายน้ำ\n2: เทคโนโลยีเปราะบางแบบใช้แล้วทิ้ง เซนเซอร์อุดตันหรือผุกร่อนภายใน 2–3 สัปดาห์ และถูกทิ้งร้างในพื้นที่\n3: มีรอยเท้าสิ่งแวดล้อมตามมาตรฐาน ต้องเปลี่ยนแบตเตอรี่ตามรอบ มีสายยึดป้องกันอุปกรณ์สูญหาย\n4: กล่องหุ้มทนทานผลกระทบต่ำ กินไฟต่ำ ใช้วัสดุรีไซเคิลได้ และมีสายสลิงยึดโยงเพื่อความปลอดภัย\n5: ออกแบบตามหลักเศรษฐกิจหมุนเวียน 100% กู้คืนอุปกรณ์ได้ปลอดภัย ใช้วัสดุไม่เป็นพิษ ไร้รอยเท้าสิ่งแวดล้อม",
         "score": 5,
-        "weight": 0.0333,
+        "weight": 0.05,
         "evidence": "Solution-2 is an active, human-operated portable diagnostic tool rather than a permanently installed IoT node. Crews temporarily place the transmitter and receiver at opposite manholes, emit acoustic pulses through the sewer air column, record transmission loss, and immediately retrieve the equipment upon test completion. Because zero hardware, probes, or batteries are left unattended in the sewer, it achieves 100% fail-safe retrieval, leaves zero field trace, and generates zero marine litter or toxic leaching into the urban drainage network (SDG 6.3 / 12.4).",
         "descope": "Standardize handheld enclosures using non-toxic recyclable TPU and aluminum with replaceable hydrophobic ePTFE acoustic membranes to withstand sewer moisture without requiring harsh chemical cleaning agents."
-      },
-      {
-        "id": "SDG-03",
-        "pillar": "ด้านความยั่งยืน (+S / SDGs 2.7)",
-        "question": "ความโปร่งใสของอัลกอริทึมและความเป็นธรรมในการตัดสินใจ (Algorithmic Equity & Transparency) ของสมการคลื่นเสียง?",
-        "rationale": "ป้องกันความลำเอียงในการจัดสรรความช่วยเหลือหรือการปิดบังตรรกะการตัดสินใจต่อประชาชน (SDG 10.2 / 16.6)",
-        "rubric": "1: อัลกอริทึมแบบ Black-box ไม่โปร่งใส ปรับเปลี่ยนหรือยกเลิกการช่วยเหลือโดยไม่มีคำอธิบาย เสี่ยงต่อความไม่เท่าเทียม\n2: ตรรกะการตัดสินใจคลุมเครือ ซ่อนอยู่ในโค้ดที่ซับซ้อน เจ้าหน้าที่ไม่สามารถอธิบายเหตุผลให้ประชาชนเข้าใจได้\n3: กฎเกณฑ์มีเอกสารบันทึกไว้สำหรับวิศวกร แต่ยังไม่มีระบบตรวจสอบสาธารณะหรือช่องทางอุทธรณ์ผลการตรวจวัด\n4: การตัดสินใจขับเคลื่อนด้วยสมการฟิสิกส์มาตรฐานเปิด ปฏิบัติต่อทุกพื้นที่ของเมืองด้วยเกณฑ์เดียวกันอย่างเป็นธรรม\n5: ตรวจสอบได้ 100% มีระบบบันทึก Audit Trail ดิจิทัลที่โปร่งใส เปิดให้ประชาชนและเจ้าหน้าที่เข้าถึงได้อย่างเท่าเทียม",
-        "score": 4,
-        "weight": 0.0334,
-        "evidence": "Pipe cleanliness scoring (0-10) is derived from deterministic acoustic waveguide physics (transmission loss and boundary attenuation governed by cross-sectional blockage area). Decisions are based on transparent physical equations applied equally across all city zones regardless of neighborhood socio-economic status (SDG 10.2). It achieves Level 4 rather than 5 because inspection datasets currently remain internal engineering logs without a live, tamper-evident civic open-data portal (SDG 16.6).",
-        "descope": "Release the acoustic inversion calibration curves as open-source documentation; automatically push all 0-10 pipe cleanliness ratings to Open Data BMA with timestamped GPS coordinates for transparent public oversight."
       }
     ]
   },
@@ -456,22 +434,22 @@
     "bottleneck": "ตกเกณฑ์ข้อบังคับวิกฤตด้านเศรษฐศาสตร์ (E-01=1 VETOED) เนื่องจากใช้น้ำประปาและพลังงานต่อเนื่องโดยไม่มีผลตอบแทนทางการเงิน และมีความเสี่ยงสูงต่อการลื่นล้มของคนเดินถนน (O-01=2) รวมถึงการต่อต้านจากร้านค้าริมทาง (O-02=2)",
     "advice": "เปลี่ยนพื้นที่ติดตั้งจากตรอกซอยทางเดินแคบไปเป็นศาลาพักผู้โดยสารหรือลานกิจกรรมกลางแจ้งที่มีระบบระบายน้ำ และใช้น้ำฝนบำบัดแทนน้ำประปา พร้อมติดแผ่นยางกันลื่น",
     "robotic_compatibility": {
-      "score": 8.0,
+      "score": 10.0,
       "domains": {
-        "perception": "Score 2.7/3.5: Non-contact radiometric infrared surface temperature sensing and ambient microclimate relative humidity monitoring.",
-        "control_algorithms": "Score 3.0/3.5: Closed-loop feedback control incorporating thermodynamic latent heat balance modeling, anti-runoff mass flux limits, and adaptive PWM/hysteresis solenoid modulation.",
-        "actuation_mechanics": "Score 2.3/3.0: Active electro-fluidic actuation featuring a high-pressure pump, fast-switching solenoid valves, atomizing mist nozzle array, and hydraulic manifold mechanical structures."
+        "perception": "Level 3.0 / 4.0: Non-contact radiometric infrared surface temperature sensing and ambient microclimate relative humidity monitoring.",
+        "control_algorithms": "Level 3.5 / 4.0: Closed-loop feedback control incorporating thermodynamic latent heat balance modeling, anti-runoff mass flux limits, and adaptive PWM/hysteresis solenoid modulation.",
+        "actuation_mechanics": "Level 3.5 / 4.0: Active electro-fluidic actuation featuring a high-pressure pump, fast-switching solenoid valves, atomizing mist nozzle array, and hydraulic manifold mechanical structures."
       },
-      "fibo_alignment_rationale": "Solution 3 represents a complete closed-loop cyber-physical mechatronic automation system (Sense -> Think -> Act -> Feedback). It achieves 100% synergy with the team's multidisciplinary curriculum, fully engaging CAD/FEA mechanical design (Fifa/Jay), custom driver PCB and firmware (Due), feedback control theory and differential heat modeling (JK), and telemetry analytics (Kin). It scores 8.0/10.0 due to its stationary configuration lacking multi-DOF kinematics or mobile locomotion."
+      "fibo_alignment_rationale": "Solution 3 represents a complete closed-loop cyber-physical mechatronic automation system (Sense -> Think -> Act -> Feedback). It achieves 100% synergy with the team's multidisciplinary curriculum, fully engaging CAD/FEA mechanical design (Fifa/Jay), custom driver PCB and firmware (Due), feedback control theory and differential heat modeling (JK), and telemetry analytics (Kin). It scores 10.0/12.0 due to its stationary configuration lacking multi-DOF kinematics or mobile locomotion."
     },
     "robotic_data": {
-      "score": 8.0,
+      "score": 10.0,
       "domains": {
-        "perception": "Score 2.7/3.5: Non-contact radiometric infrared surface temperature sensing and ambient microclimate relative humidity monitoring.",
-        "control_algorithms": "Score 3.0/3.5: Closed-loop feedback control incorporating thermodynamic latent heat balance modeling, anti-runoff mass flux limits, and adaptive PWM/hysteresis solenoid modulation.",
-        "actuation_mechanics": "Score 2.3/3.0: Active electro-fluidic actuation featuring a high-pressure pump, fast-switching solenoid valves, atomizing mist nozzle array, and hydraulic manifold mechanical structures."
+        "perception": "Level 3.0 / 4.0: Non-contact radiometric infrared surface temperature sensing and ambient microclimate relative humidity monitoring.",
+        "control_algorithms": "Level 3.5 / 4.0: Closed-loop feedback control incorporating thermodynamic latent heat balance modeling, anti-runoff mass flux limits, and adaptive PWM/hysteresis solenoid modulation.",
+        "actuation_mechanics": "Level 3.5 / 4.0: Active electro-fluidic actuation featuring a high-pressure pump, fast-switching solenoid valves, atomizing mist nozzle array, and hydraulic manifold mechanical structures."
       },
-      "fibo_alignment_rationale": "Solution 3 represents a complete closed-loop cyber-physical mechatronic automation system (Sense -> Think -> Act -> Feedback). It achieves 100% synergy with the team's multidisciplinary curriculum, fully engaging CAD/FEA mechanical design (Fifa/Jay), custom driver PCB and firmware (Due), feedback control theory and differential heat modeling (JK), and telemetry analytics (Kin). It scores 8.0/10.0 due to its stationary configuration lacking multi-DOF kinematics or mobile locomotion."
+      "fibo_alignment_rationale": "Solution 3 represents a complete closed-loop cyber-physical mechatronic automation system (Sense -> Think -> Act -> Feedback). It achieves 100% synergy with the team's multidisciplinary curriculum, fully engaging CAD/FEA mechanical design (Fifa/Jay), custom driver PCB and firmware (Due), feedback control theory and differential heat modeling (JK), and telemetry analytics (Kin). It scores 10.0/12.0 due to its stationary configuration lacking multi-DOF kinematics or mobile locomotion."
     },
     "assessment_data": [
       {
@@ -642,13 +620,13 @@
       {
         "id": "SDG-01",
         "pillar": "ด้านความยั่งยืน (+S / SDGs 2.7)",
-        "question": "ผลกระทบต่อสังคมและความทนทานของเมืองเทียบกับการฟอกเขียว (Public Impact vs. Greenwashing) ของการลดเกาะความร้อน?",
-        "rationale": "ประเมินผลกระทบที่แท้จริงต่อการลดความสูญเสียจากภัยพิบัติเมือง (SDG 11.5 / 13.1) เทียบกับโครงการสาธิตเชิงวิชาการ",
-        "rubric": "1: กล่าวอ้างความยั่งยืนโดยไม่มีข้อมูลรองรับ (Greenwashing) วัดผลไม่ได้จริง และไม่แก้ปัญหาของเมือง\n2: เชื่อมโยงทางอ้อม ทำหน้าที่เป็นเพียงโครงงานสาธิตในสถาบันการศึกษา ไม่สามารถประเมินการลดความเสียหายได้\n3: พิสูจน์ผลได้ในระดับท้องถิ่น (ลดเวลาตอบสนองหรือลดความร้อนได้เฉพาะจุดทดสอบ) แต่ยังขาดโมเดลขยายผล\n4: มีศักยภาพปกป้องโครงสร้างพื้นฐานหรือลดความเสียหายของประชาชนในระดับเขตพื้นที่เมืองอย่างชัดเจน\n5: เสริมสร้างความทนทานต่อภัยพิบัติของเมือง มีข้อมูลเชิงประจักษ์ยืนยันการลดความสูญเสียทางเศรษฐกิจและชีวิต",
+        "question": "ระดับการครอบคลุมเสาหลักความยั่งยืนตามโมเดล Stockholm Wedding Cake (Planet, People, Prosperity)?",
+        "rationale": "ประเมินความครอบคลุมของผลกระทบเชิงระบบว่าตอบโจทย์เสาหลักความยั่งยืน 3 ชั้นหลักของ Stockholm Resilience Centre (ชีวมณฑล/Planet, สังคม/People, และเศรษฐกิจ/Prosperity) อย่างเป็นองค์รวม ไม่ใช่โครงการแก้ปัญหาจุดเดียวที่ละเลยมิติอื่น",
+        "rubric": "1: หลุดจาก Wedding Cake หรือสร้างผลกระทบเชิงลบต่อเสาหลักใดเสาหลักหนึ่งอย่างรุนแรง\n2: สัมผัสเพียง 1 เสาหลักอย่างผิวเผิน ขาดการเชื่อมโยงเชิงประจักษ์ไปยังสังคมหรือสิ่งแวดล้อมจริง\n3: ครอบคลุม 1 เสาหลักอย่างเป็นรูปธรรม หรือ 2 เสาหลักแบบมีข้อจำกัดเฉพาะจุด/เฉพาะช่วงเวลา\n4: บูรณาการ 2 เสาหลักสำคัญ (เช่น Planet + People) ควบคู่กันอย่างชัดเจนและมีตัวชี้วัดรองรับ\n5: บูรณาการครบทั้ง 3 เสาหลัก (Planet, People, Prosperity) อย่างสมดุลและครบวงจร",
         "score": 3,
-        "weight": 0.0333,
-        "evidence": "Solution-3 deploys IR surface temperature sensors and solenoid misting valves to cool sidewalk pavement when surface temperatures exceed 45°C between 11:00 and 14:00. While evaporative cooling provides verified localized temperature drops on the immediate 10-20 meter sidewalk test strip, the proposal explicitly notes that it 'ต้องใช้พื้นที่ในปริมาณมากเพื่อทำให้เกิดผลที่ต้องการ' (requires vast spatial coverage) and lacks nearby clean water sources in sois. In Bangkok's high-humidity tropical climate, evaporative cooling is severely limited by small wet-bulb depression and rapid convective wind dissipation, lacking a scalable model for district-level heat resilience (SDG 11.5 / 13.1).",
-        "descope": "Constrain deployment to high-density covered pedestrian transit nodes (bus stops, skywalk plazas) where shade canopies sustain the microclimate; integrate wet-bulb globe temperature (WBGT) cutoffs to inhibit misting above 75% RH to prevent muggy heat stress."
+        "weight": 0.05,
+        "evidence": "Solution-3 attempts to address People/Society (SDG 11.7 cooling pedestrian corridors to prevent heatstroke) and Planet/Biosphere (SDG 13.1 mitigating urban heat island microclimates). However, its Wedding Cake balance is severely impaired: (1) it incurs a severe negative trade-off on Planet/Biosphere via SDG 6.4 (continuous wasteful consumption of potable tap water); (2) introduces safety hazards to People (O-01=2 slip hazards); and (3) completely fails Prosperity/Economy (E-01=1 VETOED with perpetual operating OpEx and zero financial return). It qualifies only as Level 3 (conditional single-pillar coverage with heavy negative externalities).",
+        "descope": "Replace potable tap water with recycled air-conditioner condensate or rainwater harvesting to eliminate the negative water footprint on Planet (SDG 6.4), and relocate to covered transit shelters with non-slip mats to protect People (SDG 11.7)."
       },
       {
         "id": "SDG-02",
@@ -657,20 +635,9 @@
         "rationale": "ป้องกันการทอดทิ้งขยะอิเล็กทรอนิกส์หรือสารพิษลงสู่ระบบระบายน้ำและสิ่งแวดล้อมเมือง (SDG 6.3 / 12.4)",
         "rubric": "1: ก่ออันตรายและสารพิษในพื้นที่ กล่องอุปกรณ์แตกสลาย หรือแบตเตอรี่รั่วไหลหลุดลงสู่ระบบระบายน้ำ\n2: เทคโนโลยีเปราะบางแบบใช้แล้วทิ้ง เซนเซอร์อุดตันหรือผุกร่อนภายใน 2–3 สัปดาห์ และถูกทิ้งร้างในพื้นที่\n3: มีรอยเท้าสิ่งแวดล้อมตามมาตรฐาน ต้องเปลี่ยนแบตเตอรี่ตามรอบ มีสายยึดป้องกันอุปกรณ์สูญหาย\n4: กล่องหุ้มทนทานผลกระทบต่ำ กินไฟต่ำ ใช้วัสดุรีไซเคิลได้ และมีสายสลิงยึดโยงเพื่อความปลอดภัย\n5: ออกแบบตามหลักเศรษฐกิจหมุนเวียน 100% กู้คืนอุปกรณ์ได้ปลอดภัย ใช้วัสดุไม่เป็นพิษ ไร้รอยเท้าสิ่งแวดล้อม",
         "score": 3,
-        "weight": 0.0333,
+        "weight": 0.05,
         "evidence": "Solution-3 uses wall/pole-mounted fixtures (solenoid valves, misting lines, IR sensors), avoiding toxic waterway litter. However, it generates notable operational footprints: (1) high consumption of potable municipal tap water during peak heat hours, while non-potable water cannot be used due to pathogen aerosolization risks (Legionella/coliforms); (2) severe mineral scale calcification (CaCO3) in fine mist nozzles under hard water, causing rapid clogging, frequent nozzle discards, and polyurethane line UV degradation (SDG 6.3 / 12.4).",
         "descope": "Install inline multi-stage sediment and catalytic water-softening filters to extend nozzle lifespan by 300%; integrate a closed-loop condensate harvesting system from adjacent building air conditioners to minimize municipal tap water consumption."
-      },
-      {
-        "id": "SDG-03",
-        "pillar": "ด้านความยั่งยืน (+S / SDGs 2.7)",
-        "question": "ความโปร่งใสของอัลกอริทึมและความเป็นธรรมในการตัดสินใจ (Algorithmic Equity & Transparency) ของการเข้าถึงน้ำ?",
-        "rationale": "ป้องกันความลำเอียงในการจัดสรรความช่วยเหลือหรือการปิดบังตรรกะการตัดสินใจต่อประชาชน (SDG 10.2 / 16.6)",
-        "rubric": "1: อัลกอริทึมแบบ Black-box ไม่โปร่งใส ปรับเปลี่ยนหรือยกเลิกการช่วยเหลือโดยไม่มีคำอธิบาย เสี่ยงต่อความไม่เท่าเทียม\n2: ตรรกะการตัดสินใจคลุมเครือ ซ่อนอยู่ในโค้ดที่ซับซ้อน เจ้าหน้าที่ไม่สามารถอธิบายเหตุผลให้ประชาชนเข้าใจได้\n3: กฎเกณฑ์มีเอกสารบันทึกไว้สำหรับวิศวกร แต่ยังไม่มีระบบตรวจสอบสาธารณะหรือช่องทางอุทธรณ์ผลการตรวจวัด\n4: การตัดสินใจขับเคลื่อนด้วยสมการฟิสิกส์มาตรฐานเปิด ปฏิบัติต่อทุกพื้นที่ของเมืองด้วยเกณฑ์เดียวกันอย่างเป็นธรรม\n5: ตรวจสอบได้ 100% มีระบบบันทึก Audit Trail ดิจิทัลที่โปร่งใส เปิดให้ประชาชนและเจ้าหน้าที่เข้าถึงได้อย่างเท่าเทียม",
-        "score": 3,
-        "weight": 0.0334,
-        "evidence": "Operational rules are based on documented engineering thresholds (>45°C surface temp, 11:00-14:00 window, humidity cutoff). However, the system faces severe socio-spatial inequality: it requires tapping water and power from adjacent private buildings ('ต้องต่อน้ำจากอาคารซึ่งอาจมีข้อจำกัดด้านสิทธิ์การใช้พื้นที่'). Consequently, cooling will disproportionately benefit commercial shopfronts with cooperative owners, leaving low-income residential alleys neglected. Additionally, there is no public audit log or civic appeal mechanism explaining misting activations or shutdowns (SDG 10.2 / 16.6).",
-        "descope": "Establish a municipal spatial siting framework prioritizing public community pathways and transit hubs independent of commercial property agreements; deploy a public QR code at each misting pole linking to a real-time civic telemetry dashboard displaying temperature, humidity, and water consumption data."
       }
     ]
   }

@@ -140,26 +140,18 @@
 
 ### SDGs Feasibility (TELOS+S Master Criteria)
 
-#### SDG-01: Public Impact vs. Academic Greenwashing (SDG 11.5 / 13.1)
+#### SDG-01: Stockholm Wedding Cake Coverage (Planet, People, Prosperity)
 
-* **1 — Pure Buzzword / Greenwashing:** Claims sustainability benefits with zero data, zero measurable effect, and solves no real municipal problem.
-* **2 — Superficial Correlation:** Indirect impact; functions only as an isolated school demo with no realistic way to measure damage prevention.
-* **3 — Localized Proof:** Delivers a measurable, verified benefit (e.g., cuts response time or drops localized temperature on a single test strip), but lacks a scaling model.
-* **4 — District-Level Viability:** Clear pathway to protect municipal infrastructure or reduce public losses across multiple roads/alleys during extreme weather.
-* **5 — Systemic City Resilience:** Backed by concrete empirical data showing significant reduction in public economic losses, vehicle damage, or human hazard.
+* **1 — Disconnected / Negative Externalities (หลุดจาก Wedding Cake / ก่อผลกระทบเชิงลบ):** ไม่ครอบคลุมเสาหลักใดเลย หรือสร้างผลกระทบเชิงลบอย่างรุนแรงต่อเสาหลักใดเสาหลักหนึ่ง (เช่น สิ้นเปลืองทรัพยากรบริสุทธิ์หรือสร้างมลพิษย้อนกลับ)
+* **2 — Superficial Single-Pillar (สัมผัสเพียง 1 เสาหลักอย่างผิวเผิน):** ตอบโจทย์เพียง 1 เสาหลักแบบอ้อมๆ หรือทำหน้าที่เป็นเพียงโครงการสาธิตเชิงวิชาการ ขาดการเชื่อมโยงเชิงประจักษ์ไปยังสังคมหรือสิ่งแวดล้อม
+* **3 — Robust Single-Pillar / Limited Dual (ครอบคลุม 1 เสาหลักอย่างเป็นรูปธรรม หรือ 2 เสาหลักแบบมีข้อจำกัด):** มีผลลัพธ์เชิงประจักษ์ชัดเจนใน 1 เสาหลักเต็มรูปแบบ (เช่น ด้าน People หรือ Planet) หรือเริ่มแตะ 2 เสาหลักแต่ยังมีข้อจำกัดเฉพาะจุด/เฉพาะช่วงเวลา
+* **4 — Dual-Tier Systemic Integration (บูรณาการ 2 เสาหลักสำคัญอย่างมีนัยสำคัญ):** เชื่อมโยงและตอบโจทย์ 2 เสาหลักควบคู่กันอย่างชัดเจนและมีตัวชี้วัดรองรับ (เช่น Planet + People หรือ People + Prosperity)
+* **5 — Triple-Tier Complete Harmony (บูรณาการครบทั้ง 3 เสาหลักของ Wedding Cake อย่างสมบูรณ์):** ตอบโจทย์ครบทั้ง 3 เสาหลักอย่างสมดุล (Planet: อนุรักษ์/ฟื้นฟูชีวมณฑล, People: ยกระดับความปลอดภัยและสุขภาวะสังคม, Prosperity: สร้างความคุ้มค่าและขับเคลื่อนเศรษฐกิจอย่างยั่งยืน)
 
-#### SDG-02: Environmental Footprint & E-Waste ("Do No Harm" — SDG 6.3 / 12.4)
+#### SDG-02: Environmental Footprint & E-Waste ("Do No Harm" — SDG 6.3 / 12.4 & Circular Economy)
 
 * **1 — Toxic Field Hazard:** Enclosure degrades under UV, or unsealed batteries leak toxic chemicals and detach into the urban drainage network as marine litter.
 * **2 — Fragile Disposable Tech:** Short operational lifespan; sensors foul or corrode within 2–3 weeks and are abandoned because retrieval is impractical.
 * **3 — Standard Field Footprint:** Requires periodic battery replacement and creates standard electronic scrap, but uses basic tethering to prevent total hardware loss.
 * **4 — Low-Impact Enclosure:** Solar-trickle or long-life low-power architecture; uses recyclable casing and redundant physical tethers (e.g., dual stainless lanyards).
-* **5 — Fully Circular & Zero Footprint:** 100% fail-safe retrieval design; uses non-toxic materials, consumes minimal public resources, and leaves zero field trace.
-
-#### SDG-03: Algorithmic Equity & Decision Transparency (SDG 10.2 / 16.6)
-
-* **1 — Opaque Black Box:** Proprietary or unexplained threshold that cancels dispatches or alters public services with zero explanation, risking neglect of vulnerable areas.
-* **2 — Ambiguous Logic:** Decision rules are buried in messy heuristic code; field operators cannot explain to a citizen why an alert was triggered or suppressed.
-* **3 — Documented Internal Rules:** Logic is documented on paper for engineers, but has no public audit trail or clear appeal mechanism if the sensor misreads.
-* **4 — Open Empirical Standards:** Decisions are driven by transparent physical equations applied equally across all city zones.
-* **5 — 100% Auditable & Equitable:** Full tamper-evident digital audit trail; open logic accessible to officials and citizens, guaranteeing equal public protection regardless of district wealth.
+* **5 — Fully Circular & Zero Footprint:** 100% fail-safe retrieval design; uses non-toxic materials, consumes minimal public resources, adheres to circular economy principles, and leaves zero field trace.

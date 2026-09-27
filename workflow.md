@@ -284,47 +284,47 @@ To guarantee specialized depth and prevent cognitive shortcutting, the TELOS+S a
 
 ---
 
-## 10. The FIBO Robotics Potential Matrix (Scale 0.0 to 10.0)
+## 10. The FIBO Robotics Potential Matrix (Scale 0.0 to 12.0)
 
 ### A. Architectural Purpose
 At FIBO (Institute of Field RoBOtics, KMUTT), an engineering capstone or system design must be evaluated on its **Robotics & Mechatronics Depth**. A solution might have high operational viability (e.g. putting a manual sign on a road) while having 0% robotics content. Conversely, a highly complex robot might fail operational feasibility.
 
 Therefore, the **Robotics Potential Scale is orthogonal**:
 - **TELOS+S Feasibility Score (0 to 100%)**: Measures real-world viability, operational adoption, economics, and legal safety.
-- **Robotics Potential Score (0.0 to 10.0 Points)**: Measures automation depth, mechatronic coupling, and utilization of FIBO robotics knowledge.
+- **Robotics Potential Score (0.0 to 12.0 Points)**: Measures automation depth, mechatronic coupling, and utilization of FIBO robotics knowledge (3 pillars $\times$ 4 levels = clean 12.0 points).
 - The two scores are presented side-by-side in executive matrices, never summed together.
 
 ### B. The 3-Pillar Scoring Formulation (Sense - Think - Act)
 
-$$\text{Robotic Potential (10.0)} = \text{Perception (3.5)} + \text{Processing \& Algorithms (3.5)} + \text{Actuation \& Mechanics (3.0)}$$
+$$\text{Robotic Potential (12.0)} = \text{Perception (4.0)} + \text{Processing \& Algorithms (4.0)} + \text{Actuation \& Mechanics (4.0)}$$
 
-1. **Perception & Sensing (0.0 – 3.5 Pts)**:
+1. **Perception & Sensing (0.0 – 4.0 Pts)**:
    - Evaluates sensor physics, transduction, signal conditioning, and environmental perception.
-   - *Rubric*:
-     - `0.0 - 1.0`: Manual entry / static switch.
-     - `1.1 - 2.0`: Raw single-point analog/digital sensor without calibration.
-     - `2.1 - 2.8`: Time-series signal acquisition (ultrasonic pulse, optical flow, IR array) with basic filtering.
-     - `2.9 - 3.5`: Advanced sensing modality (Acoustic Reflectometry, PTV/PIV velocimetry, 2D cross-sectional scanning, spectral filtering).
+   - *Rubric (4 Levels)*:
+     - `Level 1 (0.0 - 1.0)`: Manual entry / static switch.
+     - `Level 2 (1.1 - 2.0)`: Raw single-point analog/digital sensor without calibration.
+     - `Level 3 (2.1 - 3.0)`: Time-series signal acquisition (ultrasonic pulse, optical flow, IR array) with basic filtering.
+     - `Level 4 (3.1 - 4.0)`: Advanced sensing modality (Acoustic Reflectometry, PTV/PIV velocimetry, 2D cross-sectional scanning, spectral filtering).
 
-2. **Processing, Algorithms & Automation Depth (0.0 – 3.5 Pts)**:
+2. **Processing, Algorithms & Automation Depth (0.0 – 4.0 Pts)**:
    - Evaluates edge computing, DSP, state estimation, closed-loop feedback, and automated decision scoring.
-   - *Rubric*:
-     - `0.0 - 1.0`: Static hardcoded delay / zero algorithmic processing.
-     - `1.1 - 2.0`: Simple single-threshold IF-THEN logic.
-     - `2.1 - 2.8`: Multi-variable data pipeline (radar + telemetry, dynamic queue priority).
-     - `2.9 - 3.5`: Automated closed-loop state estimation, 2D profile reconstruction, acoustic energy decay modeling, or quantitative 0–10 cleanliness grading.
+   - *Rubric (4 Levels)*:
+     - `Level 1 (0.0 - 1.0)`: Static hardcoded delay / zero algorithmic processing.
+     - `Level 2 (1.1 - 2.0)`: Simple single-threshold IF-THEN logic.
+     - `Level 3 (2.1 - 3.0)`: Multi-variable data pipeline (radar + telemetry, dynamic queue priority).
+     - `Level 4 (3.1 - 4.0)`: Automated closed-loop state estimation, 2D profile reconstruction, acoustic energy decay modeling, or quantitative 0–10 cleanliness grading.
 
-3. **Actuation, Mechanisms & Physical Coupling (0.0 – 3.0 Pts)**:
+3. **Actuation, Mechanisms & Physical Coupling (0.0 – 4.0 Pts)**:
    - Evaluates physical interaction with the physical environment, mechanical rigging, acoustic transmitters, or robotic carriages.
-   - *Rubric*:
-     - `0.0 - 0.5`: Pure virtual software / dashboard (zero physical interaction).
-     - `0.6 - 1.2`: Static bracket or simple on/off solenoid relay with zero motion control.
-     - `1.3 - 2.0`: Controlled fluid/pneumatic delivery (modulated misting valves) or calibrated acoustic transmitter/receiver rig.
-     - `2.1 - 3.0`: Active mechatronic payload, robotic crawler carriage, or dynamic positioning mechanism.
+   - *Rubric (4 Levels)*:
+     - `Level 1 (0.0 - 1.0)`: Pure virtual software / dashboard (zero physical interaction).
+     - `Level 2 (1.1 - 2.0)`: Static bracket or simple on/off solenoid relay with zero motion control.
+     - `Level 3 (2.1 - 3.0)`: Controlled fluid/pneumatic delivery (modulated misting valves) or calibrated acoustic transmitter/receiver rig.
+     - `Level 4 (3.1 - 4.0)`: Active mechatronic payload, robotic crawler carriage, or dynamic positioning mechanism.
 
-### C. Performance Interpretation Tiers
-- **8.5 – 10.0**: Exemplary Robotics / Core FIBO Capstone (full closed-loop Sense-Think-Act).
-- **7.0 – 8.4**: Strong Mechatronic Payload / Active NDT Inspection (advanced DSP + automated scoring + physical rig).
-- **5.0 – 6.9**: Applied Instrumentation & Automated Control (sensing + threshold actuation).
-- **0.0 – 4.9**: Passive Telemetry / Pure Software Service (lacks mechatronic actuation or processing depth).
+### C. Performance Interpretation Tiers (Scale 0.0 – 12.0)
+- **10.0 – 12.0**: Exemplary Robotics / Core FIBO Capstone (full closed-loop Sense-Think-Act).
+- **8.0 – 9.9**: Strong Mechatronic Payload / Active NDT Inspection (advanced DSP + automated scoring + physical rig).
+- **6.0 – 7.9**: Applied Instrumentation & Automated Control (sensing + threshold actuation).
+- **0.0 – 5.9**: Passive Telemetry / Pure Software Service (lacks mechatronic actuation or processing depth).
 

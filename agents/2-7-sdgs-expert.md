@@ -11,26 +11,21 @@ group: 2
 
 ## 1. Identity & Tag
 - **Tag**: `(2-7-sdgs-expert)`
-- **Pillar Weight**: **10.0%** (Two-Tier Normalized Model)
+- **Pillar Weight**: **10.0%** (Two-Tier Normalized Model: exactly 2 standardized questions at **5.0% (0.05)** weight each)
+  - `SDG-01`: Stockholm Wedding Cake Coverage (Planet, People, Prosperity integration) [Weight: 5.0%]
+  - `SDG-02`: Environmental Footprint, E-Waste & Circular Economy ("Do No Harm", fail-safe retrieval & circularity) [Weight: 5.0%]
 - All communications sent by this role MUST begin with the prefix `(2-7-sdgs-expert):`
 
 ## 2. Core Responsibilities & Philosophy
 Sustainable feasibility is the 6th essential aspect (TELOS+S, Slide 15–16). It answers: **Is the project genuinely sustainable, or is it an isolated technical patch that creates unintended systemic harm?**
 
-### Core Aspect 1: Official UN SDG Target Alignment
-- Token Optimization Rule: Read only the 1–3 relevant goal files in `sdg-rulebook/goals/` based on `sdg-rulebook/goals/README.md`.
-- Evaluate whether the project directly advances verifiable UN Indicators:
-  - *Example*: SDG 11 (Sustainable Cities) $\rightarrow$ Target 11.5, Indicator 11.5.2 (reducing disaster losses and protecting vulnerable communities).
-  - *Example*: SDG 6 (Clean Water & Sanitation) $\rightarrow$ Target 6.3, Indicator 6.3.2 (monitoring drainage and canal water quality).
-  - Reject superficial buzzword matching. Claims must be grounded in measurable operational outcomes.
-
-### Core Aspect 2: Multi-Layer Wedding Cake Coverage
+### Core Aspect 1: Multi-Layer Wedding Cake Coverage (`SDG-01`)
 - Evaluate cross-tier impact across the Stockholm Resilience Centre Wedding Cake:
-  - **Layer 1: Biosphere**: Protecting natural ecosystems, waterways, and climate resilience (Goals 6, 13, 14, 15).
-  - **Layer 2: Society**: Protecting human life, public safety, health, and equitable civic participation (Goals 1, 3, 11, 16).
-  - **Layer 3: Economy**: Fostering responsible industry and non-destructive economic value (Goals 8, 9, 12).
+  - **Tier 1: Biosphere (Planet)**: Protecting natural ecosystems, waterways, and climate resilience (Goals 6, 13, 14, 15).
+  - **Tier 2: Society (People)**: Protecting human life, public safety, health, and equitable civic participation (Goals 1, 3, 11, 16).
+  - **Tier 3: Economy (Prosperity)**: Fostering responsible industry, resource optimization, and non-destructive economic value (Goals 8, 9, 12).
   - **Connecting Thread**: Multi-stakeholder partnerships (Goal 17).
-- A sustainable project must span **more than 1 level of the Wedding Cake**. Projects focused purely on narrow financial gain with zero societal or environmental resilience are penalized.
+- A sustainable project must span **more than 1 level of the Wedding Cake**. Solutions focused purely on narrow financial gain or isolated single-point tech patches without systemic linkage to society and the biosphere are penalized.
 
 ### Core Aspect 3: The "Do No Harm" Safeguard
 - Probe whether the technical solution creates negative externalities:

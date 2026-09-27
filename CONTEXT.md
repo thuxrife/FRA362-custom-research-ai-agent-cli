@@ -17,8 +17,8 @@
    - Roles: `(2-1-jury)` (Chief Judge & Orchestrator), `(2-2-tech-feasibility)`, `(2-3-economic-feasibility)`, `(2-4-legal-feasibility)`, `(2-5-operational-feasibility)`, `(2-6-schedule-feasibility)`, `(2-7-sdgs-expert)`
    - Function: Rigorous systems-thinking feasibility audit based on LN5 curriculum (Anti-Tech Trap, cross-aspect interdependence, discrete whole integer scores `{1, 2, 3, 4, 5}`, knockout fatal flaw rule `MIN=1 -> VETOED`).
 3. **Orthogonal Robotics Axis (FIBO Compatibility)**:
-   - Scale: **0.0 to 10.0 points** (evaluated independently, **never** added to the 100-point TELOS+S score).
-   - Core Triad: **Sense (Perception) $\to$ Think (Processing) $\to$ Act (Actuation)** closed-loop.
+   - Scale: **0.0 to 12.0 points** (evaluated independently, **never** added to the 100-point TELOS+S score).
+   - Core Triad: **Sense (Perception 4.0) $\to$ Think (Processing 4.0) $\to$ Act (Actuation 4.0)** closed-loop (3 pillars $\times$ 4 rubric levels = clean 12.0 points).
 
 ---
 
@@ -29,31 +29,31 @@ Currently, only **3 active solutions** are being evaluated (solutions 4 and 5 we
 1. **`solution-details/solution-1.md`**:
    - *Title*: `CCTV on the road (Visual water flow) + ultrasonic to measure the flow rate of the canal + alarm`
    - *Concept*: Computer vision (PTV/PIV, Optical Flow) on road CCTV combined with existing canal ultrasonic level meters.
-   - *TELOS+S Feasibility*: **65.93 / 100 — VETOED / NON-VIABLE PENDING DE-SCOPING**
+   - *TELOS+S Feasibility*: **66.27 / 100 — VETOED / NON-VIABLE PENDING DE-SCOPING**
      - Fatal Flaws: `T-02=1` (BMA municipal firewall blocks RTSP streams), `T-03=1` (Uncalibrated LSPIV without seeding is TRL 2-3), `T-04=1` (Single Point of Failure: only JK has OpenCV, 0 have fluid velocimetry).
-   - *Robotics Potential*: **4.8 / 10.0** (Perception: 2.5, Processing: 2.1, Actuation: 0.2 — Broken loop at Actuation, open-loop alert).
+   - *Robotics Potential*: **6.0 / 12.0** (Perception: Level 3.0/4.0, Processing: Level 2.0/4.0, Actuation: Level 1.0/4.0 — Broken loop at Actuation, passive open-loop alert).
 2. **`solution-details/solution-2.md`**:
    - *Title*: `Sewer Inspection by transmitter and receiver. Mapping Sewer profile`
    - *Concept*: Airborne Acoustic Reflectometry across manholes under normal low-water conditions; digital signal processing generates 2D cross-section and automated **Cleanliness Score (0–10)** for maintenance dispatch.
-   - *TELOS+S Feasibility*: **69.10 / 100 — CONDITIONALLY VIABLE (ผ่านเกณฑ์แบบมีเงื่อนไข)**
+   - *TELOS+S Feasibility*: **69.43 / 100 — CONDITIONALLY VIABLE (ผ่านเกณฑ์แบบมีเงื่อนไข)**
      - Zero Fatal Flaws! Minimum score is 2 on `L-01` (Traffic/confined space permits required for public manholes).
-     - Highest SDG Score (8.67 / 10.0) due to 100% fail-safe retrieval and zero e-waste left in sewers.
-   - *Robotics Potential*: **5.8 / 10.0** (Perception: 2.8, Processing: 2.4, Actuation: 0.6 — Advanced NDT acoustic sensor payload, DSP filtering, automated 0-10 cleanliness score).
+     - Highest SDG Score (9.0 / 10.0) due to 100% fail-safe retrieval, zero e-waste left in sewers, and circular economy compliance.
+   - *Robotics Potential*: **8.0 / 12.0** (Perception: Level 3.5/4.0, Processing: Level 3.0/4.0, Actuation: Level 1.5/4.0 — Advanced NDT acoustic reflectometry payload, DSP filtering, automated 0-10 cleanliness score).
 3. **`solution-details/solution-3.md`**:
    - *Title*: `ระบบปล่อยน้ำแบบ Adaptive เพื่อระบายความร้อนบนทางเดินเท้าและตรอกซอยอย่างมีประสิทธิภาพสูงสุด`
    - *Concept*: Contactless IR surface temperature sensor triggering high-pressure solenoid misting when $>45^\circ\text{C}$ between 11:00–14:00.
    - *TELOS+S Feasibility*: **67.17 / 100 — VETOED / NON-VIABLE PENDING DE-SCOPING**
      - Fatal Flaw: `E-01=1` (Payback $\ge 10$ yrs: continuous potable water and electricity consumption with zero direct financial return or labor savings in Bangkok's 80% RH climate).
      - Critical Operational Hazards: `O-01=2` (Pedestrian slipping hazards on wet pavement), `O-02=2` (Shopfront resistance against misting dampening wares).
-   - *Robotics Potential*: **8.0 / 10.0** (Perception: 2.7, Processing: 3.0, Actuation: 2.3 — Complete closed-loop cyber-physical mechatronic system).
+   - *Robotics Potential*: **10.0 / 12.0** (Perception: Level 3.0/4.0, Processing: Level 3.5/4.0, Actuation: Level 3.5/4.0 — Complete closed-loop cyber-physical mechatronic system).
 
 ---
 
 ### Latest Generated Deliverables:
 - **JSON Matrix**: `feasibility-outcome/jury_eval_data.json`
-- **Master Excel**: `feasibility-outcome/9-26-2026-1648_0.xlsx`
+- **Master Excel**: `feasibility-outcome/9-27-2026-2258_0.xlsx`
 - **Executive Visualizations (`summary-image/`)**:
-  - `summary-image/feasibility_robotics_cross_matrix.png` & `.svg` (2D Cross-Matrix: complete 0–10 Y-axis, clean minimal without zone boxes or footer clutter)
+  - `summary-image/feasibility_robotics_cross_matrix.png` & `.svg` (2D Cross-Matrix: complete 0–12 Y-axis, clean minimal without zone boxes or footer clutter)
   - `summary-image/telos_s_robotics_column_bar.png` & `.svg` (3 Big Columns Comparison: 1 column per solution with individual 7-pillar bar chart & overall score)
 - **Subagent Conversation Roster**:
   - `fe13f96f-6ed8-4e39-9331-dcd8dcfebe1a` (`fibo_robotics_auditor`)
@@ -85,9 +85,9 @@ Currently, only **3 active solutions** are being evaluated (solutions 4 and 5 we
 
 ---
 
-## 4. The 18 Standardized Questions & Normalized Weights (`question_raw.txt`)
+## 4. The 17 Standardized Questions & Normalized Weights (`question_raw.txt`)
 
-All solutions are benchmarked against the exact same 18 problem-space questions with **5-level discrete integer rubrics `{1, 2, 3, 4, 5}`** and a **Two-Tier Normalized Weighting Architecture** totaling 100.0%:
+All solutions are benchmarked against the exact same 17 problem-space questions with **5-level discrete integer rubrics `{1, 2, 3, 4, 5}`** and a **Two-Tier Normalized Weighting Architecture** totaling 100.0%:
 
 | Pillar | ID | Question Title | Weight |
 | :--- | :--- | :--- | :---: |
@@ -106,10 +106,9 @@ All solutions are benchmarked against the exact same 18 problem-space questions 
 | | `O-03` | Developer — Contribution Dependency (Administrative & Lab Gatekeeping) | 5.0% |
 | | `O-04` | Developer — Complexity (Step Count & Pipeline Friction) | 5.0% |
 | **Schedule (15.0%)** | `S-01` | Production Time (Engineering Design Maturity by 5 Business Weeks) | 15.0% |
-| **SDGs (10.0%)** | `SDG-01` | SDG-01: Public Impact vs. Academic Greenwashing (SDG 11.5 / 13.1) | 3.33% |
-| | `SDG-02` | SDG-02: Environmental Footprint & E-Waste ("Do No Harm" — SDG 6.3 / 12.4) | 3.33% |
-| | `SDG-03` | SDG-03: Algorithmic Equity & Decision Transparency (SDG 10.2 / 16.6) | 3.34% |
-| **Total Weight** | | **6 Pillars / 18 Diagnostic Questions** | **100.0%** |
+| **SDGs (10.0%)** | `SDG-01` | Stockholm Wedding Cake Coverage (Planet, People, Prosperity integration) | 5.0% |
+| | `SDG-02` | Environmental Footprint, E-Waste & Circular Economy ("Do No Harm" & circularity) | 5.0% |
+| **Total Weight** | | **6 Pillars / 17 Diagnostic Questions** | **100.0%** |
 
 ---
 
