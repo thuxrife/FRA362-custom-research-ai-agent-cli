@@ -24,47 +24,45 @@
 
 ## 2. Active Intake Proposals (`solution-details/`)
 
-Currently, **4 active solutions** are evaluated for the urban pipe inspection and condition-based maintenance domain:
+Following the confirmed municipal drainage constraint (**"มีน้ำอยู่ในท่อไม่เกิน 20%"** — Water inside pipe $\le 20\%$, meaning $\ge 80\%$ open airspace), **Solution 3 (Underwater Sonar Profiling) is EXCLUDED** because sonar physically requires flooded submersion and fails in low-water conditions.
 
-1. **`solution-details/solution-1.md`**:
-   - *Title*: `Pipe Inspection Robot using CCTV for profiling pipe`
-   - *Concept*: 4K PTZ Camera + High-Power LED array mounted on a Wheeled Crawler Platform with YOLOv8 AI object detection for cracks, leaks, and blockages.
-   - *TELOS+S Feasibility*: **59.30 / 100 — CONDITIONALLY VIABLE (ผ่านเกณฑ์แบบมีเงื่อนไข)**
-     - Zero Fatal Flaws! Lowest scores are 2 on `T-01` (IP68 waterproofing chassis fabrication), `E-03` (Scrap buffer for high-spec camera/tether), `L-01` (Traffic/manhole closure permits), `O-04` (Multi-stage setup complexity), `S-01` (5-week development maturity).
-   - *Robotics Potential*: **10.5 / 12.0** (Perception: 3.5/4.0, Processing: 3.5/4.0, Actuation: 3.5/4.0 — Genuine closed-loop mobile robotic crawler with edge AI vision).
+Currently, **3 candidate solutions** are evaluated (ordered by feasibility score descending):
 
-2. **`solution-details/solution-2.md`**:
-   - *Title*: `Pipe Inspection Instrument using Acoustic using Reflectometry`
-   - *Concept*: Airborne Acoustic Reflectometry across consecutive manholes (SL-RAT EPA USA Standard); digital signal processing (DSP) measures acoustic attenuation and outputs automated **0–10 Cleanliness Score** for condition-based jetting dispatch.
-   - *TELOS+S Feasibility*: **83.53 / 100 — HIGHLY VIABLE / TOP RECOMMENDED (ผ่านเกณฑ์ระดับดีเยี่ยม)**
-     - Zero Fatal Flaws! Recalibrated for Bangkok Municipal Standing Water Reality (Roadside gravity laterals with 10–30% dry-weather standing water and 70–90% headspace).
-     - `T-03=3` (TRL 5-6 with standing water compensation baseline), `E-01=4` (2-3 year payback covering 65-75% roadside network), `O-02=3` (Triage rule: use on gravity laterals with headspace, avoid 100% submerged inverted siphons).
+1. **Solution 2 (`solution-details/solution-2.md`)**:
+   - *Title*: `Pipe Inspection Instrument using Acoustic Reflectometry`
+   - *Concept*: Airborne Acoustic Reflectometry across consecutive manholes (SL-RAT EPA USA Standard); digital signal processing (DSP) measures acoustic attenuation in the 80%+ pipe airspace and outputs automated **0–10 Cleanliness Score** for condition-based jetting dispatch.
+   - *TELOS+S Feasibility*: **83.53 / 100 — HIGHLY VIABLE (ผ่านเกณฑ์ระดับดีเยี่ยม)**
+     - Zero Fatal Flaws! Recalibrated for Bangkok Municipal Standing Water Reality ($\le 20\%$ dry-weather standing water and $\ge 80\%$ clear headspace).
+     - `T-03=3` (TRL 5-6 with standing water compensation baseline), `E-01=4` (1-2 year payback covering 80-90% gravity lateral network), `O-02=3` (Street-level tripod/wand deployment without sewer entry).
      - Highest Economic ROI, lowest operational friction (zero robot in sewage, 100% fail-safe retrieval), perfect team skill alignment (Due's audio amp & JK's DSP).
    - *Robotics Potential*: **8.5 / 12.0** (Perception: 3.5/4.0, Processing: 3.5/4.0, Actuation: 1.5/4.0 — Advanced NDT acoustic reflectometry payload with spectral DSP).
 
-3. **`solution-details/solution-3.md`**:
-   - *Title*: `Pipe Inspection Instrument using Sonar Frequency Profiling attaching with Robot`
-   - *Concept*: Submersible 360° rotating underwater Sonar transducer on float/crawler doing frequency profiling and 3D cross-sectional geometry mapping through dirty wastewater.
-   - *TELOS+S Feasibility*: **33.43 / 100 — VETOED / NON-VIABLE PENDING DE-SCOPING (ตกเกณฑ์ข้อบังคับวิกฤต)**
-     - Fatal Flaws (`score == 1`): `T-01=1` (Build from scratch underwater piezo matching), `T-04=1` (Zero team members have underwater hydrophone experience), `T-05=1` (Total reset learning curve), `E-02=1` (Proprietary vendor lock-in), `E-03=1` (Zero scrap buffer for >50k THB sonar head), `O-04=1` (Convoluted pipeline), `S-01=1` (0% design maturity impossible in 5 weeks).
-   - *Robotics Potential*: **10.5 / 12.0** (Perception: 4.0/4.0, Processing: 3.5/4.0, Actuation: 3.0/4.0 — Exemplary deep sensing robotics, but non-viable for capstone constraints).
+2. **Solution 1 (`solution-details/solution-1.md`)**:
+   - *Title*: `Pipe Inspection Robot using CCTV for profiling pipe`
+   - *Concept*: 4K PTZ Camera + High-Power LED array mounted on a Wheeled Crawler Platform with YOLOv8 AI object detection for cracks, leaks, and blockages.
+   - *TELOS+S Feasibility*: **59.30 / 100 — CONDITIONALLY VIABLE (ผ่านเกณฑ์แบบมีเงื่อนไข)**
+     - Zero Fatal Flaws! Under $\le 20\%$ water level, camera sits in the upper air cavity avoiding total submersion. However, crawler wheels must maintain traction through sludge/wastewater.
+     - Lowest scores are 2 on `T-01` (IP68 waterproofing chassis fabrication), `E-03` (Scrap buffer for high-spec camera/tether), `L-01` (Traffic/manhole closure permits), `O-04` (Multi-stage setup complexity), `S-01` (5-week development maturity).
+   - *Robotics Potential*: **10.5 / 12.0** (Perception: 3.5/4.0, Processing: 3.5/4.0, Actuation: 3.5/4.0 — Genuine closed-loop mobile robotic crawler with edge AI vision).
 
-4. **`solution-details/solution-4.md`**:
+3. **Solution 4 (`solution-details/solution-4.md`)**:
    - *Title*: `Pipe Inspection Instrument using LiDAR SLAM attaching with Robot`
    - *Concept*: 3D LiDAR laser time-of-flight scanning + IMU mounted on mobile crawler doing LiDAR SLAM to construct dense 3D point cloud pipe profiles.
    - *TELOS+S Feasibility*: **55.04 / 100 — VETOED / NON-VIABLE PENDING DE-SCOPING (ตกเกณฑ์ข้อบังคับวิกฤต)**
-     - Fatal Flaw (`score == 1`): `E-03=1` (Scrap Margin / Budget Ceiling: 3D LiDAR sensor ~30,000 THB + Jetson exhausts 100% of budget with zero spare allowance if flooded in sewage).
-     - Critical Physical Flaw: `T-03=2` (Laser light 905nm suffers total absorption/refraction on wastewater, fails in flooded/foggy sewer pipes).
+     - Fatal Flaw (`score == 1`): `E-03=1` (Scrap Margin / Budget Ceiling: 3D LiDAR sensor ~30,000 THB + Jetson exhausts 100% of student budget with zero spare allowance if flooded in sewage).
+     - Critical Physical Flaw: `T-03=2` (Laser light 905nm suffers specular absorption/reflection on dark wastewater puddle surface at bottom 20%).
    - *Robotics Potential*: **11.5 / 12.0** (Perception: 4.0/4.0, Processing: 4.0/4.0, Actuation: 3.5/4.0 — Gold-standard capstone robotics depth).
+
+*(Note: Solution 3 - Underwater Sonar is formally archived as non-viable due to fundamental operational mismatch with the $\le 20\%$ water constraint).*
 
 ---
 
 ### Latest Generated Deliverables:
-- **JSON Matrix**: `feasibility-outcome/jury_eval_data.json`
-- **Master Excel**: `feasibility-outcome/9-28-2026-2331_0.xlsx`
+- **JSON Matrix**: `feasibility-outcome/jury_eval_data.json` (3 solutions sorted by score)
+- **Master Excel**: `feasibility-outcome/9-29-2026-0233_0.xlsx` (Executive Comparison tab + 3 solution tabs)
 - **Executive Visualizations (`summary-image/`)**:
-  - `summary-image/feasibility_robotics_cross_matrix.png` & `.svg` (2D Cross-Matrix for 4 solutions: Y-axis 0–12, X-axis 0-100)
-  - `summary-image/telos_s_robotics_column_bar.png` & `.svg` (4 Big Columns Comparison: 1 column per solution with individual 7-pillar bar chart & overall score)
+  - `summary-image/feasibility_robotics_cross_matrix.png` & `.svg` (2D Cross-Matrix for 3 solutions: Y-axis 0–12, X-axis 0-100)
+  - `summary-image/telos_s_robotics_column_bar.png` & `.svg` (3 Big Columns Comparison: Solution 2, Solution 1, Solution 4 with 7-pillar bar chart & overall score)
 - **Subagent Conversation Roster**:
   - `fe13f96f-6ed8-4e39-9331-dcd8dcfebe1a` (`fibo_robotics_auditor`)
   - `36f568c7-bf8e-40e3-b01b-63f688946acf` (`telos_specialist_auditor` - Technical 2.2)
@@ -144,20 +142,38 @@ All solutions are benchmarked against the exact same 17 problem-space questions 
 
 ---
 
-## 6. Execution Command Quick Reference
+## 6. Script Execution Pipeline & Adjustable Parameters
 
+This system is completely decoupled: the Python code contains zero hardcoded questions, and all evaluation rules flow from `jury_eval_data.json`.
+
+```
+[update_jury_eval.py] ──> [jury_eval_data.json] ──┬──> [feasibility-analysis.py] ──> [Master Excel .xlsx]
+                                                 ├──> [generate_summary_images.py] ──> [SVGs & PNGs]
+                                                 └──> [verify_excel.py] ──> [Verification Audit]
+```
+
+### Script-to-Output Reference Table:
+
+| Script | Input File | Output File | Purpose | What Can Be Adjusted |
+| :--- | :--- | :--- | :--- | :--- |
+| **`update_jury_eval.py`** | Solution MDs, Question rubrics | `feasibility-outcome/jury_eval_data.json` | Master Evaluation Engine & Data Source of Truth | • Solution inclusion/exclusion (add/remove solutions)<br>• Solution ordering/ranking<br>• Discrete scores `{1, 2, 3, 4, 5}` & question weights<br>• Diagnostic evidence citations & de-scoping advice<br>• Robotics triad scores (Perception, Processing, Actuation each 0.0–4.0, total /12) |
+| **`feasibility-analysis.py`** | `feasibility-outcome/jury_eval_data.json` | `feasibility-outcome/{month}-{date}-{year}-{time}_{seq}.xlsx` | Transposed Horizontal TELOS+S Master Excel Matrix & Executive Comparison Sheet | • Excel output directory / custom filename (`--name`, `--outdir`)<br>• Excel styling, fonts (Segoe UI), color palettes (Navy/White)<br>• Excel formula definitions (`SUM`, `IF(MIN=1, VETOED, ...)` thresholds)<br>• Column widths and header labeling |
+| **`generate_summary_images.py`** | `feasibility-outcome/jury_eval_data.json` | `summary-image/feasibility_robotics_cross_matrix.svg/.png`<br>`summary-image/telos_s_robotics_column_bar.svg/.png` | Executive Visualizations: 2D Cross-Matrix (TELOS+S vs. Robotics) & Ranked Column Bar Chart | • Color palette (`PALETTES` array: White-Purple theme)<br>• Cross-Matrix card callout positions (`card_configs`: coordinates, leader lines)<br>• Threshold lines (Feasibility $\ge 60$, Robotics $\ge 8.0$)<br>• Column card dimensions (`card_w`, `card_gap`, `start_x`)<br>• PNG export resolution / device scale factor (default: 2.0x scale) |
+| **`verify_excel.py`** | Latest `.xlsx` in `feasibility-outcome/` | Console Audit Log | Validates Excel structural integrity, formula references, and tab counts | • Sheet validation rules<br>• Row/column verification ranges |
+
+### Standard Execution Pipeline:
 ```powershell
-# 1. Update/check jury evaluation JSON (Master Source of Truth)
+# Step 1: Update/validate evaluation data engine
 python update_jury_eval.py
 
-# 2. Compile Excel workbook from jury_eval_data.json
+# Step 2: Compile Master Excel workbook
 python feasibility-analysis.py
 
-# 3. Generate Executive Visualizations (SVGs & 300 DPI PNGs in summary-image/)
+# Step 3: Generate visual assets (SVGs and high-res PNGs)
 python generate_summary_images.py
 
-# 4. Check git status
-git status
+# Step 4: Verify generated Excel structure
+python verify_excel.py
 ```
 
 ---
