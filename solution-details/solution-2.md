@@ -1,54 +1,42 @@
-# **Solution 2 : Sewer Inspection by transmitter and receiver.Mapping Sewer profile มีตัวรับ ตัวส่ง แต่ยังไม่ confirm ตัวกลาง**
+# **Solution 2:** 
 
-**Leverage point fit**
+# Pipe Inspection Instrument using Acoutic using Reflectometry
 
-- QRT ( Data for make decision )  
-- Maintenance Queue
+# **Requirement**
+For Pipe Maintanance
+- ทำให้การทำความสะอาดท่อที่สะอาดเกิดขึ้นน้อยลง 
 
+For Empty case (Where problem Naturally Receded)
+- สามารถยืนยันได้ว่าบริเวณนั้นไม่มีน้ำท่วมอยู่
 
-# **Function**
+# **Constrains**
+For Pipe Maintanance
+- น้ำฝนและน้ำเสีย อยู่ในท่อเดียวกัน
+- การวางท่ออยู่ใต้ดินทั้งหมด
+- ท่อมี เส้นผ่านศูนย์กลาง ความยาว และความลึก ไม่เท่ากันในแต่ละพื้นที่
+- สิ่งที่อุดตันท่อในแต่ละพื้นที่่ต่างกัน
+- ขนาดปากท่อบนพื้นผิวถนนของแต่ละพื้นที่่ไม่เท่ากัน
 
-- สามารถตรวจสอบสภาพของท่อได้ว่ามีสิ่งอุดตันท่อ   
-- สามารถบอกได้ว่าท่อ segment นี้มีความสะอาดเท่าไหร่ใน Scale 0-10
-- มีตัวส่งสัญญาณ และตัวรับสัญญาณ
+For Empty case (Where problem Naturally Receded)
+- แต่ละพื้นที่มีเซนเซอร์ติดอยู่แล้วเพื่อดูน้ำท่วมบนถนนไม่เท่ากัน
+- กล้อง CCTV ของแต่ละพื้นที่มีไม่เท่ากัน และไม่สามารถดูครอบคลุมได้ทุกพื้นที่
+- ท่อหลายท่อเชืื่อมกับคลองเดียวกัน
+- ขนาดปากท่อบนผิวถนนของแต่ละพื้นที่ไม่เท่ากัน.
 
 # **Operation flow**
-
-- Input :วาง Transmitter และ Receiver ไว้คนละฝั่งของช่วงท่อที่ต้องการตรวจสอบ  
--   
-- Transmitter ส่งสัญญาณเสียงผ่านอากาศภายในท่อไปยัง Receiver  
--   
-- Receiver รับสัญญาณเสียงที่ผ่านช่วงท่อ  
--   
-- วิเคราะห์การลดลงของพลังงานเสียงที่เกิดขึ้นระหว่างการส่งและการรับสัญญาณ  
--   
-- ประเมินระดับการอุดตันหรือสิ่งกีดขวางภายในช่วงท่อ  
--   
-- จำแนกใน segment นี้ว่า good or bad ใน Scale (0-10)
-
-  - ตำแหน่งLatitude and Longitude ของท่อ  
-  - วางตัวส่งสัญญาณที่จุดต้น กับ ด้วยตัวรับสัญญาณที่จุดปลาย
-
-- Process :   
-  - วาง Transmitter และ Receiver ไว้คนละฝั่งของช่วงท่อที่ต้องการตรวจสอบ  
-  - Transmitter ส่งสัญญาณเสียงผ่านอากาศภายในท่อไปยัง Receiver  
-  - Receiver รับสัญญาณเสียงที่ผ่านช่วงท่อ  
-  - วิเคราะห์การลดลงของพลังงานเสียงที่เกิดขึ้นระหว่างการส่งและการรับสัญญาณ  
-  - ประเมินระดับการอุดตันหรือสิ่งกีดขวางภายในช่วงท่อ  
-  - ประมวลผลออกมาเป็นมุมมองภาพตัดขวาว ของท่อ  
-- Output :  
-  - ผลการตรวจสอบของท่อในมุมมองภาพตัดขวางเพื่อดูเฉพาะความอุดตัน
-
+1.  ติดตั้ง Transiver และ Receiver ไว้ระหว่าง 2 ฝั่ง ภายใน segment ของท่อระบายน้ำ
+2. ให้ Transiver และ Receiver ส่งสัญญาณ และ รับสัญญาณ
+3. ปักหมุดตำแหน่งด้วย GPS ว่า ทำงานระหว่าง segment ท่อที่ตำแหน่งไหน
+4. Analyze สัญญาณที่รับได้มา
+5. ทำให้เป็น Scale คะแนนความสะอาดจาก 0-10 ตาม มาตรฐาน SL-RAT EPA, USA
 
 **Tech stack**
-
-- Airborne Acoustic Reflectometry  
-- Signal Filtering.  
+- Signal Filtering
+- Airborne Acoustic Reflectometry
 
 **Strong point**
-
-- Fast  
+- ใช้เวลาในการทำงานไม่นาน
+- ไม่เป็นอันตรายต่อโครงสร้าง
 
 **Weak point**
-
-- Can’t use in high level water in pipe situation, low water height is still ok because high level of water implies that we operating in raining which is not corect.
+- ไม่สามาถใช้งานขณะมีน้ำเต็มท่อได้

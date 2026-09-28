@@ -1,6 +1,6 @@
-# **Solution 3:** 
+# **Solution 4:** 
 
-# Pipe Inspection Instrument using Sonar Frequency Profiling attaching with Robot
+# Pipe Inspection Instrument using LiDAR SLAM attaching with Robot
 
 # **Requirement**
 For Pipe Maintanance
@@ -24,22 +24,22 @@ For Empty case (Where problem Naturally Receded)
 - ขนาดปากท่อบนผิวถนนของแต่ละพื้นที่ไม่เท่ากัน.
 
 # **Operation flow**
-1. ติดตั้ง 360 Sonar Module ไว้ภายในท่อระบายน้ำ
-2. ลากจูง 360 Sonar Module ด้วยหุ่นยนต์สำรวจท่อ
-3. เก็บค่า 360 Sonar Signal ทำ Frequency Profiling ออกมาเป็น 3D Map ตามเส้นทางที่ผ่านไป
-4. วิเคราะห์ความอุดตัน ความเสื่อมสภาพของท่อ ด้วยความละเอียด (สามารถเห็นภาพเปรียบเทียบ Cross Section เทียบกับขนาดท่อที่ Design ไว้)
+1. ติดตั้ง 3D LiDAR ไว้ใน Inspection Robot
+2. ลากจูง 3D LiDAR ด้วยหุ่นยนต์สำรวจท่อ
+3. เก็บค่า Point Cloud
+4. ทำ SLAM ให้ได้ pipe profiling
 
 **Tech stack**
-- Sonar Frequency Profiling
-- 360° Sonar Scan
-- Profile Ring Processing
+- 3D LiDAR
+- Laser Scanning
+- Point Cloud Processing
 
 **Strong point**
-- ตรวจตะกอนและ Debris ได้
-- ได้ข้อมูล Profile รอบท่อ 360°
-- ตรวจท่อที่มีน้ำอยู่ภายในได้
+- ได้ข้อมูลเป็น 3D
+- วัดตะกอนและสภาพท่อเป็นข้อมูลเชิงปริมาณได้
+- ตรวจ Buildup และ Debris ได้
 
 **Weak point**
-- ต้องมีการลาก Sonar Head ผ่านภายในท่อ
-- ต้องใช้ Float + Winching System
-- ต้องใช้ Software Processing (ทำ Mapping ด้วยวิธีนี้มันยาก)
+- ไม่สามาถใช้งานขณะมีน้ำเต็มท่อได้ (Point Cloud ไม่สามารถทะลุน้ำได้)
+- ข้อมูลมีปริมาณมาก ต้องใช้เวลา Processing (Point Cloud ใช้ processing power เยอะ)
+- ต้องจัดเรียงและประมวลผล Point Cloud

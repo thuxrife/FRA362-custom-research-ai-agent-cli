@@ -24,37 +24,47 @@
 
 ## 2. Active Intake Proposals (`solution-details/`)
 
-Currently, only **3 active solutions** are being evaluated (solutions 4 and 5 were deprecated):
+Currently, **4 active solutions** are evaluated for the urban pipe inspection and condition-based maintenance domain:
 
 1. **`solution-details/solution-1.md`**:
-   - *Title*: `CCTV on the road (Visual water flow) + ultrasonic to measure the flow rate of the canal + alarm`
-   - *Concept*: Computer vision (PTV/PIV, Optical Flow) on road CCTV combined with existing canal ultrasonic level meters.
-   - *TELOS+S Feasibility*: **66.27 / 100 — VETOED / NON-VIABLE PENDING DE-SCOPING**
-     - Fatal Flaws: `T-02=1` (BMA municipal firewall blocks RTSP streams), `T-03=1` (Uncalibrated LSPIV without seeding is TRL 2-3), `T-04=1` (Single Point of Failure: only JK has OpenCV, 0 have fluid velocimetry).
-   - *Robotics Potential*: **6.0 / 12.0** (Perception: Level 3.0/4.0, Processing: Level 2.0/4.0, Actuation: Level 1.0/4.0 — Broken loop at Actuation, passive open-loop alert).
+   - *Title*: `Pipe Inspection Robot using CCTV for profiling pipe`
+   - *Concept*: 4K PTZ Camera + High-Power LED array mounted on a Wheeled Crawler Platform with YOLOv8 AI object detection for cracks, leaks, and blockages.
+   - *TELOS+S Feasibility*: **59.30 / 100 — CONDITIONALLY VIABLE (ผ่านเกณฑ์แบบมีเงื่อนไข)**
+     - Zero Fatal Flaws! Lowest scores are 2 on `T-01` (IP68 waterproofing chassis fabrication), `E-03` (Scrap buffer for high-spec camera/tether), `L-01` (Traffic/manhole closure permits), `O-04` (Multi-stage setup complexity), `S-01` (5-week development maturity).
+   - *Robotics Potential*: **10.5 / 12.0** (Perception: 3.5/4.0, Processing: 3.5/4.0, Actuation: 3.5/4.0 — Genuine closed-loop mobile robotic crawler with edge AI vision).
+
 2. **`solution-details/solution-2.md`**:
-   - *Title*: `Sewer Inspection by transmitter and receiver. Mapping Sewer profile`
-   - *Concept*: Airborne Acoustic Reflectometry across manholes under normal low-water conditions; digital signal processing generates 2D cross-section and automated **Cleanliness Score (0–10)** for maintenance dispatch.
-   - *TELOS+S Feasibility*: **69.43 / 100 — CONDITIONALLY VIABLE (ผ่านเกณฑ์แบบมีเงื่อนไข)**
-     - Zero Fatal Flaws! Minimum score is 2 on `L-01` (Traffic/confined space permits required for public manholes).
-     - Highest SDG Score (9.0 / 10.0) due to 100% fail-safe retrieval, zero e-waste left in sewers, and circular economy compliance.
-   - *Robotics Potential*: **8.0 / 12.0** (Perception: Level 3.5/4.0, Processing: Level 3.0/4.0, Actuation: Level 1.5/4.0 — Advanced NDT acoustic reflectometry payload, DSP filtering, automated 0-10 cleanliness score).
+   - *Title*: `Pipe Inspection Instrument using Acoustic using Reflectometry`
+   - *Concept*: Airborne Acoustic Reflectometry across consecutive manholes (SL-RAT EPA USA Standard); digital signal processing (DSP) measures acoustic attenuation and outputs automated **0–10 Cleanliness Score** for condition-based jetting dispatch.
+   - *TELOS+S Feasibility*: **83.53 / 100 — HIGHLY VIABLE / TOP RECOMMENDED (ผ่านเกณฑ์ระดับดีเยี่ยม)**
+     - Zero Fatal Flaws! Recalibrated for Bangkok Municipal Standing Water Reality (Roadside gravity laterals with 10–30% dry-weather standing water and 70–90% headspace).
+     - `T-03=3` (TRL 5-6 with standing water compensation baseline), `E-01=4` (2-3 year payback covering 65-75% roadside network), `O-02=3` (Triage rule: use on gravity laterals with headspace, avoid 100% submerged inverted siphons).
+     - Highest Economic ROI, lowest operational friction (zero robot in sewage, 100% fail-safe retrieval), perfect team skill alignment (Due's audio amp & JK's DSP).
+   - *Robotics Potential*: **8.5 / 12.0** (Perception: 3.5/4.0, Processing: 3.5/4.0, Actuation: 1.5/4.0 — Advanced NDT acoustic reflectometry payload with spectral DSP).
+
 3. **`solution-details/solution-3.md`**:
-   - *Title*: `ระบบปล่อยน้ำแบบ Adaptive เพื่อระบายความร้อนบนทางเดินเท้าและตรอกซอยอย่างมีประสิทธิภาพสูงสุด`
-   - *Concept*: Contactless IR surface temperature sensor triggering high-pressure solenoid misting when $>45^\circ\text{C}$ between 11:00–14:00.
-   - *TELOS+S Feasibility*: **67.17 / 100 — VETOED / NON-VIABLE PENDING DE-SCOPING**
-     - Fatal Flaw: `E-01=1` (Payback $\ge 10$ yrs: continuous potable water and electricity consumption with zero direct financial return or labor savings in Bangkok's 80% RH climate).
-     - Critical Operational Hazards: `O-01=2` (Pedestrian slipping hazards on wet pavement), `O-02=2` (Shopfront resistance against misting dampening wares).
-   - *Robotics Potential*: **10.0 / 12.0** (Perception: Level 3.0/4.0, Processing: Level 3.5/4.0, Actuation: Level 3.5/4.0 — Complete closed-loop cyber-physical mechatronic system).
+   - *Title*: `Pipe Inspection Instrument using Sonar Frequency Profiling attaching with Robot`
+   - *Concept*: Submersible 360° rotating underwater Sonar transducer on float/crawler doing frequency profiling and 3D cross-sectional geometry mapping through dirty wastewater.
+   - *TELOS+S Feasibility*: **33.43 / 100 — VETOED / NON-VIABLE PENDING DE-SCOPING (ตกเกณฑ์ข้อบังคับวิกฤต)**
+     - Fatal Flaws (`score == 1`): `T-01=1` (Build from scratch underwater piezo matching), `T-04=1` (Zero team members have underwater hydrophone experience), `T-05=1` (Total reset learning curve), `E-02=1` (Proprietary vendor lock-in), `E-03=1` (Zero scrap buffer for >50k THB sonar head), `O-04=1` (Convoluted pipeline), `S-01=1` (0% design maturity impossible in 5 weeks).
+   - *Robotics Potential*: **10.5 / 12.0** (Perception: 4.0/4.0, Processing: 3.5/4.0, Actuation: 3.0/4.0 — Exemplary deep sensing robotics, but non-viable for capstone constraints).
+
+4. **`solution-details/solution-4.md`**:
+   - *Title*: `Pipe Inspection Instrument using LiDAR SLAM attaching with Robot`
+   - *Concept*: 3D LiDAR laser time-of-flight scanning + IMU mounted on mobile crawler doing LiDAR SLAM to construct dense 3D point cloud pipe profiles.
+   - *TELOS+S Feasibility*: **55.04 / 100 — VETOED / NON-VIABLE PENDING DE-SCOPING (ตกเกณฑ์ข้อบังคับวิกฤต)**
+     - Fatal Flaw (`score == 1`): `E-03=1` (Scrap Margin / Budget Ceiling: 3D LiDAR sensor ~30,000 THB + Jetson exhausts 100% of budget with zero spare allowance if flooded in sewage).
+     - Critical Physical Flaw: `T-03=2` (Laser light 905nm suffers total absorption/refraction on wastewater, fails in flooded/foggy sewer pipes).
+   - *Robotics Potential*: **11.5 / 12.0** (Perception: 4.0/4.0, Processing: 4.0/4.0, Actuation: 3.5/4.0 — Gold-standard capstone robotics depth).
 
 ---
 
 ### Latest Generated Deliverables:
 - **JSON Matrix**: `feasibility-outcome/jury_eval_data.json`
-- **Master Excel**: `feasibility-outcome/9-27-2026-2258_0.xlsx`
+- **Master Excel**: `feasibility-outcome/9-28-2026-2331_0.xlsx`
 - **Executive Visualizations (`summary-image/`)**:
-  - `summary-image/feasibility_robotics_cross_matrix.png` & `.svg` (2D Cross-Matrix: complete 0–12 Y-axis, clean minimal without zone boxes or footer clutter)
-  - `summary-image/telos_s_robotics_column_bar.png` & `.svg` (3 Big Columns Comparison: 1 column per solution with individual 7-pillar bar chart & overall score)
+  - `summary-image/feasibility_robotics_cross_matrix.png` & `.svg` (2D Cross-Matrix for 4 solutions: Y-axis 0–12, X-axis 0-100)
+  - `summary-image/telos_s_robotics_column_bar.png` & `.svg` (4 Big Columns Comparison: 1 column per solution with individual 7-pillar bar chart & overall score)
 - **Subagent Conversation Roster**:
   - `fe13f96f-6ed8-4e39-9331-dcd8dcfebe1a` (`fibo_robotics_auditor`)
   - `36f568c7-bf8e-40e3-b01b-63f688946acf` (`telos_specialist_auditor` - Technical 2.2)

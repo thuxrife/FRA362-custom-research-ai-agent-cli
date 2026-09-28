@@ -1,49 +1,49 @@
 # **Solution 1:** 
 
-# CCTV on the road (Visual water flow) \+ ultrasonic to measure the flow rate of the canal \+ alarm
+# Pipe Inspection Robot using CCTV for profiling pipe
 
-พยายามใช้ local sensor ที่มีก่อน
+# **Requirement**
+For Pipe Maintanance
+- ทำให้การทำความสะอาดท่อที่สะอาดเกิดขึ้นน้อยลง 
 
-**Leverage point fit**
+For Empty case (Where problem Naturally Receded)
+- สามารถยืนยันได้ว่าบริเวณนั้นไม่มีน้ำท่วมอยู่
 
-- QRT  
-- Maintenance Queue
+# **Constrains**
+For Pipe Maintanance
+- น้ำฝนและน้ำเสีย อยู่ในท่อเดียวกัน
+- การวางท่ออยู่ใต้ดินทั้งหมด
+- ท่อมี เส้นผ่านศูนย์กลาง ความยาว และความลึก ไม่เท่ากันในแต่ละพื้นที่
+- สิ่งที่อุดตันท่อในแต่ละพื้นที่่ต่างกัน
+- ขนาดปากท่อบนพื้นผิวถนนของแต่ละพื้นที่่ไม่เท่ากัน
 
-# **Function**
-
-- ดู flow น้ำบนถนนด้วย CCTV ภายในช่วงที่มีแสง  
-- ดู ระดับความสูงน้ำบนคลอง ( มีอยู๋แล้วแต่ต้องดึงข้อมูลมา )  
-- สามารถวิเคราะห์ได้ว่าตรงไหนท่วม เพราะฝนตกหนัก หรือ เพราะท่อตัน  
-- เก็บ data เพื่อนำมาวิเคราะห์จัดคิวลอกท่อ  
-- เก็บ sample น้ำท่วม  5 นาที และดูว่าน้ำท่วมหรือไม่ เพื่อ ให้เจ้าหน้าที่สwามารถ response ได้ และสามารถเก็บ
+For Empty case (Where problem Naturally Receded)
+- แต่ละพื้นที่มีเซนเซอร์ติดอยู่แล้วเพื่อดูน้ำท่วมบนถนนไม่เท่ากัน
+- กล้อง CCTV ของแต่ละพื้นที่มีไม่เท่ากัน และไม่สามารถดูครอบคลุมได้ทุกพื้นที่
+- ท่อหลายท่อเชืื่อมกับคลองเดียวกัน
+- ขนาดปากท่อบนผิวถนนของแต่ละพื้นที่ไม่เท่ากัน.
 
 # **Operation flow**
-
-- Input :  
-  - flow การไหลของน้ำ ในคลอง (Flow Rate Meter at Canal)  
-  - ภาพวิดีโอจาก CCTV  
-  - ความสูงของน้ำในคลอง (ultrasonic)  
-- Process :   
-  - from CCTV optical Flow   
-  -  วิเคราะห์ flow rate ของน้ำในคลองจาก ultrasonic sensors ที่มีอยู่แล้ว   
-  - เก็บข้อมูล sample นาน  5 นาที  
-  - วิเคราะห์ว่าท่วม เพราะอะไร  
-    -  (1) ฝนตกหนักน้ำระบายไม่ทัน  
-    -  (2) ท่อตันไม่มี flow ที่ท่อน้ำเล็ก น้ำเลยระบายลงคลองไม่ได้  
-- Output : แจ้ง alert เข้าหน่วยงานที่เกี่ยวข้อง
-
+1. ปล่อยหุ่นยนต์ลงท่อ
+2. ใช้ CCTV streaming สภาพภายในของท่อระบายน้ำ
+3. ใช้ภาพ Video ที่รับมาจาก CCTV ทำ Object Detection หารอยรั่ว ร่องรอยความเสียหายของท่อ และ สิ่งอุดตัน
+4. ทำเป็น Map Profile ออกมา ด้วยการปักหมุดตำแหน่ง object ภายในท่อ
 
 **Tech stack**
-
-- Particle Tracking Velocimetry ( For CCTV flow rate)  
-- Particle Image Velocimetry (CCTV)  
-- Optical Flow (CCTV)  
-- Data of each canal and every sewer attached with each canal.
+- 4K PTZ Camera
+- High-Power LED Array
+- YOLOv8 AI Detection 
+- Real-time Video Streaming
+- Wheeled Crawler Platform (ส่วนล้อของหุ่นยนต์)
 
 **Strong point**
-
-- ถ้าทำได้จะสามารถรู้ได้ว่าแต่ละท่อท่วมเพราะอะไร ตรงไหนเป็นปัญหา
+- เห็นภาพจริงภายในท่อ HD
+- AI ตรวจหาความเสียหายอัตโนมัติ
+- ไม่ต้องระบายน้ำออกจากท่อ
+- ราคาต่ำกว่า Sonar System 3–10 เท่า
 
 **Weak point**
-
-- บางท่ออยู่นอกขอบเขตของ CCTV
+- ต้องการน้ำใสสำหรับกล้อง
+- สาย Tether จำกัดระยะทาง (สาย Data)
+- ไม่ได้ข้อมูล 3D Profile ท่อ
+- ต้องใช้ AI Software Processing
